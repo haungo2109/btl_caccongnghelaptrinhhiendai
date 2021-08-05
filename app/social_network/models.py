@@ -25,40 +25,36 @@ class BaseInfo(models.Model):
         return self.content
 
 
-class Report(BaseInfo):
-    type = models.CharField(max_length=255)
-    user = models.ForeignKey('User', on_delete=models.SET_NULL, null=True, related_name='reposts')
-    post = models.ForeignKey('Post', on_delete=models.SET_NULL, null=True, related_name='reposts')
-
-
-class CommentPost(BaseInfo):
-    vote = models.IntegerField(default=0)
-    user = models.ForeignKey('User', on_delete=models.CASCADE)
-    post = models.ForeignKey('Post', on_delete=models.CASCADE, related_name='post_comments')
-
-
 class Post(BaseInfo):
     vote = models.IntegerField(default=0)
     image = models.CharField(max_length=255)
-    user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='posts')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
 
 
-class Auction(Post):
+class Auction(BaseInfo):
     class StatusAuction(models.TextChoices):
         success = 'succ', _('Sản phẩm đã được giao dịch thành công')
         fail = 'fail', _('Dấu giá sản phẩm đã bị hủy')
         auction = 'being auctioned', _('Sản phẩm đang được đấu giá')
         in_process = 'in process', _('Sản phẩm trang trong quá trinfg chuyển giao đấu giá')
 
-
+    vote = models.IntegerField(default=0)
+    image = models.CharField(max_length=255)
     base_price = models.FloatField(default=0)
     condition = models.CharField(max_length=1000, default=None)
     deadline = models.DateTimeField()
     accept_price = models.FloatField(null=True)
     status_auction = models.CharField(max_length=20, choices=StatusAuction.choices, default=StatusAuction.in_process)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='auctions')
 
 
-class CommentAuction(BaseInfo):
+class PostComment(BaseInfo):
+    vote = models.IntegerField(default=0)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='post_comments')
+
+
+class AuctionComment(BaseInfo):
     class StatusTransaction(models.TextChoices):
         success = 'succ', _('Giao dịch thành công')
         fail = 'fail', _('Giao dịch đã bị hủy')
@@ -66,9 +62,9 @@ class CommentAuction(BaseInfo):
         none = 'none', _('Chưa giao dịch')
 
     price = models.FloatField()
-    user = models.ForeignKey('User', on_delete=models.SET_NULL, null=True)
-    auction = models.ForeignKey('Auction', related_name='auction_comments', on_delete=models.CASCADE, default='anonymous')
     status_transaction = models.CharField(max_length=11, choices=StatusTransaction.choices, default=StatusTransaction.none)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    auction = models.ForeignKey(Auction, related_name='auction_comments', on_delete=models.CASCADE, default='anonymous')
 
     class Meta:
         ordering = ['create_at', 'price']
@@ -78,9 +74,21 @@ class CommentAuction(BaseInfo):
 
 class PostImage(models.Model):
     image = models.CharField(max_length=100)
-    post = models.ForeignKey('Post', on_delete=models.CASCADE, related_name='post_images')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='post_images')
 
 
 class AuctionImage(models.Model):
     image = models.CharField(max_length=100)
-    auction = models.ForeignKey('Auction', on_delete=models.CASCADE, related_name='auction_images')
+    auction = models.ForeignKey(Auction, on_delete=models.CASCADE, related_name='auction_images')
+
+
+class PostReport(BaseInfo):
+    type = models.CharField(max_length=255)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    post = models.ForeignKey(Post, on_delete=models.SET_NULL, null=True, related_name='post_reports')
+
+
+class AuctionReport(BaseInfo):
+    type = models.CharField(max_length=255)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    auction = models.ForeignKey(Auction, on_delete=models.SET_NULL, null=True, related_name='auction_reports')
