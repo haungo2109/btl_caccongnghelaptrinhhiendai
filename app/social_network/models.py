@@ -2,15 +2,17 @@ from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 from django.db import models
 
+from .ultis import user_directory_path
+
 
 class User(AbstractUser):
-    phone = models.CharField(max_length=11, unique=True)
-    avatar = models.ImageField(upload_to='upload/%Y/%m', default=None)
-    address = models.CharField(max_length=255)
-    birthday = models.DateField()
+    phone = models.CharField(max_length=11, unique=True, null=True)
+    avatar = models.ImageField(upload_to=user_directory_path, default=None, null=True)
+    address = models.CharField(max_length=255, null=True)
+    birthday = models.DateField(null=True)
     
     def __str__(self):
-        return self.name
+        return self.get_full_name()
 
 
 class BaseInfo(models.Model):
@@ -22,12 +24,14 @@ class BaseInfo(models.Model):
         ordering=['create_at']
 
     def __str__(self):
-        return self.content
+        if self.content:
+            return self.content
+        else:
+            return "Null content";
 
 
 class Post(BaseInfo):
     vote = models.IntegerField(default=0)
-    image = models.CharField(max_length=255)
     active = models.BooleanField(default=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
 
@@ -37,16 +41,16 @@ class Auction(BaseInfo):
         success = 'succ', _('Sản phẩm đã được giao dịch thành công')
         fail = 'fail', _('Dấu giá sản phẩm đã bị hủy')
         auction = 'being auctioned', _('Sản phẩm đang được đấu giá')
-        in_process = 'in process', _('Sản phẩm trang trong quá trinfg chuyển giao đấu giá')
+        in_process = 'in process', _('Sản phẩm trang trong quá trình chuyển giao khách hàng')
 
+    title = models.CharField(max_length=225, default='Auction')
     active = models.BooleanField(default=True)
     vote = models.IntegerField(default=0)
-    image = models.CharField(max_length=255)
     base_price = models.FloatField(default=0)
-    condition = models.CharField(max_length=1000, default=None)
+    condition = models.TextField(blank=True, null=True, default="No condition")
     deadline = models.DateTimeField()
-    accept_price = models.FloatField(null=True)
-    status_auction = models.CharField(max_length=20, choices=StatusAuction.choices, default=StatusAuction.in_process)
+    accept_price = models.FloatField(null=True, default=0)
+    status_auction = models.CharField(max_length=20, choices=StatusAuction.choices, default=StatusAuction.auction)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='auctions')
 
 
@@ -71,16 +75,13 @@ class AuctionComment(BaseInfo):
     class Meta:
         ordering = ['create_at', 'price']
 
-    def __str__(self):
-        return self.description
-
 class PostImage(models.Model):
-    image = models.CharField(max_length=100)
+    image = models.ImageField(upload_to='post_images/%Y/%m', default=None, null=True)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='post_images')
 
 
 class AuctionImage(models.Model):
-    image = models.CharField(max_length=100)
+    image = models.ImageField(upload_to='auction_images/%Y/%m', default=None, null=True)
     auction = models.ForeignKey(Auction, on_delete=models.CASCADE, related_name='auction_images')
 
 
