@@ -28,6 +28,7 @@ class BaseInfo(models.Model):
 class Post(BaseInfo):
     vote = models.IntegerField(default=0)
     image = models.CharField(max_length=255)
+    active = models.BooleanField(default=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
 
 
@@ -38,6 +39,7 @@ class Auction(BaseInfo):
         auction = 'being auctioned', _('Sản phẩm đang được đấu giá')
         in_process = 'in process', _('Sản phẩm trang trong quá trinfg chuyển giao đấu giá')
 
+    active = models.BooleanField(default=True)
     vote = models.IntegerField(default=0)
     image = models.CharField(max_length=255)
     base_price = models.FloatField(default=0)
