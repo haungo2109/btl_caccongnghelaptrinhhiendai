@@ -1,0 +1,14 @@
+:root {
+  --main-color-primary: #fff;
+  --main-color-secondary: #022b3a;
+  --main-color-gray: #bfc0c0;
+}
+
+.main {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+}
+.main > div:nth-child(1) {
+  min-height: 50px;
+}
