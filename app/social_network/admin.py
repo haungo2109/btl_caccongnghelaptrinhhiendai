@@ -1,7 +1,13 @@
 from django.contrib import admin
+from django.contrib.auth.models import Permission, Group
+from django.db.models import Count
+from django.template.response import TemplateResponse
 from django.utils.html import mark_safe
+from django.urls import path
 
-from .models import User, Post, Auction, AuctionComment, PostComment, AuctionImage, PostImage, PostReport, AuctionReport
+
+from .models import User, Post, Auction, AuctionComment, PostComment, AuctionImage, PostImage, PostReport, \
+    AuctionReport, HashTagPost, CategoryAuction
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -36,8 +42,8 @@ class PostImageInline(admin.StackedInline):
 
 
 class PostAdmin(admin.ModelAdmin):
-    inlines = (PostImageInline,PostCommentAdmin)
-    list_display = ['content', 'vote', 'create_at', 'user']
+    inlines = (PostImageInline, PostCommentAdmin, )
+    list_display = ['content', 'vote', 'create_at', 'user', ]
     search_fields = ['content', 'user__first_name', 'user__last_name']
 
 
@@ -58,14 +64,40 @@ class AuctionImageInline(admin.StackedInline):
                     .format(url=auction_image.image)
             )
 
+
 class AuctionAdmin(admin.ModelAdmin):
     inlines = (AuctionImageInline,AuctionCommentAdmin)
     list_display = ['title', 'vote', 'create_at', 'base_price', 'user']
     search_fields = ['title', 'user__first_name', 'user__last_name']
 
 
-admin.site.register(User, UserAdmin)
-admin.site.register(Post, PostAdmin)
-admin.site.register(Auction, AuctionAdmin)
-admin.site.register(PostReport)
-admin.site.register(AuctionReport)
+class HashTagPostAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name']
+
+class SocialNetworkAdminSite(admin.AdminSite):
+    site_header = 'SOCIAL NETWORK ABOUT AUCTION'
+
+    def get_urls(self):
+        return [
+                   path('report/', self.stats_view)
+               ] + super().get_urls()
+
+    def stats_view(self, request):
+        count = Post.objects.filter(active=True).count()
+        return TemplateResponse(request,
+                                'admin/report.html', {
+                                    'count': count,
+                                    'title': "Post report"
+                                })
+
+admin_site = SocialNetworkAdminSite('app')
+
+admin_site.register(Group)
+admin_site.register(Permission)
+admin_site.register(User, UserAdmin)
+admin_site.register(CategoryAuction)
+admin_site.register(HashTagPost, HashTagPostAdmin)
+admin_site.register(Post, PostAdmin)
+admin_site.register(Auction, AuctionAdmin)
+admin_site.register(PostReport)
+admin_site.register(AuctionReport)

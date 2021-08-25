@@ -15,6 +15,19 @@ class User(AbstractUser):
         return self.get_full_name()
 
 
+class CategoryAuction(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+class HashTagPost(models.Model):
+    name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.name
+
+
 class BaseInfo(models.Model):
     content = models.TextField(blank=True, null=True)
     create_at = models.DateTimeField(auto_now_add=True, null=True)
@@ -34,6 +47,7 @@ class Post(BaseInfo):
     vote = models.IntegerField(default=0)
     active = models.BooleanField(default=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
+    hashtag = models.ManyToManyField(HashTagPost, related_name='hashtag_posts', blank=True)
 
 
 class Auction(BaseInfo):
@@ -52,7 +66,7 @@ class Auction(BaseInfo):
     accept_price = models.FloatField(null=True, default=0)
     status_auction = models.CharField(max_length=20, choices=StatusAuction.choices, default=StatusAuction.auction)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='auctions')
-
+    category = models.ForeignKey(CategoryAuction, on_delete=models.SET_NULL, null=True)
 
 class PostComment(BaseInfo):
     vote = models.IntegerField(default=0)
