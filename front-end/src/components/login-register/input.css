@@ -1,0 +1,14 @@
+.input {
+    margin: 0.5em 1em;
+    display: block;
+}
+.input label {
+    margin-bottom: 0.5em;
+}
+.input input {
+    padding: 0.5em;
+    font-size: 16px;
+}
+.input input:focus-visible {
+    outline: none;
+}
