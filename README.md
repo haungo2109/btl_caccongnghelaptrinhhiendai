@@ -1,7 +1,8 @@
 # Some of commend
 ```python manage.py makemigrations social_network 
 python manage.py migrate
-python manage.py runserver```
+python manage.py runserver
+pip3 freeze > requirements.txt```
 
 # Info admin site
 username: admin
