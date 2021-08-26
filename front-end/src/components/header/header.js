@@ -1,10 +1,5 @@
 import './header.css'
-import {
-    BrowserRouter as Router,
-    Link,
-    Switch,
-    Route
-} from "react-router-dom";
+import {Link} from "react-router-dom";
 
 const links = [
     {'name': 'Trang chủ', 'link': ''},

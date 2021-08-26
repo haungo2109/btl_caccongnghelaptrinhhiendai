@@ -1,0 +1,6 @@
+.image-uploader div { 
+    border: 1px solid var(--main-color-secondary);
+    padding: 1em;
+    width: 40%;
+    border-radius: 8px;
+}

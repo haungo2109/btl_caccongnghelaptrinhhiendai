@@ -3,10 +3,11 @@
     justify-content: center;
     height: 100%;
     border-bottom: 1px solid var(--main-color-gray);
+    background-color: var(--main-color-secondary);
 }
 .navbar a {
     text-decoration: none;
-    color: black;
+    color: var(--main-color-primary);
 }
 p {
     margin: auto 1em;
