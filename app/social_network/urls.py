@@ -9,6 +9,7 @@ router.register('post', views.PostViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('admin/', admin_site.urls)
+    path('admin/', admin_site.urls),
+    path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
 ]
 
