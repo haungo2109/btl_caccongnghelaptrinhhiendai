@@ -9,6 +9,7 @@ import Auctions from './components/auctions/auctions';
 import MainPage from './components/main-page/main-page';
 import { Login } from './components/login-register/login';
 import { Register } from './components/login-register/register';
+import Posts from './components/posts/posts';
 
 function App() {
   return (
@@ -19,7 +20,7 @@ function App() {
         </div>
         <div>
           <Switch>
-              <Route exact path="/posts" component={MainPage} ></Route>
+              <Route exact path="/posts" component={Posts} ></Route>
               <Route exact path="/auctions" component={Auctions} ></Route>
               <Route exact path="/login" component={Login} ></Route>
               <Route exact path="/register" component={Register} ></Route>
