@@ -86,9 +86,11 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'btl_caccongnghelaptrinhhiendai',
         'USER': 'root',
-        'PASSWORD': 'haungo',
+        # 'PASSWORD': 'haungo',
+        'PASSWORD': '123456',
         'HOST': '127.0.0.1',
-        'PORT': '3308',
+        # 'PORT': '3308',
+        'PORT': '3306',
     }
 }
 
