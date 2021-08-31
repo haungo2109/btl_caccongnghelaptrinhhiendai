@@ -93,10 +93,18 @@ class PostImage(models.Model):
     image = models.ImageField(upload_to='post_images/%Y/%m', default=None, null=True)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='post_images')
 
+    def __str__(self):
+        if self.image:
+            return self.image.url
+
 
 class AuctionImage(models.Model):
     image = models.ImageField(upload_to='auction_images/%Y/%m', default=None, null=True)
     auction = models.ForeignKey(Auction, on_delete=models.CASCADE, related_name='auction_images')
+
+    def __str__(self):
+        if self.image:
+            return self.image.url
 
 
 class PostReport(BaseInfo):

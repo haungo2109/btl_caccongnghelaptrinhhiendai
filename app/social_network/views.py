@@ -1,46 +1,33 @@
 from django.contrib.auth import authenticate, logout, login
 from django.shortcuts import render
-from rest_framework import viewsets, permissions, status
+from rest_framework import viewsets, permissions, status, generics
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.parsers import MultiPartParser
 from .models import *
 from .serializers import *
 
-def login_user(request):
-    username = request.POST['username']
-    password = request.POST['password']
-
-    user = authenticate(request,
-                        username=username,
-                        password=password)
-
-    if user is not None:
-        login(request, user)
-    else:
-        return
 
 def logout_user(request):
     logout(request)
 
 
-def register_user():
-    pass
+class UserViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.RetrieveAPIView, generics.UpdateAPIView):
+    queryset = User.objects.filter(is_active=True)
+    serializer_class = UserSerializer
+    parser_classes = [MultiPartParser, ]
 
-
-def change_password():
-    user = User.objects.get(pk=2)
-    user.set_password('123456')
-    user.save()
-
-
-def update_profile():
-    pass
+    def get_permissions(self):
+        if self.action == 'create':
+            return [permissions.AllowAny()]
+        return [permissions.IsAuthenticated()]
+#vấn đề chỉ ng chứng thực nào thì ms có quyền sửa thông tin đó
 
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.filter(active=True)
     serializer_class = PostSerializer
-    # permission_classes = [permissions.IsAuthenticated]
+    parser_classes = [MultiPartParser, ]
 
     def get_permissions(self):
         if self.action in ['list', 'retrieve']:
@@ -51,16 +38,27 @@ class PostViewSet(viewsets.ModelViewSet):
     def create(self, request):
         content = request.POST['content']
         hashtag = request.POST['hashtag']
+        images = request.FILES.getlist('images')
+
+        if request.user.is_authenticated:
+            user = request.user
+
+        post = Post.objects.create(content=content, user=user)
 
         if hashtag:
-            hashtag = HashTagPost.objects.create(name=hashtag)
+            list_hashtag = hashtag.split(',')
+            for name in list_hashtag:
 
-        post = Post.objects.create(content=content, hashtag=hash)
+                post.hashtag.add(HashTagPost.objects.get_or_create(name=name)[0])
+
+        for image in images:
+            PostImage.objects.create(image=image, post=post)
+
         serializer = PostSerializer(post)
         return Response(serializer.data,
                         status=status.HTTP_200_OK)
 
-    @action(methods=['get'], detail=True, url_path='increase-vote')
+    @action(methods=['post'], detail=True, url_path='increase-vote')
     def increase_vote(self, request, pk=None):
         try:
             post = Post.objects.get(pk=pk)
@@ -74,7 +72,7 @@ class PostViewSet(viewsets.ModelViewSet):
         return Response(serializer.data,
                         status=status.HTTP_200_OK)
 
-    @action(methods=['get'], detail=True, url_path='decrease-vote')
+    @action(methods=['post'], detail=True, url_path='decrease-vote')
     def decrease_vote(self, request, pk=None):
         try:
             post = Post.objects.get(pk=pk)

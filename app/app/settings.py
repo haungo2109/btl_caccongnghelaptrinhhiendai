@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'social_network.apps.SocialNetworkConfig',
     'rest_framework',
     'oauth2_provider',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -94,11 +95,11 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'btl_caccongnghelaptrinhhiendai',
         'USER': 'root',
-        # 'PASSWORD': 'haungo',
-        'PASSWORD': '123456',
         'HOST': '127.0.0.1',
-        # 'PORT': '3308',
-        'PORT': '3306',
+        'PASSWORD': 'haungo',
+        'PORT': '3308',
+        # 'PASSWORD': '123456',
+        # 'PORT': '3306',
     }
 }
 
