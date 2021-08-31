@@ -3,6 +3,7 @@
   --main-color-secondary: #022b3a;
   --main-color-gray: #e5dfdf;
   --main-color-blue: #008aff;
+  --main-color-bg: #f8f9fa;
 }
 
 .main {
@@ -12,4 +13,7 @@
 }
 .main > div:nth-child(1) {
   min-height: 50px;
+}
+.main > div:nth-child(2) {
+  background-color: var(--main-color-bg);
 }

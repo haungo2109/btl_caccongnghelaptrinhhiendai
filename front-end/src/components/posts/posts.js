@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import api from "../../api/apiCalls"
 import PostItem from "./post-item";
+import './post.css'
 
 export default function Posts() {
 
@@ -16,8 +17,7 @@ export default function Posts() {
     }, [])
 
     return(
-        <div>
-            <a>test</a>
+        <div className="posts-container">
             {posts.map((p) => {
                 return <PostItem key={p.id} content={p.content} createdAt={p.create_at} hashtags={p.hashtag} user={p.user} vote={p.vote} />
             })}

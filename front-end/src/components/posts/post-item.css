@@ -1,0 +1,55 @@
+.post-item-container {
+    margin: 1em auto;
+    padding: 1em;
+    border: 1px solid var(--main-color-gray);
+    width: 50%;
+    background-color: var(--main-color-primary);
+}
+.post-item-container p {
+    margin: 0;
+}
+.avatar { 
+    margin-bottom: 0.5em;
+    display: flex;
+    /* border-bottom: 1px solid var(--main-color-gray); */
+}
+.avatar .avatar-body > p {
+    font-weight: bold;
+}
+.avatar .avatar-img {
+    display: flex;
+    margin-right: 0.5em;
+    justify-content: center;
+}
+.avatar .avatar-img img {
+    display: block;
+    width: 35px;
+    height: 35px;
+    margin: auto;
+    border-radius: 50%;
+}
+.avatar .date {
+    margin-top: 0.25em;
+    font-size: 14px;
+    opacity: 0.7;
+}
+.tool-bar {
+    margin-top: 0.5em;
+    padding-top: 0.25em;
+    display: flex;
+    border-top: 1px solid var(--main-color-gray);
+}
+.tool-bar .card {
+    padding: 0.25em;
+    text-align: center;
+    margin-right: 1em;
+    width: 50%;
+    cursor: pointer;
+    transition: 0.1s ease-in-out;
+}
+.tool-bar .card p svg {
+    margin-right: 0.5em;
+}
+.tool-bar .card:hover {
+    background-color: var(--main-color-bg);
+}
