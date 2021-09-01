@@ -2,27 +2,34 @@ import axios from "axios";
 import queryString from "query-string";
 
 let baseURL = "http://localhost:8000/";
-// let baseURL = "http://192.168.2.161:2000/api";
 
 const axiosClient = axios.create({
-    baseURL,
-    headers: {
-        "Content-Type": "application/json",
-    },
-    paramsSerializer: (params) => queryString.stringify(params),
+	baseURL,
+	headers: {
+		'Content-Type': 'application/json',
+        'Accept': "*/*"
+	},
+	// paramsSerializer: (params) => queryString.stringify(params),
 });
 
 //nhét token vào request
-// axiosClient.interceptors.request.use(async (config) => {
-//     config.headers["Authentication"] = localStorage.getItem("Authentication");
-//     return config;
-// });
+axiosClient.interceptors.request.use(async (config) => {
+    const Authentication = localStorage.getItem('Authentication');
+    
+    if (Authentication)
+        config.headers["Authentication"] = localStorage.getItem("Authentication");
+    
+    return config;
+});
 
 //nhét token vào respone
 axiosClient.interceptors.response.use(
     (res) => {
-        if (res?.data?.token)
-            localStorage.setItem("Authentication", res?.data?.token);
+        if (res?.data?.access_token)
+            localStorage.setItem(
+				'Authentication',
+				`Bearer ${res?.data?.access_token}`
+			);
         if (res?.data) {
             return res.data;
         }

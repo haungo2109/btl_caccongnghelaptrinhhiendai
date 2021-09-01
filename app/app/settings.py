@@ -100,10 +100,10 @@ DATABASES = {
         'NAME': 'btl_caccongnghelaptrinhhiendai',
         'USER': 'root',
         'HOST': '127.0.0.1',
-        # 'PASSWORD': 'haungo',
-        # 'PORT': '3308',
-        'PASSWORD': '123456',
-        'PORT': '3306',
+        'PASSWORD': 'haungo',
+        'PORT': '3308',
+        # 'PASSWORD': '123456',
+        # 'PORT': '3306',
     }
 }
 
@@ -150,5 +150,5 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
+CORS_ORIGIN_ALLOW_ALL = True
 APPEND_SLASH=False

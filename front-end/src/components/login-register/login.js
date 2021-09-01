@@ -1,26 +1,27 @@
 import React, { useState } from 'react';
-import api from '../../api/apiCalls';
+import { useHistory } from 'react-router-dom';
+import userApi, { ID, SECRET } from '../../api/userApi';
 import { Input } from './input';
 import './login.css'
 
 export function Login() {
-
-    let ErrorMsg = "";
-
+    let history = useHistory();
     const [username, setInfo] = useState("");
     const [password, setPassword] = useState("");
+    let ErrorMsg = "";
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        const formData = new FormData();
-        formData.append('grant_type', 'password')
+
+        const formData = new URLSearchParams();
         formData.append('username', username);
         formData.append('password', password);
-        formData.append('client_secret', process.env.REACT_APP_CLIENT_SECRET);
-        formData.append('client_id', process.env.REACT_APP_CLIENT_ID);
+        formData.append('grant_type', "password");
+        formData.append('client_secret', SECRET);
+        formData.append('client_id', ID);
 
-        api.user.login(formData).then(data => {
-            console.log(data);
+        userApi.login(formData).then(data => {
+            history.push('/')
         }).catch(error => window.alert('Sai tài khoản hoặc mật khẩu'))
     }
 
