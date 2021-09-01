@@ -39,7 +39,7 @@ export function Register() {
 
         api.user.register(formData).then(data => {
             console.log(data);
-        }).catch(error => console.log(error))
+        }).catch(error => console.log("Đăng ký thất bại, vui lòng thử lại sau"))
         
     }
 
