@@ -19,7 +19,7 @@ export default function Posts() {
     return(
         <div className="posts-container">
             {posts.map((p) => {
-                return <PostItem key={p.id} content={p.content} createdAt={p.create_at} hashtags={p.hashtag} user={p.user} vote={p.vote} />
+                return <PostItem key={p.id} content={p.content} createdAt={p.create_at} hashtags={p.hashtag} user={p.user} vote={p.vote} id={p.id}/>
             })}
         </div>
     )

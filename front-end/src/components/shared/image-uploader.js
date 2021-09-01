@@ -19,7 +19,7 @@ export default function ImageUploader({label, onImageSelect}) {
     }, [selectImage])
 
     const handleChange = (data) => {
-        if(!data.target.files || data.target.files.length == 0) {
+        if(!data.target.files || data.target.files.length === 0) {
             setSelectImage(undefined)
             return;
         }

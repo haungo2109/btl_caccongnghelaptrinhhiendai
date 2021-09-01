@@ -15,7 +15,14 @@ const api = {
 
     },
     user: {
-
+        register: (data) => {
+            return axiosClient.post('/user/', data, {
+                'Content-Type': 'multipart/form-data'
+            });
+        }, 
+        login: (data) => {
+            return axiosClient.post('/user/', data);
+        },
     }
 
 }

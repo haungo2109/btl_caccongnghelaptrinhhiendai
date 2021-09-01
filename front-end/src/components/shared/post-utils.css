@@ -1,0 +1,28 @@
+.util-container {
+    display: flex;
+    position: relative;
+    padding: 0.5em;
+}
+.util-container .post-util {
+    cursor: pointer;
+}
+.post-util-list {
+    position: absolute;
+    top: 100%;
+    right: calc(0.5em);
+    width: 180px;
+    padding: 0.5em;
+    background-color: var(--main-color-secondary);
+    color: var(--main-color-primary);
+    border-radius: 5px;
+}
+.post-util-list .util-item {
+    padding: 0.25em;
+}
+.post-util-list .util-item p {
+    cursor: pointer;
+}
+.post-util-list .util-item a {
+    text-decoration: none;
+    color: var(--main-color-primary);
+}
