@@ -21,7 +21,7 @@ const api = {
             });
         }, 
         login: (data) => {
-            return axiosClient.post('/user/', data);
+            return axiosClient.post('/o/token/', data);
         },
     }
 

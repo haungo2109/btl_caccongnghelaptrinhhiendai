@@ -13,12 +13,15 @@ export function Login() {
     const handleSubmit = (event) => {
         event.preventDefault();
         const formData = new FormData();
+        formData.append('grant_type', 'password')
         formData.append('username', username);
         formData.append('password', password);
+        formData.append('client_secret', process.env.REACT_APP_CLIENT_SECRET);
+        formData.append('client_id', process.env.REACT_APP_CLIENT_ID);
 
-        api.user.register(formData).then(data => {
+        api.user.login(formData).then(data => {
             console.log(data);
-        }).catch(error => console.log(error))
+        }).catch(error => window.alert('Sai tài khoản hoặc mật khẩu'))
     }
 
     return(
