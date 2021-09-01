@@ -10,6 +10,7 @@ export function Login() {
     const [password, setPassword] = useState("");
 
     const handleSubmit = (event) => {
+        event.preventDefault();
         if(!username) {
             ErrorMsg = "Vui lòng nhập tài khoản";
             return;
@@ -21,21 +22,22 @@ export function Login() {
 
         
         
-        event.preventDefault();
     }
 
     return(
         <div className="form-container">
-            <div className="form" onSubmit={handleSubmit}>
-                <h2>Đăng nhập</h2>
-                <form>
-                    <div>
-                        <Input name="Tài khoản" value={username} type="text" changeData={setInfo} />
-                        <Input name="Mật khẩu" value={password} type="password" changeData={setPassword} />
-                    </div>
-                    <input className="submit" disabled={!username || !password} type="submit" value="Đăng nhập" />
-                    <span className="error" >{ErrorMsg}</span>
-                </form>
+            <div className="out-layer">
+                <div className="form" onSubmit={handleSubmit}>
+                    <h2>Đăng nhập</h2>
+                    <form>
+                        <div>
+                            <Input name="Tài khoản" value={username} type="text" changeData={setInfo} />
+                            <Input name="Mật khẩu" value={password} type="password" changeData={setPassword} />
+                        </div>
+                        <input className="submit" disabled={!username || !password} type="submit" value="Đăng nhập" />
+                        <span className="error" >{ErrorMsg}</span>
+                    </form>
+                </div>
             </div>
         </div>
     )

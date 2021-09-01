@@ -15,7 +15,9 @@ const api = {
 
     },
     user: {
-
+        register: (data) => {
+            return axiosClient.post('/user', data);
+        }
     }
 
 }
