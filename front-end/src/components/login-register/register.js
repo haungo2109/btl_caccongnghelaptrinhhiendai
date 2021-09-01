@@ -6,7 +6,8 @@ import api from '../../api/apiCalls';
 
 export function Register() {
 
-    const [error, setError] = useState("")
+    const emailRe = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
     const [username, setInfo] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -17,6 +18,10 @@ export function Register() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        if(!emailRe.test(email)) {
+            window.alert("Vui lòng nhập Email đúng định dạng");
+            return;
+        }
         if(password !== confirmPassword) {
             window.alert("Mật khẩu và xác nhận mật khẩu không trùng nhau");
             setConfirmPassword("");
@@ -25,14 +30,16 @@ export function Register() {
         const formData = new FormData();
         formData.append('first_name', firstName);
         formData.append('last_name', lastName);
-        formData.append('avatar', avatar);
+        if(Object.keys(avatar).length !== 0) {
+            formData.append('avatar', avatar);
+        }
         formData.append('email', email);
         formData.append('username', username);
         formData.append('password', password);
 
         api.user.register(formData).then(data => {
             console.log(data);
-        })
+        }).catch(error => console.log(error))
         
     }
 
@@ -41,7 +48,7 @@ export function Register() {
             <div className="out-layer">
                 <div className="form">
                     <h2>Đăng Ký</h2>
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={handleSubmit} encType="multipart/form-data">
                         <div>
                             <ImageUploader label="Hình đại diện" onImageSelect={setAvatar} />
                             <Input name="Họ*" value={firstName} type="text" changeData={setFirstName} />
