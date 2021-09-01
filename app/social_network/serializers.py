@@ -1,5 +1,5 @@
 from rest_framework.fields import SerializerMethodField
-from rest_framework.relations import StringRelatedField
+from rest_framework.relations import StringRelatedField, SlugRelatedField, HyperlinkedIdentityField
 from rest_framework.serializers import ModelSerializer
 from rest_framework.response import Response
 from rest_framework import status
@@ -55,28 +55,15 @@ class PostImageSerializer(ModelSerializer):
 class PostSerializer(ModelSerializer):
     hashtag = HashTagSerializer(many=True, read_only=True)
     user = UserBaseInforSerializer(read_only=True)
-    post_images = StringRelatedField(many=True, read_only=True)
+    # post_images = StringRelatedField(many=True, read_only=True)
 
     class Meta:
         model = Post
         fields = ['id', 'content', 'create_at', 'vote',
-                  'hashtag', 'user', 'post_images']
+                  'hashtag', 'user', 'post_images', 'like']
 
         extra_kwargs = {
-            # 'hashtag': {'read_only': 'true'},
-            # 'user': {'read_only': 'true'},
+            'like': {'read_only': 'true'},
             'create_at': {'read_only': 'true'},
             'vote': {'read_only': 'true'},
         }
-
-    # def get_image(self, post):
-    #     return PostImage.objects.filter(post=post)
-
-    # def create(self, validated_data):
-    #     print(validated_data)
-    #     post = Post(**validated_data)
-    #
-    #     post.vote = 0
-    #     post.save()
-    #
-    #     return post

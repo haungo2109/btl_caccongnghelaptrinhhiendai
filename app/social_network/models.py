@@ -48,7 +48,7 @@ class Post(BaseInfo):
     active = models.BooleanField(default=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
     hashtag = models.ManyToManyField(HashTagPost, related_name='hashtag_posts', blank=True)
-
+    like = models.ManyToManyField(User, related_name='post_liked', blank=True)
 
 class Auction(BaseInfo):
     class StatusAuction(models.TextChoices):
