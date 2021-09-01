@@ -19,7 +19,10 @@ const api = {
             return axiosClient.post('/user/', data, {
                 'Content-Type': 'multipart/form-data'
             });
-        }
+        }, 
+        login: (data) => {
+            return axiosClient.post('/user/', data);
+        },
     }
 
 }

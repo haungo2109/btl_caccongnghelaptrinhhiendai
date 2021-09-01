@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import api from '../../api/apiCalls';
 import { Input } from './input';
 import './login.css'
 
@@ -11,23 +12,19 @@ export function Login() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        if(!username) {
-            ErrorMsg = "Vui lòng nhập tài khoản";
-            return;
-        }
-        if(!password) {
-            ErrorMsg = "Vui lòng nhập mật khẩu";
-            return;
-        }
+        const formData = new FormData();
+        formData.append('username', username);
+        formData.append('password', password);
 
-        
-        
+        api.user.register(formData).then(data => {
+            console.log(data);
+        }).catch(error => console.log(error))
     }
 
     return(
         <div className="form-container">
             <div className="out-layer">
-                <div className="form" onSubmit={handleSubmit}>
+                <div className="form" onSubmit={handleSubmit} encType="multipart/form-data">
                     <h2>Đăng nhập</h2>
                     <form>
                         <div>

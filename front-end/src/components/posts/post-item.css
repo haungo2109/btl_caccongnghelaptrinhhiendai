@@ -4,9 +4,16 @@
     border: 1px solid var(--main-color-gray);
     width: 50%;
     background-color: var(--main-color-primary);
+    position: relative;
 }
 .post-item-container p {
     margin: 0;
+}
+.post-item-container .utils {
+    position: absolute;
+    padding: 0.5em;
+    top: 0;
+    right: 0;
 }
 .avatar { 
     margin-bottom: 0.5em;
