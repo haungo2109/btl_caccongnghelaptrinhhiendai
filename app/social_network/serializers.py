@@ -1,8 +1,6 @@
 from rest_framework.fields import SerializerMethodField
-from rest_framework.relations import StringRelatedField, SlugRelatedField, HyperlinkedIdentityField
+from rest_framework.relations import StringRelatedField
 from rest_framework.serializers import ModelSerializer
-from rest_framework.response import Response
-from rest_framework import status
 from .models import *
 
 class UserSerializer(ModelSerializer):
@@ -13,7 +11,8 @@ class UserSerializer(ModelSerializer):
         extra_kwargs = {
             'password': {'write_only': 'true'},
             'phone': {'read_only': 'true'},
-            'birthday': {'read_only': 'true'},
+            'avatar': {'read_only': 'true'},
+            'address': {'read_only': 'true'},
         }
         # mấy cột t igrore thì khỏi cần phaair đưa lên, vd như thêm avatar nữa , tạo tk rồi ng ta cập nhật sau
     #     sau khi đăng nhập không gửi về token ?, đk không gửi về token, đăng nhập ms gửi, có token rồi ms lấy được thông tin user
@@ -45,29 +44,64 @@ class HashTagSerializer(ModelSerializer):
 
 
 class PostCommentSerializer(ModelSerializer):
+    user = UserBaseInforSerializer(read_only=True)
+
     class Meta:
         model = PostComment
-        fields = ['id', 'content']
-
-
-class PostImageSerializer(ModelSerializer):
-    class Meta:
-        model = PostImage
-        fileds = ['image', 'id']
+        fields = ['id', 'content', 'user', 'vote', 'create_at']
+        extra_kwargs = {
+            'create_at': {'read_only': 'true'},
+            'vote': {'read_only': 'true'},
+        }
 
 
 class PostSerializer(ModelSerializer):
     hashtag = HashTagSerializer(many=True, read_only=True)
     user = UserBaseInforSerializer(read_only=True)
-    # post_images = StringRelatedField(many=True, read_only=True)
+    post_images = StringRelatedField(many=True, read_only=True)
 
     class Meta:
         model = Post
         fields = ['id', 'content', 'create_at', 'vote',
                   'hashtag', 'user', 'post_images', 'like']
-
         extra_kwargs = {
             'like': {'read_only': 'true'},
             'create_at': {'read_only': 'true'},
             'vote': {'read_only': 'true'},
+        }
+
+
+class CategorySerializer(ModelSerializer):
+    class Meta:
+        model = CategoryAuction
+        fields = ['id', 'name']
+
+
+class AuctionCommentSerializer(ModelSerializer):
+    user = UserBaseInforSerializer(read_only=True)
+
+    class Meta:
+        model = AuctionComment
+        fields = ['id', 'content', 'user', 'vote', 'create_at']
+        extra_kwargs = {
+            'create_at': {'read_only': 'true'},
+            'vote': {'read_only': 'true'},
+        }
+
+
+class AuctionSerializer(ModelSerializer):
+    category = CategorySerializer(read_only=True)
+    user = UserBaseInforSerializer(read_only=True)
+    auction_images = StringRelatedField(many=True, read_only=True)
+
+    class Meta:
+        model = Auction
+        fields = ['id', 'content', 'create_at', 'title', 'base_price', 'condition' ,'vote', 'deadline',
+                  'accept_price','status_auction', 'category', 'user', 'like', 'auction_images']
+        extra_kwargs = {
+            'like': {'read_only': 'true'},
+            'create_at': {'read_only': 'true'},
+            'status_auction': {'read_only': 'true'},
+            'vote': {'read_only': 'true'},
+            'accept_price': {'read_only': 'true'},
         }
