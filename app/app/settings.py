@@ -100,10 +100,10 @@ DATABASES = {
         'NAME': 'btl_caccongnghelaptrinhhiendai',
         'USER': 'root',
         'HOST': '127.0.0.1',
-        'PASSWORD': 'haungo',
-        'PORT': '3308',
-        # 'PASSWORD': '123456',
-        # 'PORT': '3306',
+        # 'PASSWORD': 'haungo',
+        # 'PORT': '3308',
+        'PASSWORD': '123456',
+        'PORT': '3306',
     }
 }
 

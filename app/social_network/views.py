@@ -19,9 +19,10 @@ class UserViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.RetrieveAPI
     parser_classes = [MultiPartParser, ]
 
     def get_permissions(self):
-        if self.action == 'create':
-            return [permissions.AllowAny()]
-        return [IsOwner()]
+        # if self.action == 'create':
+        #     return
+        # return [IsOwner()]
+        return [permissions.AllowAny()]
 #vấn đề chỉ ng chứng thực nào thì ms có quyền sửa thông tin đó
 
 
