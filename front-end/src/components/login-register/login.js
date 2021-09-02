@@ -13,7 +13,7 @@ export function Login() {
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        const formData = new URLSearchParams();
+        const formData = new FormData();
         formData.append('username', username);
         formData.append('password', password);
         formData.append('grant_type', "password");
@@ -21,6 +21,7 @@ export function Login() {
         formData.append('client_id', ID);
 
         userApi.login(formData).then(data => {
+            // const userData = await userApi.getUserInfo(data)
             history.push('/')
         }).catch(error => window.alert('Sai tài khoản hoặc mật khẩu'))
     }

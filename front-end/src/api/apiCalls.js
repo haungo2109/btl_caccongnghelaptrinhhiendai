@@ -3,7 +3,7 @@ import axiosClient from "./axiosClient"
 const api = {
     post: {
         getListByPage: () => {
-            return axiosClient.get(`/post`)
+            return axiosClient.get(`/post/`)
         }
     },
     auction: {

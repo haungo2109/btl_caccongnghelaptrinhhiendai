@@ -10,6 +10,8 @@ import MainPage from './components/main-page/main-page';
 import { Login } from './components/login-register/login';
 import { Register } from './components/login-register/register';
 import Posts from './components/posts/posts';
+import ProtectedRoute from './route/protected-route';
+import UserPage from './components/user/user';
 
 function App() {
   return (
@@ -24,6 +26,7 @@ function App() {
               <Route exact path="/auctions" component={Auctions} ></Route>
               <Route exact path="/login" component={Login} ></Route>
               <Route exact path="/register" component={Register} ></Route>
+              <ProtectedRoute exact path="/user" component={UserPage}></ProtectedRoute>
               <Route exact path="/" component={MainPage}></Route>
           </Switch>
         </div>

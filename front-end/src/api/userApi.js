@@ -22,7 +22,11 @@ const userApi = {
 	},
 	register: (data) => {
 		const url = '/user/';
-		return axiosClient.post(url, data);
+		return axiosClient.post(url, data, config);
 	},
+	getUserInfo: (id) => {
+		const url = `/user/${id}`
+		return axiosClient.get(url);
+	}
 };
 export default userApi;
