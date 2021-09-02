@@ -29,7 +29,7 @@ const userApi = {
 		return axiosClient.get(url);
 	},
 	getCurrentUserInfo: () => {
-		const url = `/user/current-user`
+		const url = `/user/current-user/`
 		return axiosClient.get(url);
 	},
 };

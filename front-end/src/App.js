@@ -12,8 +12,25 @@ import { Register } from './components/login-register/register';
 import Posts from './components/posts/posts';
 import ProtectedRoute from './route/protected-route';
 import UserPage from './components/user/user';
+import userApi from './api/userApi';
+import { useDispatch, useStore } from 'react-redux';
 
 function App() {
+
+  const store = useStore();
+  const user = store.getState();
+  const dispatch = useDispatch()
+
+  //pursist state
+  if(localStorage.getItem('Authorization') && Object.keys(user).length == 0) {
+    userApi.getCurrentUserInfo().then(data => {
+      dispatch({
+        type: 'login',
+        payload: data
+      })
+    })
+  }
+
   return (
     <div className="main">
       <Router>
