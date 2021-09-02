@@ -152,3 +152,41 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ORIGIN_ALLOW_ALL = True
 APPEND_SLASH=False
+
+SWAGGER_SETTINGS = {
+   'SECURITY_DEFINITIONS': {
+       'OAuth2': {
+            'type': 'oauth2',
+            'authorizationUrl': '/o/token',
+            'tokenUrl': '/o/token/',
+            'flow': 'password',
+            'scopes': {
+                'read:groups': 'read groups',
+            }
+       },
+   },
+    'OAUTH2_CONFIG': {
+        'clientId': 'TPLrxQE8mF9slRzevZSNbNCLQXDSSbJrnIprMCNM',
+        'clientSecret': 'QRHKVKgNnYo8GmwvxUfFtJRAtvtoLTD4mDoNtWzxulgFhrY8rssWssFglvAvZxZpm2vHHBY2nIJDHETm3SOONxD0ADRKL0ald5Ip8hCoUeOAxQn8KipFFjkU64LlzlCQ',
+        'appName': 'social-app',
+        'username': 'haungo1',
+        'password': '123456',
+        'grant_type': 'password'
+   },
+}
+#
+# SWAGGER_SETTINGS = {
+#     'USE_SESSION_AUTH': False,
+#     'SECURITY_DEFINITIONS': {
+#         'OAuth2': {
+#             'type': 'oauth2',
+#             'authorizationUrl': '/o/token',
+#             'tokenUrl': '/o/token/',
+#             'flow': 'accessCode',
+#             'scopes': {
+#                 'read:groups': 'read groups',
+#             }
+#         },
+#     },
+#
+# }

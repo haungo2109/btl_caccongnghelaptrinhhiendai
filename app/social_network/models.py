@@ -50,6 +50,7 @@ class Post(BaseInfo):
     hashtag = models.ManyToManyField(HashTagPost, related_name='hashtag_posts', blank=True)
     like = models.ManyToManyField(User, related_name='post_liked', blank=True)
 
+
 class Auction(BaseInfo):
     class StatusAuction(models.TextChoices):
         success = 'succ', _('Sản phẩm đã được giao dịch thành công')
@@ -67,6 +68,8 @@ class Auction(BaseInfo):
     status_auction = models.CharField(max_length=20, choices=StatusAuction.choices, default=StatusAuction.auction)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='auctions')
     category = models.ForeignKey(CategoryAuction, on_delete=models.SET_NULL, null=True)
+    like = models.ManyToManyField(User, related_name='auction_liked', blank=True)
+
 
 class PostComment(BaseInfo):
     vote = models.IntegerField(default=0)

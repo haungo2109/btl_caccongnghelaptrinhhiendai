@@ -13,6 +13,7 @@ schema_view = get_schema_view(
         contact=openapi.Contact(email="ngovanhau1999@gmail.com"),
         license=openapi.License(name="Hau Dung IT02 - HCM City Open University"),
     ),
+
     public=True,
     permission_classes=(permissions.AllowAny,),
 )
