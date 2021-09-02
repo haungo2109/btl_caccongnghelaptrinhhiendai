@@ -14,10 +14,10 @@ const axiosClient = axios.create({
 
 //nhét token vào request
 axiosClient.interceptors.request.use(async (config) => {
-    const Authentication = localStorage.getItem('Authentication');
+    const Authentication = localStorage.getItem('Authorization');
     
     if (Authentication)
-        config.headers["Authentication"] = localStorage.getItem("Authentication");
+        config.headers["Authorization"] = localStorage.getItem("Authorization");
     
     return config;
 });
@@ -27,7 +27,7 @@ axiosClient.interceptors.response.use(
     (res) => {
         if (res?.data?.access_token)
             localStorage.setItem(
-				'Authentication',
+				'Authorization',
 				`Bearer ${res?.data?.access_token}`
 			);
         if (res?.data) {

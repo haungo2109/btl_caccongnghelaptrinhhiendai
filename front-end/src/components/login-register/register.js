@@ -5,9 +5,11 @@ import ImageUploader from '../shared/image-uploader';
 import api from '../../api/apiCalls';
 import userApi, { ID, SECRET } from '../../api/userApi';
 import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 export function Register() {
 
+    let dispatch = useDispatch();
     let history = useHistory()
 
     const emailRe = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -50,7 +52,13 @@ export function Register() {
             formDa.append('client_secret', SECRET);
             formDa.append('client_id', ID);
             userApi.login(formDa).then(data => {
-                history.push('/');
+                userApi.getCurrentUserInfo().then(data => {
+                    dispatch({
+                        type: 'login',
+                        payload: data
+                    })
+                    history.push('/')
+                })
             }).catch(error => window.alert("Đăng ký thành công, đăng nhập thất bại, vui lòng thử lại sau"))
         }).catch(error => window.alert("Đăng ký thất bại, vui lòng thử lại sau"))
         

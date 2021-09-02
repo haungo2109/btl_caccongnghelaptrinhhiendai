@@ -27,6 +27,10 @@ const userApi = {
 	getUserInfo: (id) => {
 		const url = `/user/${id}`
 		return axiosClient.get(url);
-	}
+	},
+	getCurrentUserInfo: () => {
+		const url = `/user/current-user`
+		return axiosClient.get(url);
+	},
 };
 export default userApi;
