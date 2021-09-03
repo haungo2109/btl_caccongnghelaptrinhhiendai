@@ -17,6 +17,9 @@ class UserSerializer(ModelSerializer):
             'avatar': {'read_only': 'true'},
             'address': {'read_only': 'true'},
         }
+        # mấy cột t igrore thì khỏi cần phaair đưa lên, vd như thêm avatar nữa , tạo tk rồi ng ta cập nhật sau
+    #     sau khi đăng nhập không gửi về token ?, đk không gửi về token, đăng nhập ms gửi, có token rồi ms lấy được thông tin user
+
 
     def create(self, validated_data):
         user = User(**validated_data)

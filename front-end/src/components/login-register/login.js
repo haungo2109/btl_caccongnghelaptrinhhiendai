@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
+import { useDispatch, useStore } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import userApi, { ID, SECRET } from '../../api/userApi';
 import { Input } from './input';
 import './login.css'
 
 export function Login() {
+    const dispatch = useDispatch();
+
     let history = useHistory();
     const [username, setInfo] = useState("");
     const [password, setPassword] = useState("");
@@ -21,7 +24,13 @@ export function Login() {
         formData.append('client_id', ID);
 
         userApi.login(formData).then(data => {
-            history.push('/')
+            userApi.getCurrentUserInfo().then(data => {
+                dispatch({
+                    type: 'login',
+                    payload: data
+                })
+                history.push('/')
+            })
         }).catch(error => window.alert('Sai tài khoản hoặc mật khẩu'))
     }
 
