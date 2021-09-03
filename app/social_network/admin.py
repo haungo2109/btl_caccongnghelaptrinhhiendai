@@ -74,6 +74,11 @@ class AuctionAdmin(admin.ModelAdmin):
 class HashTagPostAdmin(admin.ModelAdmin):
     list_display = ['id', 'name']
 
+
+class CategoryAuctionAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name']
+
+
 class SocialNetworkAdminSite(admin.AdminSite):
     site_header = 'SOCIAL NETWORK ABOUT AUCTION'
 
@@ -95,7 +100,7 @@ admin_site = SocialNetworkAdminSite('app')
 admin_site.register(Group)
 admin_site.register(Permission)
 admin_site.register(User, UserAdmin)
-admin_site.register(CategoryAuction)
+admin_site.register(CategoryAuction, CategoryAuctionAdmin)
 admin_site.register(HashTagPost, HashTagPostAdmin)
 admin_site.register(Post, PostAdmin)
 admin_site.register(Auction, AuctionAdmin)

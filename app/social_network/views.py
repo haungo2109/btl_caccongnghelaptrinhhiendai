@@ -3,8 +3,9 @@ from django.shortcuts import render
 from rest_framework import viewsets, permissions, status, generics
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.parsers import MultiPartParser
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.views import APIView
+from django.db import IntegrityError
 
 from .models import *
 from .serializers import *
@@ -139,41 +140,55 @@ class PostCommentAPIView(APIView):
                         status=status.HTTP_200_OK)
 
 
+class CategoryViewSet(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView):
+    queryset = CategoryAuction.objects.all()
+    serializer_class = CategoryAuctionSerializer
+
+    def get_permissions(self):
+        if self.action == 'create':
+            return [permissions.IsAdminUser]
+
+        return [permissions.AllowAny()]
+
+
 class AuctionViewSet(viewsets.ModelViewSet):
-    queryset = Auction.objects.filter(active=True)
+    queryset = Auction.objects.filter(active=True).select_related("user").select_related("category")
     serializer_class = AuctionSerializer
     parser_classes = [MultiPartParser, ]
+    basename = "/"
 
     def get_permissions(self):
         if self.action in ['list', 'retrieve']:
             return [permissions.AllowAny()]
 
-        return [IsOwner()]
+        return [permissions.IsAuthenticated(), IsOwner()]
 
     def create(self, request):
-        content = request.POST.pop('content')
-        name_category = request.POST.pop('category')
-        images = request.FILES.getlist('images')
+        form_data = dict(request.POST.dict())
+        category_id = form_data.pop('category')
 
-        category = CategoryAuction.objects.get_or_create(name=name_category)[0]
-        auction = Auction.objects.create(content=content, user=request.user, category=category, **request.POST)
+        category = CategoryAuction.objects.get(id=category_id)
+        auction = Auction.objects.create(user=request.user, category=category, **form_data)
 
-        for image in images:
-            AuctionImage.objects.create(image=image, auction=auction)
+        if request.FILES:
+            images = request.FILES.getlist('images')
+            for image in images:
+                AuctionImage.objects.create(image=image, auction=auction)
 
-        serializer = PostSerializer(auction)
+        serializer = AuctionSerializer(auction)
         return Response(serializer.data,
                         status=status.HTTP_200_OK)
 
     @action(methods=['get'], detail=False, url_path='owner')
     def get_owner_post(self, request):
+
         try:
             auctions = Auction.objects.filter(user__id=request.user.id)
 
         except Auction.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        serializer = PostSerializer(auctions, many=True)
+        serializer = AuctionSerializer(auctions, many=True)
         return Response(serializer.data,
                         status=status.HTTP_200_OK)
 
@@ -227,7 +242,7 @@ class AuctionCommentAPIView(APIView):
         if self.request.method == 'GET':
             return [permissions.AllowAny()]
 
-        return [permissions.IsAuthenticated()]
+        return [permissions.IsAuthenticated(), IsOwner()]
 
     def get(self, request, auction_id):
         try:
@@ -238,3 +253,22 @@ class AuctionCommentAPIView(APIView):
         serializer = AuctionCommentSerializer(comments, many=True)
         return Response(serializer.data,
                         status=status.HTTP_200_OK)
+
+    # def post(self, request, auction_id):
+    #     content = request.data.get('content')
+    #     price = request.data.get('price')
+    #
+    #     if content is not None and price is not None:
+    #         try:
+    #             auction = Auction.objects.get(pk=auction_id)
+    #             auction_comment = AuctionComment.objects.create(content=content, price=price,
+    #                                        user=request.user, auction=auction)
+    #         except IntegrityError:
+    #             err_msg = "Lesson does not exist!"
+    #         else:
+    #             return Response(AuctionCommentSerializer(auction_comment).data,
+    #                             status=status.HTTP_201_CREATED)
+    #     else:
+    #         err_msg = "Content and Price is required!!!"
+    #
+    #     return Response(data={'error_msg': err_msg}, status=status.HTTP_400_BAD_REQUEST)

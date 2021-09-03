@@ -15,7 +15,7 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-MEDIA_ROOT = '%s/social_network/static/' % BASE_DIR
+MEDIA_ROOT = '%s/social_network/' % BASE_DIR
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -60,8 +60,22 @@ MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True # If this is used then `CORS_ALLOWED_ORIGINS` will not have any effect
-# CORS_ALLOW_CREDENTIALS = True
+# CORS_ALLOW_ALL_ORIGINS = True
+CORS_ORIGIN_ALLOW_ALL = True
+
+
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "accept-encoding",
+    "authorization",
+    "content-type",
+    "dnt",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+]
+
 ROOT_URLCONF = 'app.urls'
 
 TEMPLATES = [
@@ -85,7 +99,7 @@ WSGI_APPLICATION = 'app.wsgi.application'
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': '2',
+    'PAGE_SIZE': '5',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
     )
@@ -150,7 +164,6 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-CORS_ORIGIN_ALLOW_ALL = True
 APPEND_SLASH=False
 
 SWAGGER_SETTINGS = {
@@ -174,19 +187,3 @@ SWAGGER_SETTINGS = {
         'grant_type': 'password'
    },
 }
-#
-# SWAGGER_SETTINGS = {
-#     'USE_SESSION_AUTH': False,
-#     'SECURITY_DEFINITIONS': {
-#         'OAuth2': {
-#             'type': 'oauth2',
-#             'authorizationUrl': '/o/token',
-#             'tokenUrl': '/o/token/',
-#             'flow': 'accessCode',
-#             'scopes': {
-#                 'read:groups': 'read groups',
-#             }
-#         },
-#     },
-#
-# }

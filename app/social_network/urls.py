@@ -7,7 +7,8 @@ from rest_framework.routers import DefaultRouter
 router = DefaultRouter()
 router.register('post', views.PostViewSet)
 router.register('user', views.UserViewSet)
-router.register('auction', views.AuctionViewSet)
+router.register('auction', views.AuctionViewSet, basename='auction')
+router.register('category', views.CategoryViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

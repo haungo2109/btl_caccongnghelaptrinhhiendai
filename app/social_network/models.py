@@ -93,7 +93,7 @@ class AuctionComment(BaseInfo):
         ordering = ['create_at', 'price']
 
 class PostImage(models.Model):
-    image = models.ImageField(upload_to='post_images/%Y/%m', default=None, null=True)
+    image = models.ImageField(upload_to='static/post_images/%Y/%m', default=None, null=True)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='post_images')
 
     def __str__(self):
@@ -102,7 +102,7 @@ class PostImage(models.Model):
 
 
 class AuctionImage(models.Model):
-    image = models.ImageField(upload_to='auction_images/%Y/%m', default=None, null=True)
+    image = models.ImageField(upload_to='static/auction_images/%Y/%m', default=None, null=True)
     auction = models.ForeignKey(Auction, on_delete=models.CASCADE, related_name='auction_images')
 
     def __str__(self):
