@@ -9,3 +9,4 @@ body {
 #root {
   min-height: 100vh;
 }
+textarea, input, button, select { font-family: inherit; font-size: inherit; }

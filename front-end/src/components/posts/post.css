@@ -1,5 +1,13 @@
 .posts-container {
     display: flex;
     flex-direction: column;
+}
+.posts-body-container {
     margin: 1em auto;
+    display: flex;
+    flex-direction: column;
+}
+.temp-input { 
+    flex: 1;
+    padding: 1em;
 }

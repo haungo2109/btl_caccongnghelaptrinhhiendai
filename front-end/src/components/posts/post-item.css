@@ -1,5 +1,7 @@
 .post-item-container {
     margin: 1em auto;
+    display: flex;
+    flex-direction: column;
     padding: 1em;
     border: 1px solid var(--main-color-gray);
     width: 50%;

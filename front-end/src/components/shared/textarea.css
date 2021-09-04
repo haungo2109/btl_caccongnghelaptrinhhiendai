@@ -1,0 +1,11 @@
+.textarea {
+    display: flex;
+}
+.textarea textarea {
+    resize: none;
+    padding: 1em;
+    width: 100%;
+    font-size: 16px;
+    border: 1px solid var(--main-color-secondary);
+    /* background-color: var(--main-color-gray); */
+}

@@ -1,0 +1,15 @@
+@import url('./post-item.css');
+
+.post-item-container .post-utils{
+    display: flex;
+    margin-top: 1em;
+}
+.post-item-container .post-utils .button {
+    flex: 1;
+}
+.post-item-container .post-utils .button:first-child {
+    margin-left: 0;
+}
+.post-item-container .post-utils .button:last-child {
+    margin-right: 0;
+}

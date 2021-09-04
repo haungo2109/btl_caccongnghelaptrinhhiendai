@@ -1,6 +1,7 @@
 import { faComment, faHeart } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import moment from 'moment'
+import { useStore } from 'react-redux'
 import PostUtil from '../shared/post-utils'
 import './post-item.css'
 
@@ -8,14 +9,24 @@ import './post-item.css'
 
 export default function PostItem({content, createdAt, vote, user, hashtags, id}) {
 
+    const store = useStore();
+    const userStore = store.getState();
+
     let deleteItem = () => {
         console.log('delete')
     }
+    let report = () => {
+        console.log('report')
+    }
 
-    const utilItems = [
-        {name: 'Chỉnh sửa bài viết', link: `/post/${id}`},
-        {name: 'Xóa bài viết', action: deleteItem}
+    let utilItems = [
+        {name: 'Báo cáo', action: report}
     ]
+
+    if(userStore.id == id) {
+        utilItems.push({name: 'Chỉnh sửa bài viết', link: `/post/${id}`});
+        utilItems.push({name: 'Xóa bài viết', action: deleteItem});
+    }
 
     return (
         <div className="post-item-container">

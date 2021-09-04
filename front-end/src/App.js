@@ -28,6 +28,8 @@ function App() {
         type: 'login',
         payload: data
       })
+    }).catch(err => {
+      console.log('Hết hạn phiên làm việc')
     })
   }
 
@@ -40,6 +42,7 @@ function App() {
         <div>
           <Switch>
               <Route exact path="/posts" component={Posts} ></Route>
+              <Route exact path="/posts/*" component={Posts} ></Route>
               <Route exact path="/auctions" component={Auctions} ></Route>
               <Route exact path="/login" component={Login} ></Route>
               <Route exact path="/register" component={Register} ></Route>
