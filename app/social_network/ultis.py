@@ -1,4 +1,5 @@
 from rest_framework import permissions
+from rest_framework.pagination import PageNumberPagination
 
 
 def user_directory_path(instance, filename):
@@ -18,3 +19,9 @@ class IsOwner(permissions.BasePermission):
             return obj.user.username == request.user.username
         else:
             False
+
+
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 100
+    page_size_query_param = 'page_size'
+    max_page_size = 1000

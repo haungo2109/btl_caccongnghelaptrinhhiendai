@@ -6,10 +6,10 @@ from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.views import APIView
 from django.db import IntegrityError
-
 from .models import *
 from .serializers import *
-from .ultis import IsOwner
+from .ultis import IsOwner, StandardResultsSetPagination
+from datetime import datetime
 
 
 def logout_user(request):
@@ -140,19 +140,14 @@ class PostCommentAPIView(APIView):
                         status=status.HTTP_200_OK)
 
 
-class CategoryViewSet(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView):
+class CategoryViewSet(viewsets.ViewSet, generics.ListAPIView):
     queryset = CategoryAuction.objects.all()
     serializer_class = CategoryAuctionSerializer
-
-    def get_permissions(self):
-        if self.action == 'create':
-            return [permissions.IsAdminUser]
-
-        return [permissions.AllowAny()]
+    pagination_class = StandardResultsSetPagination
 
 
 class AuctionViewSet(viewsets.ModelViewSet):
-    queryset = Auction.objects.filter(active=True).select_related("user").select_related("category")
+    queryset = Auction.objects.filter(active=True).select_related("user").select_related("buyer").select_related("category")
     serializer_class = AuctionSerializer
     parser_classes = [MultiPartParser, ]
     basename = "/"
@@ -160,8 +155,12 @@ class AuctionViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.action in ['list', 'retrieve']:
             return [permissions.AllowAny()]
+        if self.action in ['create']:
+            return [permissions.IsAuthenticated()]
+        if self.action in ['update', 'partial_update', 'destroy']:
+            return [permissions.IsAuthenticated() ,IsOwner()]
 
-        return [permissions.IsAuthenticated(), IsOwner()]
+        return [permissions.IsAuthenticated()]
 
     def create(self, request):
         form_data = dict(request.POST.dict())
@@ -225,9 +224,13 @@ class AuctionViewSet(viewsets.ModelViewSet):
     @action(methods=['post'], detail=True, url_path='comments')
     def add_comment(self, request, pk=None):
         content = request.POST['content']
+        price = request.POST['price']
+
         try:
-            auction = Auction.objects.get(pk=pk)
-            comment = AuctionComment.objects.create(content=content, auction=auction, user=request.user)
+            comment, created = AuctionComment.objects.update_or_create(
+                user=request.user, auction=self.get_object(),
+                defaults={'content': content, 'price': price},
+            )
 
         except Auction.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -235,6 +238,63 @@ class AuctionViewSet(viewsets.ModelViewSet):
         serializer = AuctionCommentSerializer(comment)
         return Response(serializer.data,
                         status=status.HTTP_200_OK)
+
+    @action(methods=['post'], detail=True, url_path='fail-auction', permission_classes=[IsOwner()])
+    def success_auction(self, request, pk=None):
+        try:
+            auction = self.get_object()
+            auction.status_auction = StatusAuction.fail
+            auction.save()
+
+        except Auction.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = AuctionSerializer(auction)
+        return Response(serializer.data,
+                        status=status.HTTP_200_OK)
+
+    @action(methods=['post'], detail=True, url_path=r'comment/(?P<comment_id>\d+)/state/(?P<state>\w+)', permission_classes=[IsOwner()])
+    def set_status_transaction(self, request, *args, **kwargs):
+        comment_id = kwargs.get('comment_id')
+
+        try:
+            state_comment = StatusAuction[kwargs.get('state')]
+            if state_comment == StatusTransaction.none:
+                return Response(status=status.HTTP_400_BAD_REQUEST,
+                                data={"error_msg": "You only choose state auction comment: in_process, fail, success"})
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={"error_msg": "Wrong state of StatusAuction"})
+
+        auction = self.get_object()
+        comment = AuctionComment.objects.get(pk=comment_id)
+
+        if state_comment == StatusTransaction.in_process and comment.status_transaction == StatusTransaction.none:
+            check_exsit = auction.auction_comments.filter(status_transaction=StatusAuction.in_process)
+            if check_exsit.exists():
+                return Response(status=status.HTTP_400_BAD_REQUEST, data={"error_msg": "Any comment was in_process"})
+            comment.status_transaction = state_comment
+            auction.status_auction = StatusAuction.in_process
+        elif state_comment == StatusTransaction.fail and comment.status_transaction == StatusTransaction.in_process:
+            comment.status_transaction = state_comment
+            auction.status_auction = StatusAuction.auction
+        elif state_comment == StatusTransaction.success and comment.status_transaction == StatusTransaction.in_process :
+            comment.status_transaction = state_comment
+            auction.status_auction = StatusAuction.success
+            auction.accept_price = comment.price
+            auction.buyer = comment.user
+            auction.date_success = datetime.now()
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={"error_msg": "State of StatusAuction is not suitable"})
+
+        comment.save()
+        auction.save()
+
+        serializer = StatusSerializer(data={"status_auction": auction.status_auction,
+                                            "status_transaction": comment.status_transaction})
+        if serializer.is_valid():
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={"error_msg": "Error parser response"})
 
 
 class AuctionCommentAPIView(APIView):
@@ -254,7 +314,7 @@ class AuctionCommentAPIView(APIView):
         return Response(serializer.data,
                         status=status.HTTP_200_OK)
 
-    # def post(self, request, auction_id):
+    # def update(self, request, auction_id):
     #     content = request.data.get('content')
     #     price = request.data.get('price')
     #

@@ -51,24 +51,27 @@ class Post(BaseInfo):
     like = models.ManyToManyField(User, related_name='post_liked', blank=True)
 
 
-class Auction(BaseInfo):
-    class StatusAuction(models.TextChoices):
-        success = 'succ', _('Sản phẩm đã được giao dịch thành công')
-        fail = 'fail', _('Dấu giá sản phẩm đã bị hủy')
-        auction = 'being auctioned', _('Sản phẩm đang được đấu giá')
-        in_process = 'in process', _('Sản phẩm trang trong quá trình chuyển giao khách hàng')
+class StatusAuction(models.TextChoices):
+    success = 'succ', _('Sản phẩm đã được giao dịch thành công')
+    fail = 'fail', _('Dấu giá sản phẩm đã bị hủy')
+    auction = 'being auctioned', _('Sản phẩm đang được đấu giá')
+    in_process = 'in process', _('Sản phẩm trang trong quá trình chuyển giao khách hàng')
 
+
+class Auction(BaseInfo):
     title = models.CharField(max_length=225, default='Auction')
     active = models.BooleanField(default=True)
     vote = models.IntegerField(default=0)
     base_price = models.FloatField(default=0)
     condition = models.TextField(blank=True, null=True, default="No condition")
     deadline = models.DateTimeField()
+    date_success = models.DateTimeField(null=True)
     accept_price = models.FloatField(null=True, default=0)
     status_auction = models.CharField(max_length=20, choices=StatusAuction.choices, default=StatusAuction.auction)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='auctions')
     category = models.ForeignKey(CategoryAuction, on_delete=models.SET_NULL, null=True)
     like = models.ManyToManyField(User, related_name='auction_liked', blank=True)
+    buyer = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='auction_bought', null=True)
 
 
 class PostComment(BaseInfo):
@@ -77,15 +80,17 @@ class PostComment(BaseInfo):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='post_comments')
 
 
-class AuctionComment(BaseInfo):
-    class StatusTransaction(models.TextChoices):
-        success = 'succ', _('Giao dịch thành công')
-        fail = 'fail', _('Giao dịch đã bị hủy')
-        in_process = 'in process', _('Hai bên đag giao dịch')
-        none = 'none', _('Chưa giao dịch')
+class StatusTransaction(models.TextChoices):
+    success = 'succ', _('Giao dịch thành công')
+    fail = 'fail', _('Giao dịch đã bị hủy')
+    in_process = 'in process', _('Hai bên đag giao dịch')
+    none = 'none', _('Chưa giao dịch')
 
+
+class AuctionComment(BaseInfo):
     price = models.FloatField()
-    status_transaction = models.CharField(max_length=11, choices=StatusTransaction.choices, default=StatusTransaction.none)
+    status_transaction = models.CharField(max_length=25, choices=StatusTransaction.choices,
+                                          default=StatusTransaction.none)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     auction = models.ForeignKey(Auction, related_name='auction_comments', on_delete=models.CASCADE, default='anonymous')
 

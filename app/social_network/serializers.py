@@ -1,7 +1,7 @@
 from rest_framework.fields import SerializerMethodField
 from rest_framework.relations import StringRelatedField
 from rest_framework.serializers import ModelSerializer, ImageField, CharField, IntegerField, \
-    FileField, ListSerializer, FloatField
+    FileField, ListSerializer, FloatField, Serializer
 from .models import *
 import re
 
@@ -110,8 +110,10 @@ class AuctionCommentSerializer(ModelSerializer):
 
 class AuctionSerializer(ModelSerializer):
     user = UserBaseInforSerializer(read_only=True)
+    buyer = UserBaseInforSerializer(read_only=True)
     auction_images = SerializerMethodField(read_only=True)
     images = ImageField(allow_null=True, use_url=False, required=False, write_only=True)
+    price = IntegerField(write_only=True, required=False, help_text="This only use to post comment")
 
     def get_auction_images(self, obj):
         return AuctionImageSerializer(obj.auction_images.all(), many=True).data
@@ -119,9 +121,14 @@ class AuctionSerializer(ModelSerializer):
     class Meta:
         model = Auction
         fields = ['id', 'content', 'create_at', 'title', 'base_price', 'condition', 'vote', 'deadline',
-                  'user', 'images', 'auction_images', 'like',
-                  'accept_price', 'status_auction', 'category', ]
-        read_only_fields = ('created_by', 'like', 'status_auction', 'vote', 'accept_price')
+                  'user', 'images', 'auction_images', 'like', 'buyer', 'date_success',
+                  'accept_price', 'status_auction', 'category', 'price']
+        read_only_fields = ('created_by', 'like', 'status_auction', 'vote', 'accept_price', 'date_success')
         extra_kwargs = {
             'deadline': {'required': False},
         }
+
+
+class StatusSerializer(Serializer):
+    status_auction = CharField(max_length=20)
+    status_transaction = CharField(max_length=25)
