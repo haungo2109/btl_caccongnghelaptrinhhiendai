@@ -31,7 +31,7 @@ export default function Posts() {
         history.push(`${url}${path}`)
     }
 
-    if(user) {
+    if(user && user?.username) {
         createPostEl = (
             <div className="posts-container">
                 <div className="post-item-container" onClick={() => navigate('/create')}>
@@ -51,7 +51,18 @@ export default function Posts() {
                     {createPostEl}
                     <div className="posts-container">
                         {posts.map((p) => {
-                            return <PostItem key={p.id} content={p.content} createdAt={p.create_at} hashtags={p.hashtag} user={p.user} vote={p.vote} id={p.id}/>
+                            return (
+								<PostItem
+									key={p.id}
+									images={p.post_images}
+									content={p.content}
+									createdAt={p.create_at}
+									hashtags={p.hashtag}
+									user={p.user}
+									vote={p.vote}
+									id={p.id}
+								/>
+							);
                         })}
                     </div>
                 </Route>

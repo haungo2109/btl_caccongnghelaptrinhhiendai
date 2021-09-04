@@ -16,7 +16,6 @@ import userApi from './api/userApi';
 import { useDispatch, useStore } from 'react-redux';
 
 function App() {
-
   const store = useStore();
   const user = store.getState();
   const dispatch = useDispatch()
@@ -41,8 +40,9 @@ function App() {
         </div>
         <div>
           <Switch>
-              <Route exact path="/posts" component={Posts} ></Route>
-              <Route exact path="/posts/*" component={Posts} ></Route>
+              <Route path="/posts" component={Posts} ></Route>
+              {/* <Route exact path="/posts" component={Posts} ></Route> */}
+              {/* <Route exact path="/posts/*" component={Posts} ></Route> */}
               <Route exact path="/auctions" component={Auctions} ></Route>
               <Route exact path="/login" component={Login} ></Route>
               <Route exact path="/register" component={Register} ></Route>
