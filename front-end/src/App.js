@@ -46,7 +46,7 @@ function App() {
               <Route exact path="/auctions" component={Auctions} ></Route>
               <Route exact path="/login" component={Login} ></Route>
               <Route exact path="/register" component={Register} ></Route>
-              <ProtectedRoute exact path="/user" component={UserPage}></ProtectedRoute>
+              <ProtectedRoute exact path="/user"><UserPage /></ProtectedRoute>
               <Route exact path="/" component={MainPage}></Route>
           </Switch>
         </div>

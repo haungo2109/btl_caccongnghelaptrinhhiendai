@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useStore } from "react-redux";
 import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
 import api from "../../api/apiCalls"
+import ProtectedRoute from "../../route/protected-route";
 import PostItem from "./post-item";
 import PostMaker from "./post-maker";
 import './post.css'
@@ -44,9 +45,9 @@ export default function Posts() {
     return(
         <div className="posts-body-container">
             <Switch>
-                <Route exact path={`${path}/create`}>
+                <ProtectedRoute  path={`${path}/create`}>
                     <PostMaker />
-                </Route>
+                </ProtectedRoute>
                 <Route exact path={path}>
                     {createPostEl}
                     <div className="posts-container">
