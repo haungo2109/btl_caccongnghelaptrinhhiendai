@@ -9,6 +9,10 @@ router.register('post', views.PostViewSet)
 router.register('user', views.UserViewSet)
 router.register('auction', views.AuctionViewSet, basename='auction')
 router.register('category', views.CategoryViewSet)
+router.register('report-type', views.ReportTypeViewSet)
+router.register('post-report', views.PostReportViewSet, basename='post-report')
+router.register('auction-report', views.AuctionReportViewSet, basename='auction-report')
+
 
 urlpatterns = [
     path('', include(router.urls)),

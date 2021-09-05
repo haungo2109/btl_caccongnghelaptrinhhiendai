@@ -1,12 +1,9 @@
-import axiosClient from './axiosClient';
+import axiosClient, { ID, SECRET } from './axiosClient';
 
-export const ID = 'TPLrxQE8mF9slRzevZSNbNCLQXDSSbJrnIprMCNM';
-export const SECRET =
-	'QRHKVKgNnYo8GmwvxUfFtJRAtvtoLTD4mDoNtWzxulgFhrY8rssWssFglvAvZxZpm2vHHBY2nIJDHETm3SOONxD0ADRKL0ald5Ip8hCoUeOAxQn8KipFFjkU64LlzlCQ';
 
 const config = {
 	headers: {
-		'Content-Type': 'application/x-www-form-urlencoded',
+		'Content-Type': 'multipart/form-data',
 	},
 };
 
@@ -19,6 +16,22 @@ const userApi = {
 	login: (data) => {
 		const url = '/o/token/';
 		return axiosClient.post(url, data, config);
+	},
+	logout: () => {
+		const url = '/o/revoke-token/';
+		return axiosClient.post(
+			url,
+			{
+				token: localStorage.getItem('Authorization'),
+				client_id: ID,
+				client_secret: SECRET,
+			},
+			{
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded',
+				},
+			}
+		);
 	},
 	register: (data) => {
 		const url = '/user/';

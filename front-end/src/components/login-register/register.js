@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 import { Input } from './input';
 import ImageUploader from '../shared/image-uploader';
 import api from '../../api/apiCalls';
-import userApi, { ID, SECRET } from '../../api/userApi';
+import userApi from '../../api/userApi';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { ID, SECRET } from '../../api/axiosClient';
 
 export function Register() {
 

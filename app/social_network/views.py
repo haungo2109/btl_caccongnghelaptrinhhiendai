@@ -1,19 +1,13 @@
-from django.contrib.auth import authenticate, logout, login
-from django.shortcuts import render
 from rest_framework import viewsets, permissions, status, generics
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.parsers import MultiPartParser, JSONParser
 from rest_framework.views import APIView
 from django.db import IntegrityError
 from .models import *
 from .serializers import *
 from .ultis import IsOwner, StandardResultsSetPagination
 from datetime import datetime
-
-
-def logout_user(request):
-    logout(request)
 
 
 class UserViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.UpdateAPIView):
@@ -39,12 +33,13 @@ class PostViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.action in ['list', 'retrieve']:
             return [permissions.AllowAny()]
-
-        return [IsOwner()]
+        elif self.action in ['update', 'partial_update', 'destroy']:
+            return [permissions.IsAuthenticated(), IsOwner()]
+        return [permissions.IsAuthenticated()]
 
     def create(self, request):
-        content = request.POST['content']
-        hashtag = request.POST['hashtag']
+        content = request.data.get('content')
+        hashtag = request.data.get('hashtag')
         images = request.FILES.getlist('images')
 
         if request.user.is_authenticated:
@@ -80,9 +75,9 @@ class PostViewSet(viewsets.ModelViewSet):
     @action(methods=['post'], detail=True, url_path='increase-vote')
     def increase_vote(self, request, pk=None):
         try:
-            post = Post.objects.get(pk=pk)
-            post.vote = post.vote + 1
+            post = self.get_object()
             post.like.add(request.user)
+            post.vote = post.like.count()
             post.save()
 
         except Post.DoesNotExist:
@@ -96,8 +91,8 @@ class PostViewSet(viewsets.ModelViewSet):
     def decrease_vote(self, request, pk=None):
         try:
             post = Post.objects.get(pk=pk)
-            post.vote = post.vote - 1
             post.like.remove(request.user)
+            post.vote = post.like.count()
             post.save()
 
         except Post.DoesNotExist:
@@ -159,7 +154,6 @@ class AuctionViewSet(viewsets.ModelViewSet):
             return [permissions.IsAuthenticated()]
         if self.action in ['update', 'partial_update', 'destroy']:
             return [permissions.IsAuthenticated() ,IsOwner()]
-
         return [permissions.IsAuthenticated()]
 
     def create(self, request):
@@ -180,7 +174,6 @@ class AuctionViewSet(viewsets.ModelViewSet):
 
     @action(methods=['get'], detail=False, url_path='owner')
     def get_owner_post(self, request):
-
         try:
             auctions = Auction.objects.filter(user__id=request.user.id)
 
@@ -195,8 +188,8 @@ class AuctionViewSet(viewsets.ModelViewSet):
     def increase_vote(self, request, pk=None):
         try:
             auction = Auction.objects.get(pk=pk)
-            auction.vote = auction.vote + 1
             auction.like.add(request.user)
+            auction.vote = auction.like.count()
             auction.save()
 
         except Auction.DoesNotExist:
@@ -210,8 +203,8 @@ class AuctionViewSet(viewsets.ModelViewSet):
     def decrease_vote(self, request, pk=None):
         try:
             auction = Auction.objects.get(pk=pk)
-            auction.vote = auction.vote - 1
             auction.like.remove(request.user)
+            auction.vote = auction.like.count()
             auction.save()
 
         except Auction.DoesNotExist:
@@ -243,6 +236,9 @@ class AuctionViewSet(viewsets.ModelViewSet):
     def success_auction(self, request, pk=None):
         try:
             auction = self.get_object()
+            if auction.status_auction == StatusAuction.success:
+                return Response(status=status.HTTP_400_BAD_REQUEST, data={"error_msg": "This auction had success."})
+
             auction.status_auction = StatusAuction.fail
             auction.save()
 
@@ -314,21 +310,64 @@ class AuctionCommentAPIView(APIView):
         return Response(serializer.data,
                         status=status.HTTP_200_OK)
 
-    # def update(self, request, auction_id):
-    #     content = request.data.get('content')
-    #     price = request.data.get('price')
-    #
-    #     if content is not None and price is not None:
-    #         try:
-    #             auction = Auction.objects.get(pk=auction_id)
-    #             auction_comment = AuctionComment.objects.create(content=content, price=price,
-    #                                        user=request.user, auction=auction)
-    #         except IntegrityError:
-    #             err_msg = "Lesson does not exist!"
-    #         else:
-    #             return Response(AuctionCommentSerializer(auction_comment).data,
-    #                             status=status.HTTP_201_CREATED)
-    #     else:
-    #         err_msg = "Content and Price is required!!!"
-    #
-    #     return Response(data={'error_msg': err_msg}, status=status.HTTP_400_BAD_REQUEST)
+
+class ReportTypeViewSet(viewsets.ViewSet, generics.ListAPIView):
+    queryset = ReportType.objects.all()
+    serializer_class = ReportTypeSerializer
+    pagination_class = StandardResultsSetPagination
+
+
+class PostReportViewSet(viewsets.ViewSet, generics.CreateAPIView):
+    parser_classes = [JSONParser]
+    serializer_class = PostReportSerializer
+
+    def get_permissions(self):
+        return [permissions.IsAuthenticated()]
+
+    def create(self, request, *args, **kwargs):
+        user = request.user
+        content = request.data.get('content')
+
+        try:
+            type = ReportType.objects.get(pk=request.data.get('type'))
+        except ReportType.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            post = Post.objects.get(pk=request.data.get('post'))
+        except Post.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        post_report = PostReport.objects.create(user=user, type=type, post=post, content=content)
+
+        serializer = PostReportSerializer(post_report)
+        return Response(serializer.data,
+                        status=status.HTTP_200_OK)
+
+
+class AuctionReportViewSet(viewsets.ViewSet, generics.CreateAPIView):
+    parser_classes = [JSONParser]
+    serializer_class = AuctionReportSerializer
+
+    def get_permissions(self):
+        return [permissions.IsAuthenticated()]
+
+    def create(self, request, *args, **kwargs):
+        user = request.user
+        content = request.data.get('content')
+
+        try:
+            type = ReportType.objects.get(pk=request.data.get('type'))
+        except ReportType.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            auction = Auction.objects.get(pk=request.data.get('auction'))
+        except Auction.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        auction_report = AuctionReport.objects.create(user=user, type=type, auction=auction, content=content)
+
+        serializer = AuctionReportSerializer(auction_report)
+        return Response(serializer.data,
+                        status=status.HTTP_200_OK)

@@ -115,13 +115,29 @@ class AuctionImage(models.Model):
             return self.image.url
 
 
+class ReportType(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        if self.name:
+            return self.name
+
+
 class PostReport(BaseInfo):
-    type = models.CharField(max_length=255)
+    type = models.ForeignKey(ReportType, on_delete=models.SET_NULL, null=True, related_name='post_types')
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     post = models.ForeignKey(Post, on_delete=models.SET_NULL, null=True, related_name='post_reports')
 
+    def __str__(self):
+        if self.content:
+            return self.content + "-" + self.type.name
+
 
 class AuctionReport(BaseInfo):
-    type = models.CharField(max_length=255)
+    type = models.ForeignKey(ReportType, on_delete=models.SET_NULL, null=True, related_name='auction_types')
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    auction = models.ForeignKey(Auction, on_delete=models.SET_NULL, null=True, related_name='auction_reports')
+    auction = models.ForeignKey(Auction, on_delete=models.CASCADE, related_name='auction_reports')
+
+    def __str__(self):
+        if self.content:
+                return self.content + "-" + self.type.name
