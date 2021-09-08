@@ -7,7 +7,7 @@ from django.urls import path
 
 
 from .models import User, Post, Auction, AuctionComment, PostComment, AuctionImage, PostImage, PostReport, \
-    AuctionReport, HashTagPost, CategoryAuction
+    AuctionReport, HashTagPost, CategoryAuction, ReportType
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -79,6 +79,18 @@ class CategoryAuctionAdmin(admin.ModelAdmin):
     list_display = ['id', 'name']
 
 
+class ReportTypeAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name']
+
+
+class PostReportAdmin(admin.ModelAdmin):
+    list_display = ['id', 'content', 'type', 'user', 'post']
+
+
+class AuctionReportAdmin(admin.ModelAdmin):
+    list_display = ['id', 'content', 'type', 'user', 'auction']
+
+
 class SocialNetworkAdminSite(admin.AdminSite):
     site_header = 'SOCIAL NETWORK ABOUT AUCTION'
 
@@ -95,14 +107,19 @@ class SocialNetworkAdminSite(admin.AdminSite):
                                     'title': "Post report"
                                 })
 
+
 admin_site = SocialNetworkAdminSite('app')
 
 admin_site.register(Group)
 admin_site.register(Permission)
 admin_site.register(User, UserAdmin)
+
 admin_site.register(CategoryAuction, CategoryAuctionAdmin)
+admin_site.register(ReportType, ReportTypeAdmin)
 admin_site.register(HashTagPost, HashTagPostAdmin)
+
 admin_site.register(Post, PostAdmin)
 admin_site.register(Auction, AuctionAdmin)
-admin_site.register(PostReport)
-admin_site.register(AuctionReport)
+
+admin_site.register(PostReport, PostReportAdmin)
+admin_site.register(AuctionReport, AuctionReportAdmin)

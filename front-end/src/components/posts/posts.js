@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useStore } from "react-redux";
 import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
 import api from "../../api/apiCalls"
+import ProtectedRoute from "../../route/protected-route";
 import PostItem from "./post-item";
 import PostMaker from "./post-maker";
 import './post.css'
@@ -31,7 +32,7 @@ export default function Posts() {
         history.push(`${url}${path}`)
     }
 
-    if(user) {
+    if(user && user?.username) {
         createPostEl = (
             <div className="posts-container">
                 <div className="post-item-container" onClick={() => navigate('/create')}>
@@ -44,14 +45,25 @@ export default function Posts() {
     return(
         <div className="posts-body-container">
             <Switch>
-                <Route exact path={`${path}/create`}>
+                <ProtectedRoute  path={`${path}/create`}>
                     <PostMaker />
-                </Route>
+                </ProtectedRoute>
                 <Route exact path={path}>
                     {createPostEl}
                     <div className="posts-container">
                         {posts.map((p) => {
-                            return <PostItem key={p.id} content={p.content} createdAt={p.create_at} hashtags={p.hashtag} user={p.user} vote={p.vote} id={p.id}/>
+                            return (
+								<PostItem
+									key={p.id}
+									images={p.post_images}
+									content={p.content}
+									createdAt={p.create_at}
+									hashtags={p.hashtag}
+									user={p.user}
+									vote={p.vote}
+									id={p.id}
+								/>
+							);
                         })}
                     </div>
                 </Route>

@@ -7,7 +7,7 @@ import './post-item.css'
 
 
 
-export default function PostItem({content, createdAt, vote, user, hashtags, id}) {
+export default function PostItem({content, createdAt, vote, user, hashtags, id, images}) {
 
     const store = useStore();
     const userStore = store.getState();
@@ -51,6 +51,9 @@ export default function PostItem({content, createdAt, vote, user, hashtags, id})
             </div>
             <div className="content">
                 <p>{content}</p>
+            </div>
+            <div className="wrapper-image">
+			    {images && images.map((c) => <img key={c} src={c} alt={c} />)}
             </div>
             <div className="tool-bar">
                 <div className="likes card" title="Thích">

@@ -2,11 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import { createStore } from 'redux';
+import { createStore, compose, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import { userReducer} from './userReducer';
+import reduxImutableStateInvariant from 'redux-immutable-state-invariant';
 
-const store = createStore(userReducer)
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store = createStore(
+	userReducer,
+	composeEnhancers(applyMiddleware(reduxImutableStateInvariant()))
+);
 
 const render = () => ReactDOM.render(
   <Provider store={store}>

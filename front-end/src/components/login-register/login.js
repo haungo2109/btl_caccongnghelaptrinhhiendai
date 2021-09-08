@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useDispatch, useStore } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import userApi, { ID, SECRET } from '../../api/userApi';
+import { ID, SECRET } from '../../api/axiosClient';
+import userApi from '../../api/userApi';
 import { Input } from './input';
 import './login.css'
 

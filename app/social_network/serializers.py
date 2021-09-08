@@ -17,8 +17,6 @@ class UserSerializer(ModelSerializer):
             'avatar': {'read_only': 'true'},
             'address': {'read_only': 'true'},
         }
-        # mấy cột t igrore thì khỏi cần phaair đưa lên, vd như thêm avatar nữa , tạo tk rồi ng ta cập nhật sau
-    #     sau khi đăng nhập không gửi về token ?, đk không gửi về token, đăng nhập ms gửi, có token rồi ms lấy được thông tin user
 
 
     def create(self, validated_data):
@@ -70,10 +68,11 @@ class PostSerializer(ModelSerializer):
     hashtag = HashTagSerializer(many=True, read_only=True)
     user = UserBaseInforSerializer(read_only=True)
     post_images = StringRelatedField(many=True, read_only=True)
+    images = ImageField(allow_null=True, use_url=False, required=False, write_only=True)
 
     class Meta:
         model = Post
-        fields = ['id', 'content', 'create_at', 'vote',
+        fields = ['id', 'content', 'create_at', 'vote', 'images',
                   'hashtag', 'user', 'post_images', 'like']
         extra_kwargs = {
             'like': {'read_only': 'true'},
@@ -96,17 +95,12 @@ class AuctionImageSerializer(ModelSerializer):
 
 class AuctionCommentSerializer(ModelSerializer):
     user = UserBaseInforSerializer(read_only=True)
-    # content = CharField(write_only=True, required=True)
-    # price = FloatField(write_only=True, required=True)
 
     class Meta:
         model = AuctionComment
         fields = ['id', 'content', 'user', 'create_at', 'price', 'status_transaction']
         read_only_fields = ('create_at', 'status_transaction')
-        # extra_kwargs = {
-        #     'content': {'required': True},
-        #     'price': {'required': True},
-        # }
+
 
 class AuctionSerializer(ModelSerializer):
     user = UserBaseInforSerializer(read_only=True)
@@ -132,3 +126,23 @@ class AuctionSerializer(ModelSerializer):
 class StatusSerializer(Serializer):
     status_auction = CharField(max_length=20)
     status_transaction = CharField(max_length=25)
+
+
+class ReportTypeSerializer(ModelSerializer):
+    class Meta:
+        model = ReportType
+        fields = ['id', 'name']
+
+
+class PostReportSerializer(ModelSerializer):
+    class Meta:
+        model = PostReport
+        fields = ['user', 'type', 'post', 'content', 'create_at']
+        read_only_fields = ['user', 'create_at']
+
+
+class AuctionReportSerializer(ModelSerializer):
+    class Meta:
+        model = AuctionReport
+        fields = fields = ['user', 'type', 'auction', 'content', 'create_at']
+        read_only_fields = ['create_at', 'user']
