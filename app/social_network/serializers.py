@@ -35,7 +35,8 @@ class UserBaseInforSerializer(ModelSerializer):
 
     def to_representation(self, instance): #make full url to absolute url of avatar
         ret = super().to_representation(instance)
-        ret['avatar'] = re.sub('''[\w\d\.:]+\/\/[\w\d\.:]+\/''', '', ret['avatar'])
+        if re.search('''[\w\d\.:]+\/\/[\w\d\.:]+\/''', ret['avatar']):
+            ret['avatar'] = "/" + re.sub('''[\w\d\.:]+\/\/[\w\d\.:]+\/''', '', ret['avatar'])
         return ret
 
     class Meta:
