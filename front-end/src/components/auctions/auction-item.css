@@ -1,0 +1,53 @@
+@import url('../posts/post-item.css');
+
+.auction-item-container .title h2 {
+    margin: 0;
+    margin-bottom: 0.5em;
+    cursor: pointer;
+    display: flex;
+    width: fit-content;
+}
+.auction-item-container .title h2:hover {
+    text-decoration: underline;
+}
+.auction-item-container .avatar {
+    border-bottom: 1px solid var(--main-color-gray);
+    padding-bottom: 0.5em;
+}
+.auction-item-container .avatar .avatar-body {
+    display: flex;
+}
+.auction-item-container .avatar .avatar-body > p {
+    font-weight: normal;
+    opacity: 0.7;
+}
+.auction-item-container .avatar .avatar-body .date {
+    margin: auto 1em;
+}
+.auction-item-container .price {
+    display: flex;
+    margin-bottom: 1em;
+}
+.auction-item-container .price > div {
+    flex: 1;
+}
+
+.small-cond-item {
+    display: flex;
+}
+.small-cond-item > span:nth-child(3) {
+    font-weight: bold;
+}
+.small-cond-item > span:nth-child(2) {
+    opacity: 0.8;
+}
+.small-cond-item > span {
+    display: block;
+    margin-right: 0.25em;
+}
+.small-cond-item > div {
+    width: 25px;
+}
+.small-cond-item > div svg {
+    margin-right: 0.5em;
+}

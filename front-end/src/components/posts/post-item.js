@@ -2,6 +2,7 @@ import { faComment, faHeart } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import moment from 'moment'
 import { useStore } from 'react-redux'
+import ImgViewer from '../shared/img-viewer'
 import PostUtil from '../shared/post-utils'
 import './post-item.css'
 
@@ -53,7 +54,7 @@ export default function PostItem({content, createdAt, vote, user, hashtags, id, 
                 <p>{content}</p>
             </div>
             <div className="wrapper-image">
-			    {images && images.map((c) => <img key={c} src={c} alt={c} />)}
+                <ImgViewer imgArray={images} />
             </div>
             <div className="tool-bar">
                 <div className="likes card" title="Thích">

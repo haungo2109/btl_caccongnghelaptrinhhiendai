@@ -4,6 +4,9 @@
   --main-color-gray: #dee2e6;
   --main-color-blue: #008aff;
   --main-color-bg: #f8f9fa;
+  --main-color-green: #40916c;
+  --main-color-yellow: #ffd639;
+  --main-color-dark-grey: #6c757d;
 }
 
 .main {
@@ -16,4 +19,16 @@
 }
 .main > div:nth-child(2) {
   background-color: var(--main-color-bg);
+}
+.display-none {
+  display: none;
+}
+.green {
+  color: var(--main-color-green);
+}
+.yellow {
+  color: var(--main-color-yellow);
+}
+.dark-grey {
+  color: var(--main-color-dark-grey);
 }
