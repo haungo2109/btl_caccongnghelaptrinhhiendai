@@ -13,9 +13,7 @@ class UserSerializer(ModelSerializer):
                   'phone', 'address', 'birthday', 'password']
         extra_kwargs = {
             'password': {'write_only': 'true'},
-            'phone': {'read_only': 'true'},
-            'avatar': {'read_only': 'true'},
-            'address': {'read_only': 'true'},
+            'username': {'read_only': 'true'},
         }
 
 

@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from django.db import IntegrityError
 from .models import *
 from .serializers import *
-from .ultis import IsOwner, StandardResultsSetPagination
+from .ultis import IsOwner, StandardResultsSetPagination, IsCurrentUser
 from datetime import datetime
 
 
@@ -18,7 +18,7 @@ class UserViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.UpdateAPIVi
     def get_permissions(self):
         if self.action == 'create':
             return [permissions.AllowAny()]
-        return [permissions.IsAuthenticated()]
+        return [permissions.IsAuthenticated(), IsCurrentUser()]
 
     @action(methods=['get'], detail=False, url_path='current-user')
     def get_current_user(self, request, pk=None):
@@ -50,11 +50,36 @@ class PostViewSet(viewsets.ModelViewSet):
         if hashtag:
             list_hashtag = hashtag.split(',')
             for name in list_hashtag:
-
                 post.hashtag.add(HashTagPost.objects.get_or_create(name=name)[0])
 
         for image in images:
             PostImage.objects.create(image=image, post=post)
+
+        serializer = PostSerializer(post)
+        return Response(serializer.data,
+                        status=status.HTTP_200_OK)
+
+    def partial_update(self, request, pk=None, *args, **kwargs):
+        hashtag = request.data.get('hashtag')
+        images = request.FILES.getlist('images')
+        content = request.data.get('content')
+        post = Post.objects.get(pk=pk)
+
+        if content:
+            post.content = content
+
+        if hashtag:
+            post.hashtag.all().delete()
+            list_hashtag = hashtag.split(',')
+            for name in list_hashtag:
+                post.hashtag.add(HashTagPost.objects.get_or_create(name=name)[0])
+
+        if (images):
+            post.post_images.all().delete()
+            for image in images:
+                PostImage.objects.create(image=image, post=post)
+
+        post.save()
 
         serializer = PostSerializer(post)
         return Response(serializer.data,
@@ -142,7 +167,8 @@ class CategoryViewSet(viewsets.ViewSet, generics.ListAPIView):
 
 
 class AuctionViewSet(viewsets.ModelViewSet):
-    queryset = Auction.objects.filter(active=True).select_related("user").select_related("buyer").select_related("category")
+    queryset = Auction.objects.filter(active=True).select_related("user").select_related("buyer").select_related(
+        "category")
     serializer_class = AuctionSerializer
     parser_classes = [MultiPartParser, ]
     basename = "/"
@@ -153,7 +179,7 @@ class AuctionViewSet(viewsets.ModelViewSet):
         if self.action in ['create']:
             return [permissions.IsAuthenticated()]
         if self.action in ['update', 'partial_update', 'destroy']:
-            return [permissions.IsAuthenticated() ,IsOwner()]
+            return [permissions.IsAuthenticated(), IsOwner()]
         return [permissions.IsAuthenticated()]
 
     def create(self, request):
@@ -249,7 +275,8 @@ class AuctionViewSet(viewsets.ModelViewSet):
         return Response(serializer.data,
                         status=status.HTTP_200_OK)
 
-    @action(methods=['post'], detail=True, url_path=r'comment/(?P<comment_id>\d+)/state/(?P<state>\w+)', permission_classes=[IsOwner()])
+    @action(methods=['post'], detail=True, url_path=r'comment/(?P<comment_id>\d+)/state/(?P<state>\w+)',
+            permission_classes=[IsOwner()])
     def set_status_transaction(self, request, *args, **kwargs):
         comment_id = kwargs.get('comment_id')
 
@@ -273,14 +300,15 @@ class AuctionViewSet(viewsets.ModelViewSet):
         elif state_comment == StatusTransaction.fail and comment.status_transaction == StatusTransaction.in_process:
             comment.status_transaction = state_comment
             auction.status_auction = StatusAuction.auction
-        elif state_comment == StatusTransaction.success and comment.status_transaction == StatusTransaction.in_process :
+        elif state_comment == StatusTransaction.success and comment.status_transaction == StatusTransaction.in_process:
             comment.status_transaction = state_comment
             auction.status_auction = StatusAuction.success
             auction.accept_price = comment.price
             auction.buyer = comment.user
             auction.date_success = datetime.now()
         else:
-            return Response(status=status.HTTP_400_BAD_REQUEST, data={"error_msg": "State of StatusAuction is not suitable"})
+            return Response(status=status.HTTP_400_BAD_REQUEST,
+                            data={"error_msg": "State of StatusAuction is not suitable"})
 
         comment.save()
         auction.save()
@@ -338,7 +366,9 @@ class PostReportViewSet(viewsets.ViewSet, generics.CreateAPIView):
         except Post.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        post_report = PostReport.objects.create(user=user, type=type, post=post, content=content)
+        post_report, created = PostReport.objects.update_or_create(
+            defaults={"type": type, "content": content}
+            , user=user, post=post)
 
         serializer = PostReportSerializer(post_report)
         return Response(serializer.data,
@@ -366,7 +396,9 @@ class AuctionReportViewSet(viewsets.ViewSet, generics.CreateAPIView):
         except Auction.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        auction_report = AuctionReport.objects.create(user=user, type=type, auction=auction, content=content)
+        auction_report, created = AuctionReport.objects.update_or_create(
+            defaults={"type": type, "content": content}
+            , user=user, auction=auction)
 
         serializer = AuctionReportSerializer(auction_report)
         return Response(serializer.data,
