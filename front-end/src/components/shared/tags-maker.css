@@ -1,0 +1,29 @@
+.tags-maker-container {
+    display: flex;
+    margin-top: 1em;
+    flex-direction: column;
+}
+.tags-maker-container .tag-input {
+    display: flex;
+}
+.tags-maker-container .tag-input input {
+    width: 70%;
+    margin-right: 1em;
+    padding: 0 1em;
+}
+.tags-maker-container .tag-input .button { 
+    width: 30%;
+    flex: 1;
+    margin: 0;
+}
+.tags-maker-container .tags-list {
+    margin-top: 0.5em;
+    display: flex;
+    flex-wrap: wrap;
+}
+.tags-maker-container .tags-list p {
+    background-color: var(--main-color-gray);
+    /* color: var(--main-color-blue); */
+    margin: 0.25em;
+}
+

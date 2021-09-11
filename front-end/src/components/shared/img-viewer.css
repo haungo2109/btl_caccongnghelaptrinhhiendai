@@ -1,0 +1,20 @@
+.imgViewer-array {
+    display: flex;
+    overflow: auto;
+}
+.imgViewer-container img {
+    object-fit: cover;
+    padding: 1px;
+    width: 100%;
+}
+.first-preview {
+    display: flex;
+    justify-content: center;
+}
+.first-preview img {
+    width: 100%;
+}
+.imgViewer-array img {
+    width: 20%;
+    cursor: pointer;
+}

@@ -19,12 +19,7 @@
 }
 .post-item-container .wrapper-image {
     display: flex;
-}
-.wrapper-image img{
-    /* max-width: 50%; */
-    object-fit: cover;
-    padding: 1px;
-    width: 100%;
+    margin-top: 0.5em;
 }
 .avatar { 
     margin-bottom: 0.5em;
