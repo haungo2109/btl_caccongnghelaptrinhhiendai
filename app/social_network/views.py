@@ -102,7 +102,6 @@ class PostViewSet(viewsets.ModelViewSet):
         try:
             post = self.get_object()
             post.like.add(request.user)
-            post.vote = post.like.count()
             post.save()
 
         except Post.DoesNotExist:
@@ -117,7 +116,6 @@ class PostViewSet(viewsets.ModelViewSet):
         try:
             post = Post.objects.get(pk=pk)
             post.like.remove(request.user)
-            post.vote = post.like.count()
             post.save()
 
         except Post.DoesNotExist:
@@ -131,9 +129,9 @@ class PostViewSet(viewsets.ModelViewSet):
     def add_comment(self, request, pk=None):
         content = request.POST['content']
         try:
-            post = Post.objects.get(pk=pk)
+            post = self.get_object()
             comment = PostComment.objects.create(content=content, post=post, user=request.user)
-
+            post.count_comment = post.count_comment + 1;
         except Post.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -215,7 +213,6 @@ class AuctionViewSet(viewsets.ModelViewSet):
         try:
             auction = Auction.objects.get(pk=pk)
             auction.like.add(request.user)
-            auction.vote = auction.like.count()
             auction.save()
 
         except Auction.DoesNotExist:
@@ -230,7 +227,6 @@ class AuctionViewSet(viewsets.ModelViewSet):
         try:
             auction = Auction.objects.get(pk=pk)
             auction.like.remove(request.user)
-            auction.vote = auction.like.count()
             auction.save()
 
         except Auction.DoesNotExist:
@@ -250,6 +246,9 @@ class AuctionViewSet(viewsets.ModelViewSet):
                 user=request.user, auction=self.get_object(),
                 defaults={'content': content, 'price': price},
             )
+            if created:
+                auction = self.get_object()
+                auction.count_comment = auction.count_comment + 1;
 
         except Auction.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)
