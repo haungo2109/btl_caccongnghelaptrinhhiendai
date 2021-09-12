@@ -21,6 +21,16 @@ class IsOwner(permissions.BasePermission):
             False
 
 
+class IsCurrentUser(permissions.BasePermission):
+    message = "You're not an onwer of this resource."
+
+    def has_object_permission(self, request, view, obj):
+        if request.user.is_authenticated:
+            return obj.username == request.user.username
+        else:
+            False
+
+
 class StandardResultsSetPagination(PageNumberPagination):
     page_size = 100
     page_size_query_param = 'page_size'

@@ -43,7 +43,7 @@ class PostImageInline(admin.StackedInline):
 
 class PostAdmin(admin.ModelAdmin):
     inlines = (PostImageInline, PostCommentAdmin, )
-    list_display = ['content', 'vote', 'create_at', 'user', ]
+    list_display = ['content', 'count_comment', 'create_at', 'user', ]
     search_fields = ['content', 'user__first_name', 'user__last_name']
 
 
@@ -67,7 +67,7 @@ class AuctionImageInline(admin.StackedInline):
 
 class AuctionAdmin(admin.ModelAdmin):
     inlines = (AuctionImageInline,AuctionCommentAdmin)
-    list_display = ['title', 'vote', 'create_at', 'base_price', 'user']
+    list_display = ['title', 'count_comment', 'create_at', 'base_price', 'user']
     search_fields = ['title', 'user__first_name', 'user__last_name']
 
 

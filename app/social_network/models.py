@@ -44,7 +44,7 @@ class BaseInfo(models.Model):
 
 
 class Post(BaseInfo):
-    vote = models.IntegerField(default=0)
+    count_comment = models.IntegerField(default=0)
     active = models.BooleanField(default=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
     hashtag = models.ManyToManyField(HashTagPost, related_name='hashtag_posts', blank=True)
@@ -61,7 +61,7 @@ class StatusAuction(models.TextChoices):
 class Auction(BaseInfo):
     title = models.CharField(max_length=225, default='Auction')
     active = models.BooleanField(default=True)
-    vote = models.IntegerField(default=0)
+    count_comment = models.IntegerField(default=0)
     base_price = models.FloatField(default=0)
     condition = models.TextField(blank=True, null=True, default="No condition")
     deadline = models.DateTimeField()
@@ -75,7 +75,6 @@ class Auction(BaseInfo):
 
 
 class PostComment(BaseInfo):
-    vote = models.IntegerField(default=0)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='post_comments')
 

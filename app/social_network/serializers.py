@@ -13,9 +13,7 @@ class UserSerializer(ModelSerializer):
                   'phone', 'address', 'birthday', 'password']
         extra_kwargs = {
             'password': {'write_only': 'true'},
-            'phone': {'read_only': 'true'},
-            'avatar': {'read_only': 'true'},
-            'address': {'read_only': 'true'},
+            'username': {'read_only': 'true'},
         }
 
 
@@ -58,10 +56,10 @@ class PostCommentSerializer(ModelSerializer):
 
     class Meta:
         model = PostComment
-        fields = ['id', 'content', 'user', 'vote', 'create_at']
+        fields = ['id', 'content', 'user', 'count_comment', 'create_at']
         extra_kwargs = {
             'create_at': {'read_only': 'true'},
-            'vote': {'read_only': 'true'},
+            'count_comment': {'read_only': 'true'},
         }
 
 
@@ -115,10 +113,10 @@ class AuctionSerializer(ModelSerializer):
 
     class Meta:
         model = Auction
-        fields = ['id', 'content', 'create_at', 'title', 'base_price', 'condition', 'vote', 'deadline',
+        fields = ['id', 'content', 'create_at', 'title', 'base_price', 'condition', 'count_comment', 'deadline',
                   'user', 'images', 'auction_images', 'like', 'buyer', 'date_success',
                   'accept_price', 'status_auction', 'category', 'price']
-        read_only_fields = ('created_by', 'like', 'status_auction', 'vote', 'accept_price', 'date_success')
+        read_only_fields = ('created_by', 'like', 'status_auction', 'count_comment', 'accept_price', 'date_success')
         extra_kwargs = {
             'deadline': {'required': False},
         }
