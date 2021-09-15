@@ -56,10 +56,9 @@ class PostCommentSerializer(ModelSerializer):
 
     class Meta:
         model = PostComment
-        fields = ['id', 'content', 'user', 'count_comment', 'create_at']
+        fields = ['id', 'content', 'user', 'create_at']
         extra_kwargs = {
             'create_at': {'read_only': 'true'},
-            'count_comment': {'read_only': 'true'},
         }
 
 
@@ -71,12 +70,12 @@ class PostSerializer(ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['id', 'content', 'create_at', 'vote', 'images',
+        fields = ['id', 'content', 'create_at', 'count_comment', 'images',
                   'hashtag', 'user', 'post_images', 'like']
         extra_kwargs = {
             'like': {'read_only': 'true'},
             'create_at': {'read_only': 'true'},
-            'vote': {'read_only': 'true'},
+            'count_comment': {'read_only': 'true'},
         }
 
 

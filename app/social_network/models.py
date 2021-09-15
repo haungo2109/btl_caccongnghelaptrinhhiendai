@@ -50,6 +50,9 @@ class Post(BaseInfo):
     hashtag = models.ManyToManyField(HashTagPost, related_name='hashtag_posts', blank=True)
     like = models.ManyToManyField(User, related_name='post_liked', blank=True)
 
+    class Meta:
+        ordering = ["-count_comment", ]
+
 
 class StatusAuction(models.TextChoices):
     success = 'succ', _('Sản phẩm đã được giao dịch thành công')

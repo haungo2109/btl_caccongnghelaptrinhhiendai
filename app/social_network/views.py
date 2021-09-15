@@ -132,6 +132,7 @@ class PostViewSet(viewsets.ModelViewSet):
             post = self.get_object()
             comment = PostComment.objects.create(content=content, post=post, user=request.user)
             post.count_comment = post.count_comment + 1;
+            post.save()
         except Post.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -249,7 +250,7 @@ class AuctionViewSet(viewsets.ModelViewSet):
             if created:
                 auction = self.get_object()
                 auction.count_comment = auction.count_comment + 1;
-
+                auction.save()
         except Auction.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
