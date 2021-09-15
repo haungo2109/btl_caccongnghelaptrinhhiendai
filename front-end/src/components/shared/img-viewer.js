@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useState } from 'react/cjs/react.development'
 import './img-viewer.css'
 

@@ -5,6 +5,7 @@ import api from "../../api/apiCalls"
 import ProtectedRoute from "../../route/protected-route";
 import PostItem from "./post-item";
 import PostMaker from "./post-maker";
+import PostSingle from "./post-single";
 import './post.css'
 
 export default function Posts() {
@@ -48,6 +49,9 @@ export default function Posts() {
                 <ProtectedRoute  path={`${path}/create`}>
                     <PostMaker />
                 </ProtectedRoute>
+                <Route path={`${path}/:postid`}>
+                    <PostSingle />
+                </Route>
                 <Route exact path={path}>
                     {createPostEl}
                     <div className="posts-container">
