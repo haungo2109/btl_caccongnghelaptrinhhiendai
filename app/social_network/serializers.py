@@ -105,7 +105,8 @@ class AuctionCommentSerializer(ModelSerializer):
 class AuctionSerializer(ModelSerializer):
     user = UserBaseInforSerializer(read_only=True)
     buyer = UserBaseInforSerializer(read_only=True)
-    auction_images = SerializerMethodField(read_only=True)
+    # auction_images = SerializerMethodField(read_only=True)
+    auction_images = StringRelatedField(many=True, read_only=True)
     images = ImageField(allow_null=True, use_url=False, required=False, write_only=True)
     price = IntegerField(write_only=True, required=False, help_text="This only use to post comment")
 
