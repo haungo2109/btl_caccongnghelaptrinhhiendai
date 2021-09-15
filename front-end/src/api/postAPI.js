@@ -20,11 +20,11 @@ const postApi = {
 		return axiosClient.get(url);
 	},
 	getPost: (postId) => {
-		const url = `/post/${postId}`;
+		const url = `/post/${postId}/`;
 		return axiosClient.get(url);
 	},
 	getPostComment: (postId) => {
-		const url = `/post-comment/${postId}`;
+		const url = `/post-comments/${postId}/`;
 		return axiosClient.get(url);
 	},
 	/**
@@ -35,11 +35,11 @@ const postApi = {
 	 * @returns Promise
 	 */
 	patchPost: (postId, data) => {
-		const url = `/post/${postId}`;
+		const url = `/post/${postId}/`;
 		return axiosClient.patch(url, data, config);
 	},
 	deletePost: (postId) => {
-		const url = `/post/${postId}`;
+		const url = `/post/${postId}/`;
 		return axiosClient.delete(url, config);
 	},
 	/**

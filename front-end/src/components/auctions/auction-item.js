@@ -1,23 +1,39 @@
 import { faBell, faCalendarAlt, faComment, faDollarSign, faHeart } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import moment from 'moment'
+import { useEffect, useState } from 'react'
 import ImgViewer from '../shared/img-viewer'
 import PostUtil from '../shared/post-utils'
 import './auction-item.css'
 
 function SmallConditionItem({className, text, title, icon}) {
     return (
-        <p className="small-cond-item">
+        <div className="small-cond-item">
             <div>
                 <FontAwesomeIcon className={className? className: ''} icon={icon} />
             </div>
             <span>{title}</span>
             <span>{text}</span>
-        </p>
+        </div>
     )
 }
 
 export default function AuctionItem({auction}) {
+
+    const [imgArray, setImgArray] = useState([]);
+
+    useEffect(() => {
+        getImgArray();
+    },[])
+
+    let getImgArray = () => {
+        // imgArray = auction.auction_images.map(i => i.image)
+        let temp = [];
+        auction.auction_images.map(img => {
+            temp.push(img.image);
+        })
+        setImgArray(temp);
+    }
 
     let utilItems = [
         {name: 'Báo cáo', action: () => {}}
@@ -52,9 +68,9 @@ export default function AuctionItem({auction}) {
             <div className="content">
                 <p>{auction.content}</p>
             </div>
-            {/* <div className="wrapper-image">
-                {auction.auction_images.length != 0 && <ImgViewer key={auction.} imgArray={auction.auction_images} />}
-            </div> */}
+            <div className="wrapper-image">
+                {imgArray.length != 0 && <ImgViewer imgArray={imgArray} />}
+            </div>
             <div className="tool-bar">
                 <div className="likes card" title="Thích">
                     <p>

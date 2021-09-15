@@ -48,7 +48,7 @@
 }
 .tool-bar {
     margin-top: 0.5em;
-    padding-top: 0.25em;
+    padding-top: 0.5em;
     display: flex;
     border-top: 1px solid var(--main-color-gray);
 }
