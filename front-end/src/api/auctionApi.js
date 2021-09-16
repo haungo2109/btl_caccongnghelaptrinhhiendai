@@ -13,7 +13,7 @@ const auctionApi = {
 	},
 	postAuction: (data) => {
 		const url = '/auction/';
-		return axiosClient.auction(url, data, config);
+		return axiosClient.post(url, data, config);
 	},
 	getAuctionOwner: () => {
 		const url = '/auction/owner/';

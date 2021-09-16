@@ -25,7 +25,7 @@ export default function PostMaker() {
         formData.set('images', imgs);
 
         postApi.postPost(formData).then(data => {
-            window.open('Bài viết được tạo thành công');
+            window.alert('Bài viết được tạo thành công');
             history.push('/post');
         })
 

@@ -1,0 +1,5 @@
+@import url('../posts/post-maker.css');
+
+.post-title, .post-condition, .post-price, .post-add-content {
+    margin-bottom: 1em;
+}

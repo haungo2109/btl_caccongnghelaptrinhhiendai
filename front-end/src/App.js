@@ -32,6 +32,8 @@ function App() {
     })
   }
 
+  // note, nếu sub route error, coi chừng chữ exact
+
   return (
     <div className="main">
       <Router>
@@ -41,12 +43,10 @@ function App() {
         <div>
           <Switch>
               <Route path="/posts" component={Posts} ></Route>
-              {/* <Route exact path="/posts" component={Posts} ></Route> */}
-              {/* <Route exact path="/posts/*" component={Posts} ></Route> */}
-              <Route exact path="/auctions" component={Auctions} ></Route>
+              <Route path="/auctions" component={Auctions} ></Route>
               <Route exact path="/login" component={Login} ></Route>
               <Route exact path="/register" component={Register} ></Route>
-              <ProtectedRoute exact path="/user"><UserPage /></ProtectedRoute>
+              <ProtectedRoute path="/user"><UserPage /></ProtectedRoute>
               <Route exact path="/" component={MainPage}></Route>
           </Switch>
         </div>

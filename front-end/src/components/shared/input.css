@@ -1,0 +1,7 @@
+.input-text {
+    display: flex;
+}
+.input-text input {
+    padding: 1em;
+    width: 100%;
+}

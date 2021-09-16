@@ -4,6 +4,7 @@ import moment from 'moment'
 import { useStore } from 'react-redux'
 import { useHistory } from 'react-router'
 import { useState } from 'react/cjs/react.development'
+import postApi from '../../api/postAPI'
 import Comment from '../shared/comment'
 import CommentsList from '../shared/comments-list'
 import ImgViewer from '../shared/img-viewer'
@@ -36,6 +37,18 @@ export default function PostItem({content, createdAt, vote, user, hashtags, id, 
     if(userStore.id == id) {
         utilItems.push({name: 'Chỉnh sửa bài viết', link: `/post/${id}`});
         utilItems.push({name: 'Xóa bài viết', action: deleteItem});
+    }
+    let sendComment = () => {
+        let form = new FormData();
+        form.set('content', comment);
+        postApi.createPostComment(id, form).then(data => {
+            getListComment()
+            setComment('');
+            // tao tự tạo ra vòng lặp...
+        }).catch(err => {
+            console.log(err); 
+            return false;
+        });
     }
 
     return (
@@ -80,7 +93,7 @@ export default function PostItem({content, createdAt, vote, user, hashtags, id, 
                 </div>
             </div>
             {isAllowedToComments && <div>
-                <Comment onComment={setComment} commentText={comment} ></Comment>
+                <Comment onComment={(e) => setComment(e.target.value)} commentText={comment} onClick={sendComment} ></Comment>
             </div>}
             {comments_list && <div>
                 <CommentsList listComment={comments_list} />

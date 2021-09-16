@@ -18,12 +18,16 @@ export default function PostSingle() {
         console.log(postid)
         if(postid) {
             postApi.getPost(postid).then(data => {
-                setPost(data);
+                setPost(data); 
             }).catch(err => console.log(err));
             getCommentList();
         }
-    }, []);
+        if(user && user?.username) {
+            setAllowComment(true);
+        }
+    }, [user]);
 
+    // khi comment xoong -> reload list coomment -> reset comment
     let getCommentList = () => {
         postApi.getPostComment(postid).then(data => {
             setCommentList(data);
@@ -33,9 +37,7 @@ export default function PostSingle() {
             return false;
         });
     }
-    if(user && user?.username) {
-        setAllowComment(true);
-    }
+    
 
     return(
         <div>
