@@ -20,21 +20,6 @@ function SmallConditionItem({className, text, title, icon}) {
 
 export default function AuctionItem({auction}) {
 
-    const [imgArray, setImgArray] = useState([]);
-
-    useEffect(() => {
-        getImgArray();
-    },[])
-
-    let getImgArray = () => {
-        // imgArray = auction.auction_images.map(i => i.image)
-        let temp = [];
-        auction.auction_images.map(img => {
-            temp.push(img.image);
-        })
-        setImgArray(temp);
-    }
-
     let utilItems = [
         {name: 'Báo cáo', action: () => {}}
     ]
@@ -69,7 +54,7 @@ export default function AuctionItem({auction}) {
                 <p>{auction.content}</p>
             </div>
             <div className="wrapper-image">
-                {imgArray.length != 0 && <ImgViewer imgArray={imgArray} />}
+                {auction.auction_images.length != 0 && <ImgViewer imgArray={auction.auction_images} />}
             </div>
             <div className="tool-bar">
                 <div className="likes card" title="Thích">
