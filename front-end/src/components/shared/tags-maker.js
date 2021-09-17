@@ -9,7 +9,7 @@ export default function TagsMaker({tags, onChangeTags}) {
     const inputRef = useRef(null);
 
     let addTag = () => {
-        if(tag != '' && !tags.includes(tag.trim())) {
+        if(tag !== '' && !tags.includes(tag.trim())) {
             onChangeTags([...tags, tag.trim()]);
         }
         setTag('');

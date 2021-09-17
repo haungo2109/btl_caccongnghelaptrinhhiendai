@@ -11,6 +11,10 @@ const auctionApi = {
 		const url = '/auction/';
 		return axiosClient.get(url);
 	},
+	getAuctionsByPage: (page) => {
+		const url = `/auction/?page=${page}`;
+		return axiosClient.get(url);
+	},
 	postAuction: (data) => {
 		const url = '/auction/';
 		return axiosClient.post(url, data, config);

@@ -50,6 +50,11 @@ export default function PostItem({content, createdAt, vote, user, hashtags, id, 
             return false;
         });
     }
+    let handleOnKeyDown = (e) => {
+        if(e.key === 'Enter') {
+            sendComment();
+        }
+    }
 
     return (
         <div className="post-item-container">
@@ -93,7 +98,7 @@ export default function PostItem({content, createdAt, vote, user, hashtags, id, 
                 </div>
             </div>
             {isAllowedToComments && <div>
-                <Comment onComment={(e) => setComment(e.target.value)} commentText={comment} onClick={sendComment} ></Comment>
+                <Comment onComment={(e) => setComment(e.target.value)} commentText={comment} onClick={sendComment} onKeyDown={handleOnKeyDown} ></Comment>
             </div>}
             {comments_list && <div>
                 <CommentsList listComment={comments_list} />

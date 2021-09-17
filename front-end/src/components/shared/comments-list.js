@@ -5,7 +5,7 @@ export function CommentLine({line}) {
         <div className="comment-item-container">
             <div className="avatar">
                 <div className="avatar-img">
-                    <img src={line.user.avatar} />
+                    <img src={line.user.avatar} alt="img" />
                 </div>
             </div>
             <div className="comment-text">
@@ -18,8 +18,8 @@ export function CommentLine({line}) {
 export default function CommentsList({listComment}) {
     return(
         <div className="comments-list-container">
-            {listComment && listComment.length == 0 && <div className="no-comment"><p>Chưa có bình luận nào</p></div>}
-            {listComment && listComment.length != 0 && listComment.map(co => <CommentLine key={co.id} line={co} />)}
+            {listComment && listComment.length === 0 && <div className="no-comment"><p>Chưa có bình luận nào</p></div>}
+            {listComment && listComment.length !== 0 && listComment.map(co => <CommentLine key={co.id} line={co} />)}
         </div>
     )
 }

@@ -1,0 +1,28 @@
+.pagination-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+.pagination-container .outer-line {
+    border: 1px solid var(--main-color-gray);
+    display: flex;
+    background-color: var(--main-color-primary);
+    border-radius: 5px;
+}
+.pagination-container .outer-line .pagination-item:first-child {
+    border-left: none;
+}
+.pagination-item {
+    padding: 1em;
+    border-left: 1px solid var(--main-color-gray) ;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0.6;
+}
+.current-page {
+    color: var(--main-color-green);
+    text-decoration: underline;
+    opacity: 1;
+    font-weight: bold;
+}

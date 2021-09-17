@@ -1,0 +1,7 @@
+.shared-input {
+    display: flex;
+    flex-direction: column;
+}
+.shared-input label {
+    margin-bottom: 0.5em;
+}

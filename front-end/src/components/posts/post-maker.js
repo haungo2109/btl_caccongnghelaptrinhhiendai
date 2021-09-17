@@ -1,4 +1,4 @@
-import { faImages, faPlusCircle, faTags } from '@fortawesome/free-solid-svg-icons';
+import { faImages, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { useRef, useState } from 'react';
 import { useHistory } from 'react-router';
 import postApi from '../../api/postAPI';

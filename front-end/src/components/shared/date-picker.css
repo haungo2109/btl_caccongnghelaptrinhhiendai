@@ -8,3 +8,6 @@
     padding: 1em;
     flex: 1;
 }
+.date-input {
+    width: 50%;
+}

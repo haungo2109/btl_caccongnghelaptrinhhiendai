@@ -15,7 +15,7 @@ export default function PostSingle() {
     const [commentList, setCommentList] = useState('');
 
     useEffect(() => {
-        console.log(postid)
+        // console.log(postid)
         if(postid) {
             postApi.getPost(postid).then(data => {
                 setPost(data); 
@@ -25,7 +25,7 @@ export default function PostSingle() {
         if(user && user?.username) {
             setAllowComment(true);
         }
-    }, [user]);
+    }, [user, postid]);
 
     // khi comment xoong -> reload list coomment -> reset comment
     let getCommentList = () => {
@@ -34,6 +34,7 @@ export default function PostSingle() {
             return true;
         }).catch(err => {
             console.log(err); 
+            window.alert('Bình luận thất bại, vui lòng thử lại sau')
             return false;
         });
     }
