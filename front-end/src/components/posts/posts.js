@@ -41,7 +41,7 @@ export default function Posts() {
         if(init) {
             handleGetListByPage(page);
         }
-    }, [page])
+    }, [page, init])
 
     let navigate = (path) => {
         history.push(`${url}${path}`)

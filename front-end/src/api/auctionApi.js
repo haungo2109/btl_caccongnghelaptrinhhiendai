@@ -24,13 +24,18 @@ const auctionApi = {
 		return axiosClient.get(url);
 	},
 	getAuction: (auctionId) => {
-		const url = `/auction/${auctionId}`;
+		const url = `/auction/${auctionId}/`;
 		return axiosClient.get(url);
 	},
 	getAuctionComment: (auctionId) => {
-		const url = `/auction-comments/${auctionId}`;
+		const url = `/auction-comments/${auctionId}/`;
 		return axiosClient.get(url);
 	},
+	createAuctionComment: (auctionId, data) => {
+		const url = `/auction/${auctionId}/comments/`;
+		return axiosClient.post(url, data, config);
+	},
+	
 	/**
 	 *Edit auction, user Formdata
 	 * @param {number} auctionId Id of Auction to update
@@ -38,11 +43,11 @@ const auctionApi = {
 	 * @returns Promise
 	 */
 	patchAuction: (auctionId, data) => {
-		const url = `/auction/${auctionId}`;
+		const url = `/auction/${auctionId}/`;
 		return axiosClient.patch(url, data, config);
 	},
 	deleteAuction: (auctionId) => {
-		const url = `/auction/${auctionId}`;
+		const url = `/auction/${auctionId}/`;
 		return axiosClient.delete(url, config);
 	},
 	/**

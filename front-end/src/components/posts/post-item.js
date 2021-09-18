@@ -5,10 +5,10 @@ import { useStore } from 'react-redux'
 import { useHistory } from 'react-router'
 import { useState } from 'react/cjs/react.development'
 import postApi from '../../api/postAPI'
-import Comment from '../shared/comment'
-import CommentsList from '../shared/comments-list'
 import ImgViewer from '../shared/img-viewer'
 import PostUtil from '../shared/post-utils'
+import PostComment from './post-comment'
+import PostCommentsList from './post-comments-list'
 import './post-item.css'
 
 
@@ -34,7 +34,7 @@ export default function PostItem({content, createdAt, vote, user, hashtags, id, 
         !comments_list && history.push(route);
     }
 
-    if(userStore.id == id) {
+    if(userStore.id === id) {
         utilItems.push({name: 'Chỉnh sửa bài viết', link: `/post/${id}`});
         utilItems.push({name: 'Xóa bài viết', action: deleteItem});
     }
@@ -44,7 +44,6 @@ export default function PostItem({content, createdAt, vote, user, hashtags, id, 
         postApi.createPostComment(id, form).then(data => {
             getListComment()
             setComment('');
-            // tao tự tạo ra vòng lặp...
         }).catch(err => {
             console.log(err); 
             return false;
@@ -73,9 +72,9 @@ export default function PostItem({content, createdAt, vote, user, hashtags, id, 
                 </div>
             </div>
             <div className="hashtag">
-                {hashtags.map((h) => {
-                    <a href="!#" >#{h}</a>
-                })}
+                {hashtags && hashtags.map((h) => 
+                    <a>#{h.name}</a>
+                )}
             </div>
             <div className="content">
                 <p>{content}</p>
@@ -90,18 +89,18 @@ export default function PostItem({content, createdAt, vote, user, hashtags, id, 
                         {vote} lượt thích
                     </p>
                 </div>
-                <div className="commends card" title="Bình luận">
-                    <p onClick={() => move(`/posts/${id}`)}>
+                <div className="commends card" title="Bình luận" onClick={() => move(`/posts/${id}`)}>
+                    <p >
                         <FontAwesomeIcon icon={faComment} />
                         Bình luận
                     </p>
                 </div>
             </div>
             {isAllowedToComments && <div>
-                <Comment onComment={(e) => setComment(e.target.value)} commentText={comment} onClick={sendComment} onKeyDown={handleOnKeyDown} ></Comment>
+                <PostComment onComment={(e) => setComment(e.target.value)} commentText={comment} onClick={sendComment} onKeyDown={handleOnKeyDown} />
             </div>}
             {comments_list && <div>
-                <CommentsList listComment={comments_list} />
+                <PostCommentsList listComment={comments_list} />
             </div>}
         </div>
     )

@@ -66,3 +66,15 @@
 .tool-bar .card:hover {
     background-color: var(--main-color-bg);
 }
+.hashtag {
+    margin-bottom: 0.5em;
+}
+.hashtag a {
+    cursor: pointer;
+    padding: 0.25em;
+}
+.hashtag a:hover {
+    background-color: var(--main-color-secondary);
+    color: var(--main-color-primary);
+    text-decoration: underline;
+}

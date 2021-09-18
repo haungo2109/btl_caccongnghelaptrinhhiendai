@@ -1,6 +1,6 @@
-import './comments-list.css'
+import './post-comments-list.css'
 
-export function CommentLine({line}) {
+export function PostCommentLine({line}) {
     return (
         <div className="comment-item-container">
             <div className="avatar">
@@ -15,11 +15,11 @@ export function CommentLine({line}) {
     )
 }
 
-export default function CommentsList({listComment}) {
+export default function PostCommentsList({listComment}) {
     return(
         <div className="comments-list-container">
             {listComment && listComment.length === 0 && <div className="no-comment"><p>Chưa có bình luận nào</p></div>}
-            {listComment && listComment.length !== 0 && listComment.map(co => <CommentLine key={co.id} line={co} />)}
+            {listComment && listComment.length !== 0 && listComment.map(co => <PostCommentLine key={co.id} line={co} />)}
         </div>
     )
 }

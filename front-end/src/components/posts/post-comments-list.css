@@ -15,7 +15,7 @@
     display: block;
     width: 35px;
     height: 35px;
-    margin: auto;
+    margin-bottom: auto;
     border-radius: 50%;
 }
 .comment-item-container {
@@ -25,7 +25,8 @@
 .comment-item-container .comment-text {
     margin: auto 0;
     padding: 0.5em;
-    background-color: var(--main-color-gray);
+    background-color: var(--main-color-primary);
+    border: 2px solid var(--main-color-gray);
     border-radius: 8px;
 }
 .comments-list-container {

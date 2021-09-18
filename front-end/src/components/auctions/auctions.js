@@ -7,6 +7,7 @@ import ProtectedRoute from '../../route/protected-route';
 import Pagination from '../shared/pagination';
 import AuctionItem from './auction-item';
 import AuctionMaker from './auction-maker';
+import AuctionSingle from './auction-single';
 import './auction.css'
 
 let postPerPage = 5;
@@ -85,6 +86,9 @@ export default function Auctions() {
                 <ProtectedRoute path={`${path}/create`}>
                     <AuctionMaker />
                 </ProtectedRoute>
+                <Route path={`${path}/:auctionid`}>
+                    <AuctionSingle />
+                </Route>
                 <Route exact path={path}>
                     {createAuctionEl}
                     {auctions && auctions.map(a => <AuctionItem key={a.id} auction={a} />)}

@@ -28,3 +28,6 @@
     background-color: var(--main-color-blue);
     color: var(--main-color-primary);
 }
+.comment-input-container .comment-btn p {
+    margin: auto;
+}

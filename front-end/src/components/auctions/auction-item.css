@@ -10,7 +10,7 @@
 .auction-item-container .title h2:hover {
     text-decoration: underline;
 }
-.auction-item-container .avatar {
+.auction-avatar {
     border-bottom: 1px solid var(--main-color-gray);
     padding-bottom: 0.5em;
 }

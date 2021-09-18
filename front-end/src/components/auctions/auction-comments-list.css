@@ -1,0 +1,16 @@
+@import url('../posts/post-comments-list.css');
+
+.comment-item-container .avatar .avatar-img img {
+    margin-bottom: auto;
+    margin-top: 0;
+}
+.comment-text .price {
+    font-weight: bold;
+    padding-bottom: 0.5em;
+    margin-bottom: 0.5em;
+    border-bottom: 1px solid var(--main-color-gray);
+}
+.comment-text .price span {
+    font-weight: normal;
+    opacity: 0.7;
+}
