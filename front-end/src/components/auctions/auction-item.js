@@ -2,6 +2,7 @@ import { faBell, faCalendarAlt, faComment, faDollarSign, faHeart } from '@fortaw
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import moment from 'moment'
 import { useEffect, useState } from 'react'
+import { useStore } from 'react-redux'
 import { useHistory } from 'react-router'
 import auctionApi from '../../api/auctionApi'
 import ImgViewer from '../shared/img-viewer'
@@ -25,6 +26,8 @@ function SmallConditionItem({className, text, title, icon}) {
 export default function AuctionItem({auction, comments_list, isAllowedToComments = false, getListComment}) {
 
     let history = useHistory();
+    let store = useStore();
+    let user = store.getState();
     const [comment, setComment] = useState('');
     const [price, setPrice] = useState(0);
 
@@ -57,6 +60,11 @@ export default function AuctionItem({auction, comments_list, isAllowedToComments
     let handleOnKeyDown = (e) => {
         if(e.key === 'Enter') {
             sendComment();
+        }
+    }
+    let checkIfLiked = () => {
+        if(auction.like.includes(user.id)) {
+            return "liked"
         }
     }
 
@@ -94,9 +102,9 @@ export default function AuctionItem({auction, comments_list, isAllowedToComments
             </div>
             <div className="tool-bar">
                 <div className="likes card" title="Thích">
-                    <p>
+                    <p className={checkIfLiked()}>
                         <FontAwesomeIcon icon={faHeart} />
-                        {auction.vote} lượt thích
+                        {auction.like.length} lượt thích
                     </p>
                 </div>
                 <div className="commends card" title="Bình luận" onClick={() => move(`/auctions/${auction.id}`)}>

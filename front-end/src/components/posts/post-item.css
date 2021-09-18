@@ -78,3 +78,6 @@
     color: var(--main-color-primary);
     text-decoration: underline;
 }
+.liked {
+    color: var(--main-color-blue);
+}

@@ -99,6 +99,7 @@ export default function Posts() {
 									createdAt={p.create_at}
 									hashtags={p.hashtag}
 									user={p.user}
+                                    like={p.like}
 									vote={p.vote}
 									id={p.id}
 								/>

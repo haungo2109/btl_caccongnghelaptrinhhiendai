@@ -48,6 +48,7 @@ export default function PostSingle() {
                     hashtags={post.hashtag}
                     user={post.user}
                     vote={post.vote}
+                    like={post.like.length}
                     comments_list={commentList}
                     getListComment={getCommentList}
                     isAllowedToComments={allowComment}
