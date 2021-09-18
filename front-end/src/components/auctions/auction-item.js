@@ -23,7 +23,7 @@ function SmallConditionItem({className, text, title, icon}) {
     )
 }
 
-export default function AuctionItem({auction, comments_list, isAllowedToComments = false, getListComment}) {
+export default function AuctionItem({auction, comments_list, isAllowedToComments = false, getListComment, handleLike}) {
 
     let history = useHistory();
     let store = useStore();
@@ -67,6 +67,13 @@ export default function AuctionItem({auction, comments_list, isAllowedToComments
             return "liked"
         }
     }
+    let handleClickLike = () => {
+        if(auction.like.includes(user.id)) {
+            handleLike(auction.id, true);
+        } else  {
+            handleLike(auction.id, false);
+        }
+    }
 
     return (
         <div className="post-item-container auction-item-container">
@@ -101,7 +108,7 @@ export default function AuctionItem({auction, comments_list, isAllowedToComments
                 {auction.auction_images.length != 0 && <ImgViewer imgArray={auction.auction_images} />}
             </div>
             <div className="tool-bar">
-                <div className="likes card" title="Thích">
+                <div className="likes card" title="Thích" onClick={() => handleClickLike()}>
                     <p className={checkIfLiked()}>
                         <FontAwesomeIcon icon={faHeart} />
                         {auction.like.length} lượt thích

@@ -79,6 +79,17 @@ export default function Auctions() {
         // console.log(pageNum)
         history.push(`/auctions?page=${pageNum}`);
     }
+    let handleLike = (id, flagLiked) => {
+        if(flagLiked) {
+            auctionApi.decreateAuctionVote(id).then(data => {
+                handleGetListByPage(page);
+            }).catch(err => {console.log(err); window.alert("Hệ thống đã lỗi, vui lòng thử lại sau")});
+        } else {
+            auctionApi.increateAuctionVote(id).then(data => {
+                handleGetListByPage(page);
+            }).catch(err => {console.log(err); window.alert("Hệ thống đã lỗi, vui lòng thử lại sau")});
+        }
+    }
 
     return (
         <div className="posts-body-container">
@@ -91,7 +102,7 @@ export default function Auctions() {
                 </Route>
                 <Route exact path={path}>
                     {createAuctionEl}
-                    {auctions && auctions.map(a => <AuctionItem key={a.id} auction={a} />)}
+                    {auctions && auctions.map(a => <AuctionItem key={a.id} auction={a} handleLike={handleLike} />)}
                     {auctions && 
                             <Pagination 
                                 currentPage={page} 

@@ -17,9 +17,7 @@ export default function PostSingle() {
     useEffect(() => {
         // console.log(postid)
         if(postid) {
-            postApi.getPost(postid).then(data => {
-                setPost(data); 
-            }).catch(err => console.log(err));
+            getData()
             getCommentList();
         }
         if(user && user?.username) {
@@ -38,6 +36,22 @@ export default function PostSingle() {
             return false;
         });
     }
+    let getData = () => {
+        postApi.getPost(postid).then(data => {
+            setPost(data); 
+        }).catch(err => console.log(err));
+    }
+    let handleLike = (id, flagLiked) => {
+        if(flagLiked) {
+            postApi.decreatePostVote(id).then(data => {
+                getData();
+            }).catch(err => {console.log(err); window.alert("Hệ thống đã lỗi, vui lòng thử lại sau")});
+        } else {
+            postApi.increatePostVote(id).then(data => {
+                getData();
+            }).catch(err => {console.log(err); window.alert("Hệ thống đã lỗi, vui lòng thử lại sau")});
+        }
+    }
     
 
     return(
@@ -48,10 +62,11 @@ export default function PostSingle() {
                     hashtags={post.hashtag}
                     user={post.user}
                     vote={post.vote}
-                    like={post.like.length}
+                    like={post.like}
                     comments_list={commentList}
                     getListComment={getCommentList}
                     isAllowedToComments={allowComment}
+                    handleLike={handleLike}
                     id={post.id} />}
         </div>
     )

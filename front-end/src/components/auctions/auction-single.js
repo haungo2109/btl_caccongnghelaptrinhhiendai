@@ -18,9 +18,7 @@ export default function AuctionSingle() {
     useEffect(() => {
         // console.log(postid)
         if(auctionid) {
-            auctionApi.getAuction(auctionid).then(data => {
-                setAuction(data);
-            }).catch(err => console.log(err));
+            getData();
             getCommentList();
         }
         if(user && user?.username) {
@@ -28,6 +26,11 @@ export default function AuctionSingle() {
         }
     }, [user, auctionid]);
 
+    let getData = () => {
+        auctionApi.getAuction(auctionid).then(data => {
+            setAuction(data);
+        }).catch(err => console.log(err));
+    }
     // khi comment xoong -> reload list coomment -> reset comment
     let getCommentList = () => {
         auctionApi.getAuctionComment(auctionid).then(data => {
@@ -39,11 +42,28 @@ export default function AuctionSingle() {
             return false;
         });
     }
-    
+    let handleLike = (id, flagLiked) => {
+        if(flagLiked) {
+            auctionApi.decreateAuctionVote(id).then(data => {
+                getData();
+            }).catch(err => {console.log(err); window.alert("Hệ thống đã lỗi, vui lòng thử lại sau")});
+        } else {
+            auctionApi.increateAuctionVote(id).then(data => {
+                getData();
+            }).catch(err => {console.log(err); window.alert("Hệ thống đã lỗi, vui lòng thử lại sau")});
+        }
+    }
 
     return(
         <div>
-            {auction && <AuctionItem key={auction.id} auction={auction} isAllowedToComments={allowComment} comments_list={commentList} getListComment={getCommentList} />}
+            {auction && 
+                <AuctionItem key={auction.id} 
+                    auction={auction} 
+                    isAllowedToComments={allowComment} 
+                    comments_list={commentList} 
+                    getListComment={getCommentList} 
+                    handleLike={handleLike} 
+                />}
         </div>
     )
 }

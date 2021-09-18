@@ -13,7 +13,7 @@ import './post-item.css'
 
 
 
-export default function PostItem({content, createdAt, vote, user, hashtags, id, images, comments_list, isAllowedToComments = false, getListComment, like}) {
+export default function PostItem({content, createdAt, vote, user, hashtags, id, images, comments_list, isAllowedToComments = false, getListComment, like, handleLike}) {
 
     const store = useStore();
     const userStore = store.getState();
@@ -59,6 +59,13 @@ export default function PostItem({content, createdAt, vote, user, hashtags, id, 
             return "liked"
         }
     }
+    let handleClickLike = () => {
+        if(like.includes(userStore.id)) {
+            handleLike(id, true);
+        } else  {
+            handleLike(id, false);
+        }
+    }
 
     return (
         <div className="post-item-container">
@@ -88,10 +95,10 @@ export default function PostItem({content, createdAt, vote, user, hashtags, id, 
                 <ImgViewer imgArray={images} />
             </div>
             <div className="tool-bar">
-                <div className="likes card" title="Thích">
+                <div className="likes card" title="Thích" onClick={() => handleClickLike()}>
                     <p className={checkIfLiked()}>
                         <FontAwesomeIcon icon={faHeart} />
-                        {like.leng} lượt thích
+                        {like.length} lượt thích
                     </p>
                 </div>
                 <div className="commends card" title="Bình luận" onClick={() => move(`/posts/${id}`)}>

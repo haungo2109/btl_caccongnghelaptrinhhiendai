@@ -47,11 +47,13 @@ export default function Posts() {
         history.push(`${url}${path}`)
     }
 
-    let handleGetListByPage = (p) => {
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
+    let handleGetListByPage = (p, rollToTop = true) => {
+        if(rollToTop) {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        }
         setLoading(true);
         postApi.getPostsByPage(p).then((data) => {
             // console.log(data.results)
@@ -66,6 +68,17 @@ export default function Posts() {
         setPage(pageNum);
         // console.log(pageNum)
         history.push(`/posts?page=${pageNum}`);
+    }
+    let handleLike = (id, flagLiked) => {
+        if(flagLiked) {
+            postApi.decreatePostVote(id).then(data => {
+                handleGetListByPage(page, false);
+            }).catch(err => {console.log(err); window.alert("Hệ thống đã lỗi, vui lòng thử lại sau")});
+        } else {
+            postApi.increatePostVote(id).then(data => {
+                handleGetListByPage(page, false);
+            }).catch(err => {console.log(err); window.alert("Hệ thống đã lỗi, vui lòng thử lại sau")});
+        }
     }
 
     if(user && user?.username) {
@@ -102,6 +115,7 @@ export default function Posts() {
                                     like={p.like}
 									vote={p.vote}
 									id={p.id}
+                                    handleLike={handleLike}
 								/>
 							);
                         })}
