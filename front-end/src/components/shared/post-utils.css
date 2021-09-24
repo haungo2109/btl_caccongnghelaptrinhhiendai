@@ -26,3 +26,11 @@
     text-decoration: none;
     color: var(--main-color-primary);
 }
+
+.post-util-list .util-item:hover {
+    background-color: var(--main-color-primary);
+    color: var(--main-color-secondary);
+}
+.post-util-list .util-item:hover a {
+    color: var(--main-color-secondary);
+}

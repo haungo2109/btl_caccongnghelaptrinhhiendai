@@ -1,9 +1,14 @@
+import { useEffect } from 'react';
 import { useState } from 'react/cjs/react.development'
 import './img-viewer.css'
 
 export default function ImgViewer({imgArray, preview = true}) {
 
     const [mainImg, setMainImg] = useState(imgArray[0]);
+
+    useEffect(() => {
+        setMainImg(imgArray[0])
+    }, [imgArray])
 
     return(
         <div className="imgViewer-container">

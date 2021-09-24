@@ -26,7 +26,7 @@ export default function Header() {
     const store = useStore();
     const user = store.getState();
 
-    if(Object.keys(user).length != 0) {
+    if(Object.keys(user).length !== 0) {
         ls.push({'name': user.last_name, 'link': 'user'});
     } else {
         ls.push({'name': 'Đăng nhập', 'link': 'login'});

@@ -72,11 +72,12 @@
 .hashtag a {
     cursor: pointer;
     padding: 0.25em;
+    color: var(--main-color-blue);
+    text-decoration: underline;
 }
 .hashtag a:hover {
     background-color: var(--main-color-secondary);
     color: var(--main-color-primary);
-    text-decoration: underline;
 }
 .liked {
     color: var(--main-color-blue);

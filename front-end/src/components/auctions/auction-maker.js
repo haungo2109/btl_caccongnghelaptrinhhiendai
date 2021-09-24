@@ -51,7 +51,10 @@ export default function AuctionMaker() {
         formData.set('condition', condition);
         formData.set('deadline', moment(date).format('YYYY-MM-DD'));
         if(imgs.length !== 0) {
-            formData.set('images', imgs);
+            // formData.set('images', imgs);
+            for (let index = 0; index < imgs.length; index++) {
+                formData.append('images', imgs[index]);            
+            }
         }
         formData.set('category', category);
 

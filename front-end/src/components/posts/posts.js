@@ -35,7 +35,7 @@ export default function Posts() {
             handleGetListByPage(page);
         }
         setInit(true);
-    }, [])
+    }, [page])
 
     useEffect(() => {
         if(init) {
@@ -80,6 +80,11 @@ export default function Posts() {
             }).catch(err => {console.log(err); window.alert("Hệ thống đã lỗi, vui lòng thử lại sau")});
         }
     }
+    let handleDeletePost = (id) => {
+        postApi.deletePost(id).then(data => {
+            handleGetListByPage(page);
+        }).catch(err => {console.log(err); window.alert("Hệ thống đã lỗi, vui lòng thử lại sau")});
+    }
 
     if(user && user?.username) {
         createPostEl = (
@@ -116,6 +121,7 @@ export default function Posts() {
 									vote={p.vote}
 									id={p.id}
                                     handleLike={handleLike}
+                                    handleDelete={handleDeletePost}
 								/>
 							);
                         })}

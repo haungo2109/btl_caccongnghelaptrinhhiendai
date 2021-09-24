@@ -13,30 +13,30 @@ import './post-item.css'
 
 
 
-export default function PostItem({content, createdAt, vote, user, hashtags, id, images, comments_list, isAllowedToComments = false, getListComment, like, handleLike}) {
+export default function PostItem({content, createdAt, vote, user, hashtags, id, images, comments_list, isAllowedToComments = false, getListComment, like, handleLike, handleDelete}) {
 
     const store = useStore();
     const userStore = store.getState();
     const history = useHistory();
     const [comment, setComment] = useState('');
 
-    let deleteItem = () => {
-        console.log('delete')
+    let handleEdit = () => {
+        history.push({pathname: "/posts/create", search: `?id=${id}`})
     }
     let report = () => {
         console.log('report')
     }
 
-    let utilItems = [
-        {name: 'Báo cáo', action: report}
-    ]
+    let utilItems = []; 
     let move = (route) => {
         !comments_list && history.push(route);
     }
 
-    if(userStore.id === id) {
-        utilItems.push({name: 'Chỉnh sửa bài viết', link: `/post/${id}`});
-        utilItems.push({name: 'Xóa bài viết', action: deleteItem});
+    if(userStore && userStore.id === user.id) {
+        utilItems.push({name: 'Chỉnh sửa bài viết', action: () => handleEdit(id)});
+        utilItems.push({name: 'Xóa bài viết', action: handleDelete});
+    } else { 
+        utilItems.push({name: 'Báo cáo', action: report});
     }
     let sendComment = () => {
         let form = new FormData();
@@ -85,7 +85,7 @@ export default function PostItem({content, createdAt, vote, user, hashtags, id, 
             </div>
             <div className="hashtag">
                 {hashtags && hashtags.map((h) => 
-                    <a>#{h.name}</a>
+                    <a key={h.id} >#{h.name}</a>
                 )}
             </div>
             <div className="content">

@@ -59,11 +59,14 @@ export default function Auctions() {
         history.push(`${url}${path}`)
     }
 
-    let handleGetListByPage = (p) => {
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
+    let handleGetListByPage = (p, scroll = true) => {
+        if(scroll) {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        }
+        
         setLoading(true);
         auctionApi.getAuctionsByPage(p).then(data => {
             // console.log(data.results)
@@ -82,11 +85,11 @@ export default function Auctions() {
     let handleLike = (id, flagLiked) => {
         if(flagLiked) {
             auctionApi.decreateAuctionVote(id).then(data => {
-                handleGetListByPage(page);
+                handleGetListByPage(page, false);
             }).catch(err => {console.log(err); window.alert("Hệ thống đã lỗi, vui lòng thử lại sau")});
         } else {
             auctionApi.increateAuctionVote(id).then(data => {
-                handleGetListByPage(page);
+                handleGetListByPage(page, false);
             }).catch(err => {console.log(err); window.alert("Hệ thống đã lỗi, vui lòng thử lại sau")});
         }
     }
