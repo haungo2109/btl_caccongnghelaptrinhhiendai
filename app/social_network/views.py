@@ -6,8 +6,10 @@ from rest_framework.views import APIView
 from django.db import IntegrityError
 from .models import *
 from .serializers import *
-from .ultis import IsOwner, StandardResultsSetPagination, IsCurrentUser
+from .ultis import IsOwner, StandardResultsSetPagination, IsCurrentUser, send_push_message, create_hash_by_RSA, \
+    send_request_to_momo
 from datetime import datetime
+from django.db.models import Q
 
 
 class UserViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.UpdateAPIView):
@@ -24,9 +26,36 @@ class UserViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.UpdateAPIVi
     def get_current_user(self, request, pk=None):
         return Response(self.serializer_class(request.user).data)
 
+    @action(methods=['get'], detail=True, url_path='base-info')
+    def get_user(self, request, pk=None):
+        try:
+            user = User.objects.get(pk=pk)
+            serializer = UserBaseInforSerializer(user)
+            return Response(serializer.data,
+                            status=status.HTTP_200_OK)
+
+        except User.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    @action(methods=['post'], detail=False, url_path='push-token')
+    def post_push_token(self, request, pk=None):
+        try:
+            push_token = request.data.get('push_token')
+            if push_token:
+                user = User.objects.get(pk=request.user.id)
+                user.push_token = push_token
+                user.save()
+
+                serializer = UserSerializer(user)
+                return Response(serializer.data,
+                                status=status.HTTP_200_OK)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        except User.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
 
 class PostViewSet(viewsets.ModelViewSet):
-    queryset = Post.objects.filter(active=True)
     serializer_class = PostSerializer
     parser_classes = [MultiPartParser, ]
 
@@ -85,17 +114,37 @@ class PostViewSet(viewsets.ModelViewSet):
         return Response(serializer.data,
                         status=status.HTTP_200_OK)
 
+    def get_queryset(self):
+        hashtag = self.request.query_params.get('hashtag', None)
+        user_name = self.request.query_params.get('user_name', None)
+        content = self.request.query_params.get('content', None)
+
+        queryset = Post.objects.filter(active=True)
+
+        if hashtag:
+            queryset = queryset.filter(hashtag__in=HashTagPost.objects.filter(name__contains=hashtag))
+        if user_name:
+            queryset = queryset.filter(
+                Q(user__first_name__icontains=user_name) | Q(user__last_name__contains=user_name))
+        if content:
+            queryset = queryset.filter(content__icontains=content)
+
+        return queryset
+
     @action(methods=['get'], detail=False, url_path='owner')
     def get_owner_post(self, request):
         try:
             posts = Post.objects.filter(user__id=request.user.id)
-
+            page = self.paginate_queryset(posts)
         except Post.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        serializer = PostSerializer(posts, many=True)
-        return Response(serializer.data,
-                        status=status.HTTP_200_OK)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(posts, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(methods=['post'], detail=True, url_path='increase-vote')
     def increase_vote(self, request, pk=None):
@@ -103,6 +152,15 @@ class PostViewSet(viewsets.ModelViewSet):
             post = self.get_object()
             post.like.add(request.user)
             post.save()
+
+            owner_post = post.user
+            if owner_post.push_token and owner_post.push_token != "none":
+                title = request.user.get_full_name() + " did like your post"
+                data = {"id": post.id, "obj": "post"}
+                send_push_message(token=owner_post.push_token,
+                                  title=title,
+                                  message=post.content,
+                                  extra=data)
 
         except Post.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -133,6 +191,16 @@ class PostViewSet(viewsets.ModelViewSet):
             comment = PostComment.objects.create(content=content, post=post, user=request.user)
             post.count_comment = post.count_comment + 1;
             post.save()
+
+            owner_post = post.user
+            if owner_post.push_token and owner_post.push_token != "none":
+                title = request.user.get_full_name() + " did comment your post"
+                data = {"id": str(post.id), "obj": "post"}
+                send_push_message(token=owner_post.push_token,
+                                  title=title,
+                                  message=content,
+                                  extra=data)
+
         except Post.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -166,11 +234,31 @@ class CategoryViewSet(viewsets.ViewSet, generics.ListAPIView):
 
 
 class AuctionViewSet(viewsets.ModelViewSet):
-    queryset = Auction.objects.filter(active=True).select_related("user").select_related("buyer").select_related(
-        "category")
     serializer_class = AuctionSerializer
     parser_classes = [MultiPartParser, ]
     basename = "/"
+
+    def get_queryset(self):
+        title = self.request.query_params.get('title', None)
+        category = self.request.query_params.get('category', None)
+        base_price = self.request.query_params.get('base_price', None)
+        user_name = self.request.query_params.get('user_name', None)
+
+        queryset = Auction.objects.filter(active=True, status_auction=StatusAuction.auction)
+        if title:
+            queryset = queryset.filter(title__icontains=title)
+        if category:
+            queryset = queryset.filter(category=category)
+        if base_price:
+            queryset = queryset.filter(base_price__gt=base_price)
+        if user_name:
+            queryset = queryset.filter(
+                Q(user__first_name__icontains=user_name) | Q(user__last_name__contains=user_name))
+
+        queryset = queryset.select_related("user").select_related("buyer").select_related("category").select_related(
+            "payment_method")
+
+        return queryset
 
     def get_permissions(self):
         if self.action in ['list', 'retrieve']:
@@ -184,9 +272,11 @@ class AuctionViewSet(viewsets.ModelViewSet):
     def create(self, request):
         form_data = dict(request.POST.dict())
         category_id = form_data.pop('category')
+        payment_method_id = form_data.pop('payment_method')
 
         category = CategoryAuction.objects.get(id=category_id)
-        auction = Auction.objects.create(user=request.user, category=category, **form_data)
+        payment = PaymentMethod.objects.get(id=payment_method_id)
+        auction = Auction.objects.create(user=request.user, category=category, payment_method=payment, **form_data)
 
         if request.FILES:
             images = request.FILES.getlist('images')
@@ -197,17 +287,65 @@ class AuctionViewSet(viewsets.ModelViewSet):
         return Response(serializer.data,
                         status=status.HTTP_200_OK)
 
+    def partial_update(self, request, pk, *args, **kwargs):
+        auction = Auction.objects.get(pk=pk)
+        data = request.data
+        images = request.FILES.getlist('images')
+        if (images):
+            AuctionImage.objects.filter(auction__id=auction.id).delete()
+            for image in images:
+                AuctionImage(image=image, auction_id=auction.id).save()
+
+        auction.title = data['title']
+        auction.content = data['content']
+        auction.base_price = data['base_price']
+        auction.condition = data['condition']
+        auction.deadline = data['deadline']
+        auction.category = CategoryAuction.objects.get(pk=data['category'])
+        auction.payment_method = PaymentMethod.objects.get(pk=data['payment_method'])
+        auction.save()
+
+        serializer = AuctionSerializer(auction)
+        return Response(serializer.data,
+                        status=status.HTTP_200_OK)
+
+    def retrieve(self, request, pk, *args, **kwargs):
+        auction = Auction.objects.get(pk=pk)
+
+        serializer = AuctionSerializer(auction)
+        return Response(serializer.data,
+                        status=status.HTTP_200_OK)
+
+
     @action(methods=['get'], detail=False, url_path='owner')
-    def get_owner_post(self, request):
+    def get_owner_auction(self, request):
         try:
             auctions = Auction.objects.filter(user__id=request.user.id)
-
+            page = self.paginate_queryset(auctions)
         except Auction.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        serializer = AuctionSerializer(auctions, many=True)
-        return Response(serializer.data,
-                        status=status.HTTP_200_OK)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(auctions, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(methods=['get'], detail=False, url_path='auction_join')
+    def get_join_auction(self, request):
+        try:
+            auctions = Auction.objects.filter(auction_comments__user__id=7)
+            page = self.paginate_queryset(auctions)
+        except Auction.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(auctions, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(methods=['post'], detail=True, url_path='increase-vote')
     def increase_vote(self, request, pk=None):
@@ -215,6 +353,15 @@ class AuctionViewSet(viewsets.ModelViewSet):
             auction = Auction.objects.get(pk=pk)
             auction.like.add(request.user)
             auction.save()
+
+            owner_auction = auction.user
+            if owner_auction.push_token and owner_auction.push_token != "none":
+                title = request.user.get_full_name() + " did like your auction"
+                data = {"id": str(auction.id), "obj": "auction"}
+                send_push_message(token=owner_auction.push_token,
+                                  title=title,
+                                  message=auction.content,
+                                  extra=data)
 
         except Auction.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -242,15 +389,35 @@ class AuctionViewSet(viewsets.ModelViewSet):
         content = request.POST['content']
         price = request.POST['price']
 
+        defaults = {}
+        if content:
+            defaults["content"] = content
+        if price:
+            defaults["price"] = price
+
         try:
             comment, created = AuctionComment.objects.update_or_create(
                 user=request.user, auction=self.get_object(),
-                defaults={'content': content, 'price': price},
+                defaults=defaults,
             )
+
+            auction = self.get_object()
+            title = request.user.get_full_name()
             if created:
-                auction = self.get_object()
                 auction.count_comment = auction.count_comment + 1;
                 auction.save()
+                title += " did comment in your auction"
+            else:
+                title += " did edit comment in your auction"
+
+            owner_auction = auction.user
+            if owner_auction.push_token and owner_auction.push_token != "none":
+                data = {"id": str(auction.id), "obj": "auction"}
+                send_push_message(token=owner_auction.push_token,
+                                  title=title,
+                                  message=auction.title,
+                                  extra=data)
+
         except Auction.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -261,7 +428,7 @@ class AuctionViewSet(viewsets.ModelViewSet):
     @action(methods=['post'], detail=True, url_path='fail-auction', permission_classes=[IsOwner()])
     def success_auction(self, request, pk=None):
         try:
-            auction = self.get_object()
+            auction = Auction.objects.get(pk=pk)
             if auction.status_auction == StatusAuction.success:
                 return Response(status=status.HTTP_400_BAD_REQUEST, data={"error_msg": "This auction had success."})
 
@@ -279,6 +446,7 @@ class AuctionViewSet(viewsets.ModelViewSet):
             permission_classes=[IsOwner()])
     def set_status_transaction(self, request, *args, **kwargs):
         comment_id = kwargs.get('comment_id')
+        auction_id = kwargs.get('pk')
 
         try:
             state_comment = StatusAuction[kwargs.get('state')]
@@ -288,7 +456,7 @@ class AuctionViewSet(viewsets.ModelViewSet):
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST, data={"error_msg": "Wrong state of StatusAuction"})
 
-        auction = self.get_object()
+        auction = Auction.objects.get(pk=auction_id)
         comment = AuctionComment.objects.get(pk=comment_id)
 
         if state_comment == StatusTransaction.in_process and comment.status_transaction == StatusTransaction.none:
@@ -310,15 +478,21 @@ class AuctionViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_400_BAD_REQUEST,
                             data={"error_msg": "State of StatusAuction is not suitable"})
 
-        comment.save()
-        auction.save()
+        user_serializer = UserBaseInforSerializer(auction.buyer)
 
         serializer = StatusSerializer(data={"status_auction": auction.status_auction,
-                                            "status_transaction": comment.status_transaction})
+                                            "status_transaction": comment.status_transaction,
+                                            "auction_id": auction.id,
+                                            "comment_id": comment_id,
+                                            "date_success": auction.date_success,
+                                            "accept_price": auction.accept_price,
+                                            "buyer": user_serializer.data})
         if serializer.is_valid():
+            comment.save()
+            auction.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
-            return Response(status=status.HTTP_400_BAD_REQUEST, data={"error_msg": "Error parser response"})
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={"error_msg": serializer.errors})
 
 
 class AuctionCommentAPIView(APIView):
@@ -330,8 +504,14 @@ class AuctionCommentAPIView(APIView):
 
     def get(self, request, auction_id):
         try:
-            comments = AuctionComment.objects.filter(auction__id=auction_id)
-        except PostComment.DoesNotExist:
+            user = request.user
+            auction = Auction.objects.get(pk=auction_id)
+            if auction.user.id == user.id:
+                comments = AuctionComment.objects.filter(auction__id=auction_id)
+            else:
+                comments = AuctionComment.objects.filter(user=user, auction=auction)
+
+        except Auction.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         serializer = AuctionCommentSerializer(comments, many=True)
@@ -403,3 +583,91 @@ class AuctionReportViewSet(viewsets.ViewSet, generics.CreateAPIView):
         serializer = AuctionReportSerializer(auction_report)
         return Response(serializer.data,
                         status=status.HTTP_200_OK)
+
+
+class PaymentMethodViewSet(viewsets.ViewSet, generics.ListAPIView):
+    queryset = PaymentMethod.objects.all()
+    parser_classes = [JSONParser]
+    serializer_class = PaymentMethodSerializer
+    pagination_class = StandardResultsSetPagination
+
+
+class MomoPay(viewsets.ViewSet, generics.CreateAPIView):
+    parser_classes = [JSONParser]
+    serializer_class = MomoPaySerializer
+
+    def get_permissions(self):
+        return [permissions.IsAuthenticated()]
+
+    def create(self, request, *args, **kwargs):
+        auction_id = request.data.get('auction_id')
+        comment_id = request.data.get('comment_id')
+        phonenumber = request.data.get('phonenumber')
+        data = request.data.get('momo_token')
+
+        try:
+            auction = Auction.objects.get(pk=auction_id)
+        except Auction.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        try:
+            comment = AuctionComment.objects.get(pk=comment_id)
+        except AuctionComment.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        partnerCode = "MOMOBDAF20201207"
+        partnerRefId = "Kanj-auctionId_%s-commentId_%s" % (auction.id, comment.id)  # ma don hang
+        customerNumber = phonenumber
+        appData = data
+        version = "2.0"
+        description = "Thanh toan dau gia"
+        amount = comment.price
+        hash = create_hash_by_RSA({"amount": amount, "partnerRefId": partnerRefId, "partnerCode": partnerCode})
+
+        res = send_request_to_momo({
+            "partnerCode": partnerCode,
+            "partnerRefId": partnerRefId,
+            "customerNumber": customerNumber,
+            "appData": appData,
+            "hash": hash.decode("utf-8"),
+            "version": version,
+            "description": description,
+            "amount": amount
+        })
+
+        if res.get("status") != 0 and res.get("status") != 2132:
+            return Response(data=res, status=status.HTTP_400_BAD_REQUEST)
+
+        auction.buyer = comment.user
+        auction.accept_price = comment.price
+        auction.date_success = datetime.now()
+        auction.status_auction = StatusAuction.success
+        comment.status_transaction = StatusTransaction.success
+
+        auction.save()
+        comment.save()
+        user_serializer = UserBaseInforSerializer(auction.buyer)
+        serializer = MomoPaySerializer(data={
+            "message": res.get("message", "Thanh toán thành công"),
+            "auction_id": auction.id,
+            "date_success": auction.date_success,
+            "accept_price": auction.accept_price,
+            "buyer": user_serializer.data,
+            "status_auction": auction.status_auction,
+            "status_transaction": comment.status_transaction,
+            "comment_id": comment.id
+        })
+
+        if serializer.is_valid():
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={"error_msg": serializer.errors})
+
+
+
+class FeedbackViewSet(viewsets.ViewSet, generics.CreateAPIView):
+    queryset = Feedback.objects.all()
+    parser_classes = [JSONParser]
+    serializer_class = FeedbackSerializer
+
+    def get_permissions(self):
+        return [permissions.IsAuthenticated()]

@@ -5,8 +5,11 @@ from rest_framework.routers import DefaultRouter
 
 
 router = DefaultRouter()
-router.register('post', views.PostViewSet)
+router.register('post', views.PostViewSet, basename='post')
 router.register('user', views.UserViewSet)
+router.register('momopay', views.MomoPay, basename='momopay')
+router.register('payment-method', views.PaymentMethodViewSet)
+router.register('feedback', views.FeedbackViewSet)
 router.register('auction', views.AuctionViewSet, basename='auction')
 router.register('category', views.CategoryViewSet)
 router.register('report-type', views.ReportTypeViewSet)

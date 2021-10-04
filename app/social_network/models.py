@@ -10,7 +10,8 @@ class User(AbstractUser):
     avatar = models.ImageField(upload_to=user_directory_path, default=None, null=True)
     address = models.CharField(max_length=255, null=True)
     birthday = models.DateField(null=True)
-    
+    push_token = models.CharField(max_length=60, null=True, default="none")
+
     def __str__(self):
         return self.get_full_name()
 
@@ -61,6 +62,12 @@ class StatusAuction(models.TextChoices):
     in_process = 'in process', _('Sản phẩm trang trong quá trình chuyển giao khách hàng')
 
 
+class PaymentMethod(models.Model):
+    name = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.name
+
 class Auction(BaseInfo):
     title = models.CharField(max_length=225, default='Auction')
     active = models.BooleanField(default=True)
@@ -75,6 +82,7 @@ class Auction(BaseInfo):
     category = models.ForeignKey(CategoryAuction, on_delete=models.SET_NULL, null=True)
     like = models.ManyToManyField(User, related_name='auction_liked', blank=True)
     buyer = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='auction_bought', null=True)
+    payment_method = models.ForeignKey(PaymentMethod, related_name="aution_pay_method", default=2, on_delete=models.SET_NULL, null=True)
 
 
 class PostComment(BaseInfo):
@@ -143,3 +151,13 @@ class AuctionReport(BaseInfo):
     def __str__(self):
         if self.content:
                 return self.content + "-" + self.type.name
+
+
+class Feedback(models.Model):
+    title = models.TextField(blank=True, null=True)
+    content = models.TextField(blank=True, null=True)
+    create_at = models.DateTimeField(auto_now_add=True, null=True)
+
+    def __str__(self):
+        if self.title:
+            return self.title

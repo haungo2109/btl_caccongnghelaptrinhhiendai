@@ -1,5 +1,50 @@
 from rest_framework import permissions
 from rest_framework.pagination import PageNumberPagination
+from exponent_server_sdk import (
+    DeviceNotRegisteredError,
+    PushClient,
+    PushMessage,
+    PushServerError,
+    PushTicketError,
+)
+
+from requests.exceptions import ConnectionError, HTTPError
+from .models import *
+import rsa
+import json
+from Crypto.PublicKey import RSA
+from Crypto.Cipher import PKCS1_v1_5 as Cipher_PKCS1_v1_5
+from base64 import b64encode
+import json
+import requests
+import uuid
+import hmac
+import hashlib
+
+
+endpoint = "https://test-payment.momo.vn/pay/app"
+public_key = "MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEApn2o3p2ww8Yda6sEgn/IcXVSJR65jxF78uoYVLoejsE+cJVqI5mXla/PVj5vqJ0mfjTS4QPIj8ENSwLlMNUnsr++bvp1G3VlRtdyIjHjMMQoerE7mBnYvvGiLHccwngPi+Wn/h6HLrtj/a4DAl1WR87K4XbCS3MfGJJiPJHB9qQy/g0JBbELPenF5dV45uIcxJ2CUBR0wGabhf3Fr2xDm8K7u+OCwMJFWHJx066sPfo2eSY+PFnZjl6wk0QrL2A35hnqRrDc+KIlCxvnxNcc9fpEm9veyLjMVNQvA0ce4BdOnycgHdHjA4TWoIZ93oeFFIjISDnRm4rrBFGGsVlNCGrw8byvRMoDMESLLAlodUmMTlzGQ8EHV5emcOOWWi4Sa3Vy1qA9SkC36A2umpVZLbADLKcTrrz3gcBYzIPz2jhv2NvFltamdBiiSgv6NTGeX8g7DY+vmzXCFgjLUNV53EnIgwq8IvGDKxHZIO/yxo2MwnlsPAQuclRM5ie3nLCET3COwj9TN4lt+c287hl1gGw3TYEKOW+sLS+Q/OVah+wyoNHMPjlNRb4cZZf5S3wfnelq0/K9Uu9C1iVSV6W7j462+iVQer3mgKsA3gbydLgTz38LMB2lA8LOLallVK5OHtohXpOJt5P5JkXhmH5pL07vT59UcSxTrxqXILIBVx8CAwEAAQ=="
+base_path = "/home/kan_haungo/Desktop/btl_caccongnghelaptrinhhiendai/app/social_network"
+
+def send_push_message(token, title, message, extra=None):
+    try:
+        response = PushClient().publish(
+            PushMessage(to=token,
+                        title=title,
+                        body=message,
+                        data=extra))
+    except PushServerError as exc:
+        print(exc)
+    except (ConnectionError, HTTPError) as exc:
+        print(exc)
+
+    try:
+        response.validate_response()
+    except DeviceNotRegisteredError as ex:
+        print("error", ex)
+        # User.objects.filter(push_token=token).update(push_token="none")
+    except PushTicketError as exc:
+        print(exc)
 
 
 def user_directory_path(instance, filename):
@@ -35,3 +80,28 @@ class StandardResultsSetPagination(PageNumberPagination):
     page_size = 100
     page_size_query_param = 'page_size'
     max_page_size = 1000
+
+
+#this function user capercase to fit with request of Momo
+def create_hash_by_RSA(rowData={}):
+    amount = rowData.get('amount')
+    partnerRefId = rowData.get('partnerRefId')
+    partnerCode = rowData.get('partnerCode')
+
+    if not (amount and partnerCode and partnerRefId):
+        return
+
+    f = open(base_path + '/mykey.pem', 'r')
+    key = RSA.importKey(f.read())
+
+    cipher = Cipher_PKCS1_v1_5.new(key)
+    cipher_text = cipher.encrypt(json.dumps(rowData).encode())
+    return b64encode(cipher_text)
+
+
+def send_request_to_momo(data):
+    data_string = json.dumps(data)
+    r = requests.post(url=endpoint, data=data_string, headers={"Content-Type": "application/json"})
+    res = r.json()
+
+    return res
