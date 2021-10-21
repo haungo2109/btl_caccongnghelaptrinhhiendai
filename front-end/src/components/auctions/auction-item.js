@@ -23,7 +23,7 @@ function SmallConditionItem({className, text, title, icon}) {
     )
 }
 
-export default function AuctionItem({auction, comments_list, isAllowedToComments = false, getListComment, handleLike}) {
+export default function AuctionItem({auction, comments_list, isAllowedToComments = false, getListComment, handleLike, handleDelete}) {
 
     let history = useHistory();
     let store = useStore();
@@ -31,10 +31,18 @@ export default function AuctionItem({auction, comments_list, isAllowedToComments
     const [comment, setComment] = useState('');
     const [price, setPrice] = useState(0);
 
+    let handleEdit = () => {
+        history.push({pathname: '/auctions/create', search: `?id=${auction.id}`})
+    }
 
-    let utilItems = [
-        {name: 'Báo cáo', action: () => {}}
-    ]
+    let utilItems = [];
+
+    if(user && user.id == auction.user.id) {
+        utilItems.push({name: 'Chỉnh sửa bài', action: () => handleEdit()});
+        utilItems.push({name: 'Xóa bài bài', action: () => handleDelete(auction.id)});
+    } else {
+        utilItems.push({name: 'Báo cáo', action: () => {}});
+    }
 
     let move = (route) => {
         !comments_list && history.push(route);

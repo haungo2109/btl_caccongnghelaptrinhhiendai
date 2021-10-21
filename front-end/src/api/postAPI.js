@@ -19,8 +19,8 @@ const postApi = {
 		const url = '/post/';
 		return axiosClient.post(url, data, config);
 	},
-	getPostOwner: () => {
-		const url = '/post/owner/';
+	getPostOwner: (page) => {
+		const url = `/post/owner/?page=${page}`;
 		return axiosClient.get(url);
 	},
 	getPost: (postId) => {

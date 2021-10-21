@@ -1,6 +1,6 @@
 import './auction-comments-list.css'
 
-export  function AuctionCommentLine({line, isFirst}) {
+export  function AuctionCommentLine({line, isFirst, showPrice = false}) {
     return (
         <div className="comment-item-container">
             <div className="avatar">
@@ -10,7 +10,7 @@ export  function AuctionCommentLine({line, isFirst}) {
             </div>
             <div className="comment-text">
                 <div className="price">
-                    <p><span>Giá đấu giá: </span>{line.price} $</p>
+                    <p><span>Giá đấu giá: </span>{showPrice? line.price + '$': '---'}</p>
                 </div>
                 <p>{line.content}</p>
             </div>

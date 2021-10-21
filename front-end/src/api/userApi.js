@@ -1,6 +1,5 @@
 import axiosClient, { ID, SECRET } from './axiosClient';
 
-
 const config = {
 	headers: {
 		'Content-Type': 'multipart/form-data',
@@ -23,8 +22,8 @@ const userApi = {
 			url,
 			{
 				token: localStorage.getItem('Authorization'),
-				client_id: ID,
-				client_secret: SECRET,
+				client_id: process.env.REACT_APP_CLIENT_ID,
+				client_secret: process.env.REACT_APP_CLIENT_SECRET,
 			},
 			{
 				headers: {

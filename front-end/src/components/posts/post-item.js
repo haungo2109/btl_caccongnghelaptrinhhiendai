@@ -33,8 +33,8 @@ export default function PostItem({content, createdAt, vote, user, hashtags, id, 
     }
 
     if(userStore && userStore.id === user.id) {
-        utilItems.push({name: 'Chỉnh sửa bài viết', action: () => handleEdit(id)});
-        utilItems.push({name: 'Xóa bài viết', action: handleDelete});
+        utilItems.push({name: 'Chỉnh sửa bài', action: () => handleEdit()});
+        utilItems.push({name: 'Xóa bài', action: () => handleDelete(id)});
     } else { 
         utilItems.push({name: 'Báo cáo', action: report});
     }

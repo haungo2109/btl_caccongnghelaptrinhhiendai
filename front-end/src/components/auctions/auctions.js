@@ -6,6 +6,7 @@ import { useQuery } from '../../App';
 import ProtectedRoute from '../../route/protected-route';
 import Pagination from '../shared/pagination';
 import AuctionItem from './auction-item';
+import AuctionList from './auction-list';
 import AuctionMaker from './auction-maker';
 import AuctionSingle from './auction-single';
 import './auction.css'
@@ -44,16 +45,6 @@ export default function Auctions() {
             handleGetListByPage(page);
         }
     }, [page])
-
-    if(user && user?.username) {
-        createAuctionEl = (
-            <div className="posts-container">
-                <div className="post-item-container" onClick={() => navigate('/create')}>
-                    <input className="temp-input" placeholder="Tạo bài đấu giá mới" />
-                </div>
-            </div>
-        )
-    }
 
     let navigate = (path) => {
         history.push(`${url}${path}`)
@@ -94,6 +85,15 @@ export default function Auctions() {
         }
     }
 
+    let handleDeleteAuctions = (id) => {
+        if(window.confirm("Xóa bài viết này ?")) {
+            auctionApi.deleteAuction(id).then(data => {
+                handleGetListByPage(page);
+                window.alert('Xóa thành công');
+            }).catch(err => {console.log(err); window.alert("Hệ thống đã lỗi, vui lòng thử lại sau")});
+        }
+    }
+
     return (
         <div className="posts-body-container">
             <Switch> 
@@ -104,14 +104,9 @@ export default function Auctions() {
                     <AuctionSingle />
                 </Route>
                 <Route exact path={path}>
-                    {createAuctionEl}
-                    {auctions && auctions.map(a => <AuctionItem key={a.id} auction={a} handleLike={handleLike} />)}
-                    {auctions && 
-                            <Pagination 
-                                currentPage={page} 
-                                count={totalPage} 
-                                onClick={handleClickPagination} 
-                            />}
+                    <AuctionList auctions={auctions} handlePagination={handleClickPagination} handleLike={handleLike} handleDelete={handleDeleteAuctions}
+                        url={url} page={page} totalPage={totalPage} >
+                    </AuctionList>
                 </Route>
             </Switch>
         </div>

@@ -50,8 +50,8 @@ export function Register() {
             formDa.append('username', username);
             formDa.append('password', password);
             formDa.append('grant_type', "password");
-            formDa.append('client_secret', SECRET);
-            formDa.append('client_id', ID);
+            formData.append('client_secret', process.env.REACT_APP_CLIENT_SECRET);
+            formData.append('client_id', process.env.REACT_APP_CLIENT_ID);
             userApi.login(formDa).then(data => {
                 userApi.getCurrentUserInfo().then(data => {
                     dispatch({

@@ -2,6 +2,9 @@
     display: flex;
     overflow: auto;
 }
+.imgViewer-container {
+    width: 100%;
+}
 .imgViewer-container img {
     object-fit: cover;
     padding: 1px;
@@ -9,6 +12,7 @@
 }
 .first-preview {
     display: flex;
+    width: 100%;
     justify-content: center;
 }
 .first-preview img {
@@ -17,4 +21,5 @@
 .imgViewer-array img {
     width: 20%;
     cursor: pointer;
+    height: 10em;
 }

@@ -1,20 +1,14 @@
 import { useEffect, useState } from "react"
 import { useStore } from "react-redux";
-import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
+import { useHistory, useRouteMatch } from "react-router-dom";
 import postApi from "../../api/postAPI";
 import { useQuery } from "../../App";
-import ProtectedRoute from "../../route/protected-route";
-import Pagination from "../shared/pagination";
-import PostItem from "./post-item";
 import PostList from "./post-list";
-import PostMaker from "./post-maker";
-import PostOwner from "./post-owner";
-import PostSingle from "./post-single";
-import './post.css'
+import './post-owner.css'
 
 let postPerPage = 5;
 
-export default function Posts() {
+export default function PostOwner() {
 
     let history = useHistory();
     let query = useQuery();
@@ -26,7 +20,6 @@ export default function Posts() {
     const [totalPage, setTotalPage] = useState(1);
     const [loading, setLoading] = useState(true);
     const [init, setInit] = useState(false);
-    // const [curentPage, setCurrentPage] = useState(1);
 
     useEffect(() => {
         if(query.get('page')) {
@@ -51,7 +44,7 @@ export default function Posts() {
             });
         }
         setLoading(true);
-        postApi.getPostsByPage(p).then((data) => {
+        postApi.getPostOwner(p).then((data) => {
             // console.log(data.results)
             setLoading(false);
             setPosts(data.results)
@@ -62,8 +55,8 @@ export default function Posts() {
     }
     let handleClickPagination = (pageNum) => {
         setPage(pageNum);
-        // console.log(pageNum)
-        history.push(`/posts?page=${pageNum}`);
+        console.log(pageNum)
+        history.push(`/posts/owner?page=${pageNum}`);
     }
     let handleLike = (id, flagLiked) => {
         if(flagLiked) {
@@ -80,30 +73,15 @@ export default function Posts() {
         if(window.confirm("Xóa bài viết này ?")) {
             postApi.deletePost(id).then(data => {
                 handleGetListByPage(page);
-                window.alert('Xóa thành công');
             }).catch(err => {console.log(err); window.alert("Hệ thống đã lỗi, vui lòng thử lại sau")});
         }
     }
 
     return(
-        <div className="posts-body-container">
-            <Switch>
-                <ProtectedRoute  path={`${path}/create`}>
-                    <PostMaker />
-                </ProtectedRoute>
-                <ProtectedRoute  path={`${path}/owner`}>
-                    <PostOwner />
-                </ProtectedRoute>
-                <Route path={`${path}/:postid`}>
-                    <PostSingle />
-                </Route>
-                <Route exact path={path}>
-                    <PostList posts={posts} handleLike={handleLike} 
+        <PostList posts={posts} handleLike={handleLike} 
                         handleClickPagination={handleClickPagination} handleDeletePost={handleDeletePost} 
                         page={page} totalPage={totalPage}
                         url={url} />
-                </Route>
-            </Switch>
-        </div>
+        // <a>{posts}</a>
     )
 }

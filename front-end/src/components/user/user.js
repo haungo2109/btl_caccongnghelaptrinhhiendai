@@ -1,4 +1,5 @@
-import { useStore } from "react-redux"
+import { useDispatch, useStore } from "react-redux"
+import { useHistory } from "react-router";
 import './user.css'
 
 let infos = [
@@ -12,6 +13,20 @@ export default function UserPage() {
 
     const store = useStore();
     const user = store.getState();
+    const history = useHistory();
+    const dispatch = useDispatch();
+
+    let move = (path) => {
+        history.push(path);
+    }
+    let logout = () => {
+        if(window.confirm('Đăng xuất ra khỏi hệ thống ?') == true) {
+            dispatch({
+                type: 'logout'
+            });
+            history.push('/')
+        }
+    }
 
     return(
         <div className="user-container">
@@ -28,6 +43,11 @@ export default function UserPage() {
                                 <p>{user[info.id]}</p>
                             </div>
                     })}
+                    <div className="buttons">
+                        <button onClick={() => move('/posts/owner')} >Bài viết của cá nhân</button>
+                        <button onClick={() => move('/auction/owner')}>Bài đấu giá của cá nhân</button>
+                        <button onClick={() => logout()}>Đăng xuất</button>
+                    </div>
                 </div>
             </div>
         </div>
