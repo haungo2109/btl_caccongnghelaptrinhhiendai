@@ -133,8 +133,8 @@ class StatusSerializer(Serializer):
     status_transaction = CharField(max_length=25)
     auction_id= CharField(max_length=20)
     comment_id = CharField(max_length=20)
-    date_success = DateTimeField()
-    accept_price = FloatField()
+    date_success = DateTimeField(allow_null=True)
+    accept_price = FloatField(allow_null=True)
     buyer = JSONField(allow_null=True)
 
 

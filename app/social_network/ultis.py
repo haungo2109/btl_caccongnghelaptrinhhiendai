@@ -1,3 +1,4 @@
+from oauth2_provider.settings import oauth2_settings
 from rest_framework import permissions
 from rest_framework.pagination import PageNumberPagination
 from exponent_server_sdk import (
@@ -20,8 +21,12 @@ import requests
 import uuid
 import hmac
 import hashlib
+from oauth2_provider.models import Application, AccessToken, RefreshToken
+from time import timezone
+from datetime import timedelta, datetime
+from oauthlib import common
 
-
+client_id = "TPLrxQE8mF9slRzevZSNbNCLQXDSSbJrnIprMCNM"
 endpoint = "https://test-payment.momo.vn/pay/app"
 public_key = "MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEApn2o3p2ww8Yda6sEgn/IcXVSJR65jxF78uoYVLoejsE+cJVqI5mXla/PVj5vqJ0mfjTS4QPIj8ENSwLlMNUnsr++bvp1G3VlRtdyIjHjMMQoerE7mBnYvvGiLHccwngPi+Wn/h6HLrtj/a4DAl1WR87K4XbCS3MfGJJiPJHB9qQy/g0JBbELPenF5dV45uIcxJ2CUBR0wGabhf3Fr2xDm8K7u+OCwMJFWHJx066sPfo2eSY+PFnZjl6wk0QrL2A35hnqRrDc+KIlCxvnxNcc9fpEm9veyLjMVNQvA0ce4BdOnycgHdHjA4TWoIZ93oeFFIjISDnRm4rrBFGGsVlNCGrw8byvRMoDMESLLAlodUmMTlzGQ8EHV5emcOOWWi4Sa3Vy1qA9SkC36A2umpVZLbADLKcTrrz3gcBYzIPz2jhv2NvFltamdBiiSgv6NTGeX8g7DY+vmzXCFgjLUNV53EnIgwq8IvGDKxHZIO/yxo2MwnlsPAQuclRM5ie3nLCET3COwj9TN4lt+c287hl1gGw3TYEKOW+sLS+Q/OVah+wyoNHMPjlNRb4cZZf5S3wfnelq0/K9Uu9C1iVSV6W7j462+iVQer3mgKsA3gbydLgTz38LMB2lA8LOLallVK5OHtohXpOJt5P5JkXhmH5pL07vT59UcSxTrxqXILIBVx8CAwEAAQ=="
 base_path = "/home/kan_haungo/Desktop/btl_caccongnghelaptrinhhiendai/app/social_network"
@@ -105,3 +110,36 @@ def send_request_to_momo(data):
     res = r.json()
 
     return res
+
+def validate_token_login_by_gg(token):
+    url = "https://oauth2.googleapis.com/tokeninfo?access_token=%s" % token
+    res = requests.post(url=url)
+    data = res.json()
+    return data
+
+def create_access_token_with_user(user):
+    application = Application.objects.get(client_id=client_id)
+    expires = datetime.now() + timedelta(seconds=36000)
+    access_token = AccessToken(
+        user=user,
+        scope='read write',
+        expires=expires,
+        token=common.generate_token(30),
+        application=application
+    )
+    access_token.save()
+    refresh_token = RefreshToken(
+        user=user,
+        token=common.generate_token(30),
+        application=application,
+        access_token=access_token
+    )
+    refresh_token.save()
+
+    return {
+        "access_token": access_token.token,
+        "expires_in": 36000,
+        "token_type": "Bearer",
+        "scope": "read write",
+        "refresh_token": refresh_token.token
+    }

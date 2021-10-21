@@ -5,44 +5,9 @@ SET time_zone = '+00:00';
 SET foreign_key_checks = 0;
 SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
-DROP DATABASE IF EXISTS `btl_caccongnghelaptrinhhiendai`;
-CREATE DATABASE `btl_caccongnghelaptrinhhiendai` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `btl_caccongnghelaptrinhhiendai`;
-
-DROP TABLE IF EXISTS `auth_group`;
-CREATE TABLE `auth_group` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(150) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
 TRUNCATE `auth_group`;
 
-DROP TABLE IF EXISTS `auth_group_permissions`;
-CREATE TABLE `auth_group_permissions` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `group_id` int NOT NULL,
-  `permission_id` int NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `auth_group_permissions_group_id_permission_id_0cd325b0_uniq` (`group_id`,`permission_id`),
-  KEY `auth_group_permissio_permission_id_84c5c92e_fk_auth_perm` (`permission_id`),
-  CONSTRAINT `auth_group_permissio_permission_id_84c5c92e_fk_auth_perm` FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`),
-  CONSTRAINT `auth_group_permissions_group_id_b120cbf9_fk_auth_group_id` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
 TRUNCATE `auth_group_permissions`;
-
-DROP TABLE IF EXISTS `auth_permission`;
-CREATE TABLE `auth_permission` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `content_type_id` int NOT NULL,
-  `codename` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `auth_permission_content_type_id_codename_01ab375a_uniq` (`content_type_id`,`codename`),
-  CONSTRAINT `auth_permission_content_type_id_2f476e4b_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 TRUNCATE `auth_permission`;
 INSERT INTO `auth_permission` (`id`, `name`, `content_type_id`, `codename`) VALUES
@@ -141,34 +106,17 @@ INSERT INTO `auth_permission` (`id`, `name`, `content_type_id`, `codename`) VALU
 (93,	'Can add report type',	23,	'add_reporttype'),
 (94,	'Can change report type',	23,	'change_reporttype'),
 (95,	'Can delete report type',	23,	'delete_reporttype'),
-(96,	'Can view report type',	23,	'view_reporttype');
-
-DROP TABLE IF EXISTS `corsheaders_corsmodel`;
-CREATE TABLE `corsheaders_corsmodel` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `cors` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+(96,	'Can view report type',	23,	'view_reporttype'),
+(97,	'Can add payment method',	24,	'add_paymentmethod'),
+(98,	'Can change payment method',	24,	'change_paymentmethod'),
+(99,	'Can delete payment method',	24,	'delete_paymentmethod'),
+(100,	'Can view payment method',	24,	'view_paymentmethod'),
+(101,	'Can add feedback',	25,	'add_feedback'),
+(102,	'Can change feedback',	25,	'change_feedback'),
+(103,	'Can delete feedback',	25,	'delete_feedback'),
+(104,	'Can view feedback',	25,	'view_feedback');
 
 TRUNCATE `corsheaders_corsmodel`;
-
-DROP TABLE IF EXISTS `django_admin_log`;
-CREATE TABLE `django_admin_log` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `action_time` datetime(6) NOT NULL,
-  `object_id` longtext COLLATE utf8_unicode_ci,
-  `object_repr` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
-  `action_flag` smallint unsigned NOT NULL,
-  `change_message` longtext COLLATE utf8_unicode_ci NOT NULL,
-  `content_type_id` int DEFAULT NULL,
-  `user_id` bigint NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `django_admin_log_content_type_id_c4bce8eb_fk_django_co` (`content_type_id`),
-  KEY `django_admin_log_user_id_c564eba6_fk_social_network_user_id` (`user_id`),
-  CONSTRAINT `django_admin_log_content_type_id_c4bce8eb_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`),
-  CONSTRAINT `django_admin_log_user_id_c564eba6_fk_social_network_user_id` FOREIGN KEY (`user_id`) REFERENCES `social_network_user` (`id`),
-  CONSTRAINT `django_admin_log_chk_1` CHECK ((`action_flag` >= 0))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 TRUNCATE `django_admin_log`;
 INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES
@@ -204,16 +152,26 @@ INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`,
 (30,	'2021-09-05 03:00:22.833060',	'4',	'ReportType object (4)',	1,	'[{\"added\": {}}]',	23,	1),
 (31,	'2021-09-05 03:00:37.046067',	'5',	'ReportType object (5)',	1,	'[{\"added\": {}}]',	23,	1),
 (32,	'2021-09-05 03:03:50.753615',	'1',	'Thông tin không hữu ích-Spam',	1,	'[{\"added\": {}}]',	9,	1),
-(33,	'2021-09-05 03:07:08.888433',	'1',	'Như đùa v-Spam',	1,	'[{\"added\": {}}]',	12,	1);
-
-DROP TABLE IF EXISTS `django_content_type`;
-CREATE TABLE `django_content_type` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `app_label` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-  `model` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `django_content_type_app_label_model_76bd3d3b_uniq` (`app_label`,`model`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+(33,	'2021-09-05 03:07:08.888433',	'1',	'Như đùa v-Spam',	1,	'[{\"added\": {}}]',	12,	1),
+(34,	'2021-09-16 16:36:41.503368',	'10',	'nopnopnopnop',	3,	'',	7,	1),
+(35,	'2021-09-16 16:36:41.526025',	'12',	'Ahihi',	3,	'',	7,	1),
+(36,	'2021-09-16 16:36:41.540552',	'13',	'change path static 1111111',	3,	'',	7,	1),
+(37,	'2021-09-16 16:36:41.559659',	'14',	'change path static 1111111',	3,	'',	7,	1),
+(38,	'2021-09-16 16:36:41.581749',	'15',	'change path static 1111111',	3,	'',	7,	1),
+(39,	'2021-09-16 16:36:41.602628',	'16',	'change path static 1111111',	3,	'',	7,	1),
+(40,	'2021-09-16 16:36:41.626225',	'17',	'change path static 1111111',	3,	'',	7,	1),
+(41,	'2021-09-16 16:36:41.642957',	'18',	'them tu postman',	3,	'',	7,	1),
+(42,	'2021-09-16 16:36:41.697356',	'19',	'them tu postman',	3,	'',	7,	1),
+(43,	'2021-09-17 08:49:00.639582',	'20',	'Sản phẩm này là sự chăm sóc của một người khác',	2,	'[{\"added\": {\"name\": \"auction comment\", \"object\": \"N\\u1ebfu d\\u1ecbch v\\u1ee5 trong 1 tu\\u1ea7n em ch\\u1ea5p nh\\u1eadn \\u1ea1\"}}]',	7,	1),
+(44,	'2021-09-17 08:53:02.144324',	'20',	'Sản phẩm này là sự chăm sóc của một người khác',	2,	'[{\"added\": {\"name\": \"auction comment\", \"object\": \"Oke \\u1ea1 nghe c\\u00f3 v\\u1ebb hay\"}}]',	7,	1),
+(45,	'2021-09-17 08:58:45.589112',	'20',	'Sản phẩm này là sự chăm sóc của một người khác',	2,	'[{\"deleted\": {\"name\": \"auction comment\", \"object\": \"n\\u1ebfu c\\u00f3 h\\u00e1t cho ng l\\u1edbn ng\\u1ee7 th\\u00ec em mua nh\\u00e9\"}}]',	7,	1),
+(46,	'2021-09-17 13:14:54.469968',	'1',	'Momo',	1,	'[{\"added\": {}}]',	24,	1),
+(47,	'2021-09-17 13:15:00.661887',	'2',	'Offline',	1,	'[{\"added\": {}}]',	24,	1),
+(48,	'2021-09-17 13:16:57.273845',	'8',	'Bài này mk đã tự làm và được 9 điểm đồ án, 8 điểm khóa luận',	2,	'[{\"changed\": {\"fields\": [\"Payment method\"]}}]',	7,	1),
+(49,	'2021-09-27 13:14:52.465922',	'23',	'Bài đấu giá thứ 4',	1,	'[{\"added\": {}}, {\"added\": {\"name\": \"auction image\", \"object\": \"/static/auction_images/2021/09/thumb-1920-161457.jpg\"}}]',	7,	1),
+(50,	'2021-09-27 16:56:32.276418',	'24',	'baif 1',	2,	'[{\"added\": {\"name\": \"auction comment\", \"object\": \"test1\"}}, {\"added\": {\"name\": \"auction comment\", \"object\": \"test2\"}}, {\"added\": {\"name\": \"auction comment\", \"object\": \"test3\"}}]',	7,	1),
+(51,	'2021-09-27 16:57:30.205789',	'24',	'baif 1',	2,	'[{\"changed\": {\"name\": \"auction comment\", \"object\": \"test1\", \"fields\": [\"Price\"]}}]',	7,	1),
+(52,	'2021-09-27 17:14:46.780390',	'24',	'baif 1',	2,	'[{\"changed\": {\"name\": \"auction comment\", \"object\": \"test2\", \"fields\": [\"User\"]}}]',	7,	1);
 
 TRUNCATE `django_content_type`;
 INSERT INTO `django_content_type` (`id`, `app_label`, `model`) VALUES
@@ -233,22 +191,15 @@ INSERT INTO `django_content_type` (`id`, `app_label`, `model`) VALUES
 (13,	'social_network',	'auctionimage'),
 (12,	'social_network',	'auctionreport'),
 (15,	'social_network',	'categoryauction'),
+(25,	'social_network',	'feedback'),
 (16,	'social_network',	'hashtagpost'),
+(24,	'social_network',	'paymentmethod'),
 (8,	'social_network',	'post'),
 (11,	'social_network',	'postcomment'),
 (10,	'social_network',	'postimage'),
 (9,	'social_network',	'postreport'),
 (23,	'social_network',	'reporttype'),
 (6,	'social_network',	'user');
-
-DROP TABLE IF EXISTS `django_migrations`;
-CREATE TABLE `django_migrations` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `app` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `applied` datetime(6) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 TRUNCATE `django_migrations`;
 INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES
@@ -286,47 +237,23 @@ INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES
 (32,	'social_network',	'0009_auction_date_success',	'2021-09-04 03:25:32.038144'),
 (33,	'social_network',	'0010_auto_20210905_0231',	'2021-09-05 02:31:21.053677'),
 (34,	'social_network',	'0011_auto_20210905_0231',	'2021-09-05 02:31:57.649204'),
-(35,	'social_network',	'0012_rename_reposttype_reporttype',	'2021-09-05 02:36:36.893271');
-
-DROP TABLE IF EXISTS `django_session`;
-CREATE TABLE `django_session` (
-  `session_key` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
-  `session_data` longtext COLLATE utf8_unicode_ci NOT NULL,
-  `expire_date` datetime(6) NOT NULL,
-  PRIMARY KEY (`session_key`),
-  KEY `django_session_expire_date_a5c62663` (`expire_date`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+(35,	'social_network',	'0012_rename_reposttype_reporttype',	'2021-09-05 02:36:36.893271'),
+(36,	'social_network',	'0002_auto_20210917_1305',	'2021-09-17 13:05:27.331503'),
+(37,	'social_network',	'0003_rename_payment_methods_auction_payment_method',	'2021-09-17 13:06:29.046015'),
+(38,	'social_network',	'0004_remove_auction_payment_method',	'2021-09-17 13:09:18.083895'),
+(39,	'social_network',	'0005_paymentmethod',	'2021-09-17 13:12:15.232870'),
+(40,	'social_network',	'0006_auction_payment_method',	'2021-09-17 13:15:50.076762'),
+(41,	'social_network',	'0007_user_push_token',	'2021-09-18 10:04:23.638460'),
+(42,	'social_network',	'0008_feedback',	'2021-10-04 14:18:53.407210');
 
 TRUNCATE `django_session`;
 INSERT INTO `django_session` (`session_key`, `session_data`, `expire_date`) VALUES
 ('awshxdk4w0k0up78711e9gotokesucnv',	'.eJxVjEEOwiAQRe_C2hBKcQCX7j0DmYFBqgaS0q6Md7dNutDtf-_9twi4LiWsnecwJXERgzj9boTxyXUH6YH13mRsdZknkrsiD9rlrSV-XQ_376BgL1sdWTkDGc8pZ7DG0QDWZ0-KdAZWqEfEtEEk65UZtbbeaMwAlAB5dOLzBfwIOGo:1mKcZl:bIOc_Tg-TKpbPbuK-wicMZVK9cYU8R-aTNRbIuv20AE',	'2021-09-13 08:23:29.396801'),
+('ggshyul6ttfifoqx26j0byc6okcym6xz',	'.eJxVjEEOwiAQRe_C2hBKcQCX7j0DmYFBqgaS0q6Md7dNutDtf-_9twi4LiWsnecwJXERgzj9boTxyXUH6YH13mRsdZknkrsiD9rlrSV-XQ_376BgL1sdWTkDGc8pZ7DG0QDWZ0-KdAZWqEfEtEEk65UZtbbeaMwAlAB5dOLzBfwIOGo:1mUne5:NZ0Np0OGJrhm7k8bwjS0e8Abuqf7MsiMY_wIZsQIGhw',	'2021-10-11 10:14:01.183042'),
 ('ktbmji8btx27ns402vgm7yw2ld2durca',	'.eJxVjEEOwiAQRe_C2hBKcQCX7j0DmYFBqgaS0q6Md7dNutDtf-_9twi4LiWsnecwJXERgzj9boTxyXUH6YH13mRsdZknkrsiD9rlrSV-XQ_376BgL1sdWTkDGc8pZ7DG0QDWZ0-KdAZWqEfEtEEk65UZtbbeaMwAlAB5dOLzBfwIOGo:1mD23F:mHK6FP6hVZBfmzVhHUJZa__bfNXgbWneVGWLvThGBnY',	'2021-08-23 09:58:33.269669'),
 ('u1bftwdenhfqvrn4lck394rnchlzt2qk',	'.eJxVjEEOwiAQRe_C2hBKcQCX7j0DmYFBqgaS0q6Md7dNutDtf-_9twi4LiWsnecwJXERgzj9boTxyXUH6YH13mRsdZknkrsiD9rlrSV-XQ_376BgL1sdWTkDGc8pZ7DG0QDWZ0-KdAZWqEfEtEEk65UZtbbeaMwAlAB5dOLzBfwIOGo:1mBaOY:OWhCRnfwKHkPX-FSHulIw-tuvo3z9GIbw6P0fdS4pzQ',	'2021-08-19 10:14:34.793902'),
-('whtyb9dc15x52uqiwqtcpjmmwj4ht4r5',	'.eJxVjEEOwiAQRe_C2hBKcQCX7j0DmYFBqgaS0q6Md7dNutDtf-_9twi4LiWsnecwJXERgzj9boTxyXUH6YH13mRsdZknkrsiD9rlrSV-XQ_376BgL1sdWTkDGc8pZ7DG0QDWZ0-KdAZWqEfEtEEk65UZtbbeaMwAlAB5dOLzBfwIOGo:1mNbwI:m_EaDH3brGWghtUZ1PnGJMzI8WyJ1R_wN2NN7cmp3mE',	'2021-09-21 14:19:06.796075');
-
-DROP TABLE IF EXISTS `oauth2_provider_accesstoken`;
-CREATE TABLE `oauth2_provider_accesstoken` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `token` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `expires` datetime(6) NOT NULL,
-  `scope` longtext COLLATE utf8_unicode_ci NOT NULL,
-  `application_id` bigint DEFAULT NULL,
-  `user_id` bigint DEFAULT NULL,
-  `created` datetime(6) NOT NULL,
-  `updated` datetime(6) NOT NULL,
-  `source_refresh_token_id` bigint DEFAULT NULL,
-  `id_token_id` bigint DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `token` (`token`),
-  UNIQUE KEY `source_refresh_token_id` (`source_refresh_token_id`),
-  UNIQUE KEY `id_token_id` (`id_token_id`),
-  KEY `oauth2_provider_acce_application_id_b22886e1_fk_oauth2_pr` (`application_id`),
-  KEY `oauth2_provider_acce_user_id_6e4c9a65_fk_social_ne` (`user_id`),
-  CONSTRAINT `oauth2_provider_acce_application_id_b22886e1_fk_oauth2_pr` FOREIGN KEY (`application_id`) REFERENCES `oauth2_provider_application` (`id`),
-  CONSTRAINT `oauth2_provider_acce_id_token_id_85db651b_fk_oauth2_pr` FOREIGN KEY (`id_token_id`) REFERENCES `oauth2_provider_idtoken` (`id`),
-  CONSTRAINT `oauth2_provider_acce_source_refresh_token_e66fbc72_fk_oauth2_pr` FOREIGN KEY (`source_refresh_token_id`) REFERENCES `oauth2_provider_refreshtoken` (`id`),
-  CONSTRAINT `oauth2_provider_acce_user_id_6e4c9a65_fk_social_ne` FOREIGN KEY (`user_id`) REFERENCES `social_network_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+('whtyb9dc15x52uqiwqtcpjmmwj4ht4r5',	'.eJxVjEEOwiAQRe_C2hBKcQCX7j0DmYFBqgaS0q6Md7dNutDtf-_9twi4LiWsnecwJXERgzj9boTxyXUH6YH13mRsdZknkrsiD9rlrSV-XQ_376BgL1sdWTkDGc8pZ7DG0QDWZ0-KdAZWqEfEtEEk65UZtbbeaMwAlAB5dOLzBfwIOGo:1mNbwI:m_EaDH3brGWghtUZ1PnGJMzI8WyJ1R_wN2NN7cmp3mE',	'2021-09-21 14:19:06.796075'),
+('z50edmqk8ra0oaeeb41ejdmudkthfgyc',	'.eJxVjEEOwiAQRe_C2hBKcQCX7j0DmYFBqgaS0q6Md7dNutDtf-_9twi4LiWsnecwJXERgzj9boTxyXUH6YH13mRsdZknkrsiD9rlrSV-XQ_376BgL1sdWTkDGc8pZ7DG0QDWZ0-KdAZWqEfEtEEk65UZtbbeaMwAlAB5dOLzBfwIOGo:1macjg:8gG9Ov-iiWN6dKUAOTNF3pdhHVzRvobn-nw0Hgvs39A',	'2021-10-27 11:47:52.552021');
 
 TRUNCATE `oauth2_provider_accesstoken`;
 INSERT INTO `oauth2_provider_accesstoken` (`id`, `token`, `expires`, `scope`, `application_id`, `user_id`, `created`, `updated`, `source_refresh_token_id`, `id_token_id`) VALUES
@@ -463,98 +390,132 @@ INSERT INTO `oauth2_provider_accesstoken` (`id`, `token`, `expires`, `scope`, `a
 (137,	'jicdRhnDmdee1Y5YIlaQgt6q4sVCfO',	'2021-09-15 19:56:37.310609',	'read write',	3,	16,	'2021-09-15 09:56:37.310917',	'2021-09-15 09:56:37.310927',	NULL,	NULL),
 (138,	'DvRatd5aPKNkjaprSygpIb4qmtd9Yk',	'2021-09-15 20:15:32.563542',	'read write',	3,	17,	'2021-09-15 10:15:32.563937',	'2021-09-15 10:15:32.563946',	NULL,	NULL),
 (139,	'oTtwf0W8Qf2w3mSjfvpdCwaqOzbIjT',	'2021-09-15 22:35:15.431273',	'read write',	3,	7,	'2021-09-15 12:35:15.431647',	'2021-09-15 12:35:15.431658',	NULL,	NULL),
-(140,	'OzPwzQjVtdn4MXChzGtHHHjcxQzbJN',	'2021-09-15 22:47:12.486938',	'read write',	3,	16,	'2021-09-15 12:47:12.487254',	'2021-09-15 12:47:12.487265',	NULL,	NULL),
-(141,	'u9jcHkXGVfgIhAJNHXnDX6kTFy7mf8',	'2021-09-16 18:53:30.043587',	'read write',	3,	7,	'2021-09-16 08:53:30.044609',	'2021-09-16 08:53:30.044637',	NULL,	NULL);
-
-DROP TABLE IF EXISTS `oauth2_provider_application`;
-CREATE TABLE `oauth2_provider_application` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `client_id` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-  `redirect_uris` longtext COLLATE utf8_unicode_ci NOT NULL,
-  `client_type` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
-  `authorization_grant_type` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
-  `client_secret` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `user_id` bigint DEFAULT NULL,
-  `skip_authorization` tinyint(1) NOT NULL,
-  `created` datetime(6) NOT NULL,
-  `updated` datetime(6) NOT NULL,
-  `algorithm` varchar(5) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `client_id` (`client_id`),
-  KEY `oauth2_provider_appl_user_id_79829054_fk_social_ne` (`user_id`),
-  KEY `oauth2_provider_application_client_secret_53133678` (`client_secret`),
-  CONSTRAINT `oauth2_provider_appl_user_id_79829054_fk_social_ne` FOREIGN KEY (`user_id`) REFERENCES `social_network_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+(141,	'u9jcHkXGVfgIhAJNHXnDX6kTFy7mf8',	'2021-09-16 18:53:30.043587',	'read write',	3,	7,	'2021-09-16 08:53:30.044609',	'2021-09-16 08:53:30.044637',	NULL,	NULL),
+(142,	'34gZGYaXF1hjKIqCzwljNC0eg0UAwr',	'2021-09-16 22:50:35.790418',	'read write',	3,	16,	'2021-09-16 12:50:35.806885',	'2021-09-16 12:50:35.806899',	140,	NULL),
+(144,	'0r3SQOd0H4vuNt70r4ILT1o9JvH9mt',	'2021-09-17 02:44:39.670123',	'read write',	3,	16,	'2021-09-16 16:44:39.670914',	'2021-09-16 16:44:39.670925',	NULL,	NULL),
+(145,	'hmC6R3Hmfbfa6jmSU5tteQ0lRiDfXl',	'2021-09-17 16:52:17.998129',	'read write',	3,	7,	'2021-09-17 06:52:18.018906',	'2021-09-17 06:52:18.018920',	143,	NULL),
+(146,	'zn4Dq7OGbsFxsNFklFm3Nhq2nkc4jX',	'2021-09-17 18:23:35.751889',	'read write',	3,	7,	'2021-09-17 08:23:35.752255',	'2021-09-17 08:23:35.752265',	NULL,	NULL),
+(147,	'bU7S8dErhnr8B5r5L9xLbWAasKgrb1',	'2021-09-17 19:45:27.853730',	'read write',	3,	16,	'2021-09-17 09:45:27.854091',	'2021-09-17 09:45:27.854101',	NULL,	NULL),
+(148,	'BAFkUKWbM1AyezYzcnIwdXkIvz2vpE',	'2021-09-17 20:16:43.014824',	'read write',	3,	7,	'2021-09-17 10:16:43.015797',	'2021-09-17 10:16:43.015824',	NULL,	NULL),
+(150,	'vX0IKEN9RZM30iAuyElt61KEOYE0xN',	'2021-09-18 19:03:36.281237',	'read write',	3,	7,	'2021-09-18 09:03:36.281599',	'2021-09-18 09:03:36.281610',	NULL,	NULL),
+(151,	'tBhBA2tjrMSSyeL8wcuFjCPb7c0phf',	'2021-09-18 19:04:45.348666',	'read write',	3,	7,	'2021-09-18 09:04:45.349027',	'2021-09-18 09:04:45.349039',	NULL,	NULL),
+(153,	'0g8O6mIv4mihdem16rPCbnTtrdR07t',	'2021-09-18 20:28:15.456296',	'read write',	3,	7,	'2021-09-18 10:28:15.457338',	'2021-09-18 10:28:15.457367',	NULL,	NULL),
+(154,	'HzaUPazmxiKFRDsLlQIjkrrqUjs58v',	'2021-09-18 20:28:28.526794',	'read write',	3,	16,	'2021-09-18 10:28:28.527483',	'2021-09-18 10:28:28.527511',	NULL,	NULL),
+(155,	'LlPHLjfD8ECbzWSvKYgTDf08K0WAv0',	'2021-09-18 20:57:56.932769',	'read write',	3,	16,	'2021-09-18 10:57:56.933287',	'2021-09-18 10:57:56.933299',	NULL,	NULL),
+(157,	'9SdqRMkranwhQEzTn5fUY3xgQMemKD',	'2021-09-20 11:18:08.530755',	'read write',	3,	7,	'2021-09-20 01:18:08.543266',	'2021-09-20 01:18:08.543281',	156,	NULL),
+(158,	'Z7wIsNRjCMZ7V2HAHZM9vyaf1ZNdSf',	'2021-09-20 11:22:24.843956',	'read write',	3,	16,	'2021-09-20 01:22:24.844271',	'2021-09-20 01:22:24.844282',	NULL,	NULL),
+(159,	'AcQVu8K1TWpcp8zudRFCqvI0wBPAt4',	'2021-09-20 11:22:38.670330',	'read write',	3,	7,	'2021-09-20 01:22:38.671041',	'2021-09-20 01:22:38.671052',	NULL,	NULL),
+(160,	'taqPLmPul9CF8I69Dt1eZXqu7UCLHp',	'2021-09-20 18:40:02.500160',	'read write',	3,	7,	'2021-09-20 08:40:02.500530',	'2021-09-20 08:40:02.500540',	NULL,	NULL),
+(161,	'kWjPZ61iTMdD0f5knGdBBOFI8FkV0v',	'2021-09-20 18:50:00.038428',	'read write',	3,	16,	'2021-09-20 08:50:00.039513',	'2021-09-20 08:50:00.039525',	NULL,	NULL),
+(162,	'BXxcI5ptvOHa9ySKI5rGAuqrwnUpjK',	'2021-09-20 19:25:58.531763',	'read write',	3,	7,	'2021-09-20 09:25:58.532064',	'2021-09-20 09:25:58.532075',	NULL,	NULL),
+(164,	'9S9fb43CmMf3BZTwj30ZgFOyCnv8cs',	'2021-09-21 10:35:58.222184',	'read write',	3,	7,	'2021-09-21 00:35:58.234999',	'2021-09-21 00:35:58.235018',	163,	NULL),
+(165,	'xQvSeRXhdcvjiAWsfOZDca6TyM0abB',	'2021-09-21 19:06:58.886686',	'read write',	3,	7,	'2021-09-21 09:06:58.887073',	'2021-09-21 09:06:58.887083',	NULL,	NULL),
+(166,	'69WigL2jCaL1IDBhWtF0t8eY5lEGml',	'2021-09-21 19:22:29.457124',	'read write',	3,	7,	'2021-09-21 09:22:29.457430',	'2021-09-21 09:22:29.457440',	NULL,	NULL),
+(168,	'KonT8mSZ8DaOJQreIcPxNzzoY5SANQ',	'2021-09-23 13:44:09.554066',	'read write',	3,	7,	'2021-09-23 03:44:09.563618',	'2021-09-23 03:44:09.563629',	167,	NULL),
+(169,	'V67CciBTymVT7PMtn1ELDoPuGlLyA6',	'2021-09-23 14:23:00.365143',	'read write',	3,	7,	'2021-09-23 04:23:00.365514',	'2021-09-23 04:23:00.365525',	NULL,	NULL),
+(170,	'ZgsjZkq5yGVCYwbtfdnpWWanOylvGA',	'2021-09-23 14:23:16.384013',	'read write',	3,	16,	'2021-09-23 04:23:16.384750',	'2021-09-23 04:23:16.384765',	NULL,	NULL),
+(171,	'2lXS08omBNcISExXAOoEMW7R84e6vN',	'2021-09-23 19:13:14.269016',	'read write',	3,	16,	'2021-09-23 09:13:14.269492',	'2021-09-23 09:13:14.269503',	NULL,	NULL),
+(172,	'GAp1JFCBtIxdfsxn0XpwSudXiq0Nwb',	'2021-09-23 19:48:36.885069',	'read write',	3,	16,	'2021-09-23 09:48:36.885661',	'2021-09-23 09:48:36.885676',	NULL,	NULL),
+(173,	'ebjrZF6o6wNESsPwnhENkdBlNw5Dbh',	'2021-09-23 19:49:37.178606',	'read write',	3,	16,	'2021-09-23 09:49:37.178956',	'2021-09-23 09:49:37.178966',	NULL,	NULL),
+(174,	'mlXg7QT7Hry5EEvtpiHGlysF2VLCLg',	'2021-09-23 19:50:04.908230',	'read write',	3,	16,	'2021-09-23 09:50:04.908650',	'2021-09-23 09:50:04.908661',	NULL,	NULL),
+(175,	'5mDFGYtRQgykSbWsbh38Mtwayn5fh6',	'2021-09-24 01:00:11.405470',	'read write',	3,	7,	'2021-09-23 15:00:11.405847',	'2021-09-23 15:00:11.405857',	NULL,	NULL),
+(176,	'HButONIqqfNeGXe1pG9ciGdqpsGCoe',	'2021-09-24 13:18:21.856338',	'read write',	3,	7,	'2021-09-24 03:18:21.856733',	'2021-09-24 03:18:21.856743',	NULL,	NULL),
+(177,	'i0w0DGMiZRmvkuyLRIFngPbW93Xmcc',	'2021-09-25 18:58:15.219821',	'read write',	3,	7,	'2021-09-25 08:58:15.221479',	'2021-09-25 08:58:15.221511',	NULL,	NULL),
+(178,	'dC33dmUGwvVEdOLNOciYzGJ6VbETr6',	'2021-09-26 01:44:49.292890',	'read write',	3,	7,	'2021-09-25 15:44:49.293834',	'2021-09-25 15:44:49.293862',	NULL,	NULL),
+(179,	'JsfuiqVfIuRRndMcc3O9WjLpEoraK2',	'2021-09-26 11:43:51.910644',	'read write',	3,	7,	'2021-09-26 01:43:51.911525',	'2021-09-26 01:43:51.911553',	NULL,	NULL),
+(180,	'FpcLj1AsdTdsWxLQOtKUxWDY2T51V4',	'2021-09-26 11:45:53.149965',	'read write',	3,	7,	'2021-09-26 01:45:53.150563',	'2021-09-26 01:45:53.150590',	NULL,	NULL),
+(184,	'Ib0LXfEPvEI6ajH52eWelRhRjbcLk8',	'2021-09-27 23:04:39.512023',	'read write',	3,	7,	'2021-09-27 13:04:39.521560',	'2021-09-27 13:04:39.521572',	183,	NULL),
+(185,	'l9F5HDhzCRarInLIgeWlXZvTnJ0CDM',	'2021-09-27 23:17:48.888299',	'read write',	3,	16,	'2021-09-27 13:17:48.888626',	'2021-09-27 13:17:48.888636',	NULL,	NULL),
+(186,	'tyxiEMX3OFACRzwthAGlWeyR0J6mpc',	'2021-09-27 23:19:16.289998',	'read write',	3,	16,	'2021-09-27 13:19:16.290319',	'2021-09-27 13:19:16.290329',	NULL,	NULL),
+(187,	'6JKUy8N36AaeBM3gw37yOyFiOuEAoP',	'2021-09-28 01:24:19.263922',	'read write',	3,	7,	'2021-09-27 15:24:19.264638',	'2021-09-27 15:24:19.264649',	NULL,	NULL),
+(188,	'ithT3mqEhgpFl3TUbiO8DPRPSiyz9P',	'2021-09-28 03:16:30.019617',	'read write',	3,	16,	'2021-09-27 17:16:30.020527',	'2021-09-27 17:16:30.020555',	NULL,	NULL),
+(189,	'bbDTcygrYQCUXK9NQsK3xTfQslU7Aa',	'2021-09-28 03:16:30.331462',	'read write',	3,	16,	'2021-09-27 17:16:30.332189',	'2021-09-27 17:16:30.332217',	NULL,	NULL),
+(190,	'agC9LtdkqdFCPeKSIt3X5vxXidvAQa',	'2021-09-28 03:32:28.385259',	'read write',	3,	7,	'2021-09-27 17:32:28.386082',	'2021-09-27 17:32:28.386109',	NULL,	NULL),
+(191,	'V5VnB0XkDOqS7MVTfY5n0hLjvVDG7i',	'2021-09-28 03:41:05.192807',	'read write',	3,	7,	'2021-09-27 17:41:05.193510',	'2021-09-27 17:41:05.193537',	NULL,	NULL),
+(192,	'HiIvoExjDVWck7OdrZxaOM3bLM9uGE',	'2021-09-28 03:42:54.092859',	'read write',	3,	16,	'2021-09-27 17:42:54.093586',	'2021-09-27 17:42:54.093614',	NULL,	NULL),
+(193,	'xpwN2kL6Sj6UG3A6YaTKmj1hqa2dOD',	'2021-09-28 03:48:39.874005',	'read write',	3,	7,	'2021-09-27 17:48:39.875355',	'2021-09-27 17:48:39.875385',	NULL,	NULL),
+(195,	'XMgyVlwtkjfredIclPg4pbEUjo2tVq',	'2021-09-28 03:53:32.356656',	'read write',	3,	7,	'2021-09-27 17:53:32.368148',	'2021-09-27 17:53:32.368167',	182,	NULL),
+(197,	'pW1YR6orzWsNzOX46al8jPdMipJOzP',	'2021-09-28 12:44:35.278444',	'read write',	3,	7,	'2021-09-28 02:44:35.278814',	'2021-09-28 02:44:35.278825',	NULL,	NULL),
+(198,	'Vmfz7tGjJMjti5lkJ5ZQ5GZbd9Lb0S',	'2021-09-28 13:49:43.823146',	'read write',	3,	7,	'2021-09-28 03:49:43.841529',	'2021-09-28 03:49:43.841560',	194,	NULL),
+(199,	'AUn6JZBIVNCqoOaPqjkvcMKkqu9PW3',	'2021-09-28 14:08:41.251984',	'read write',	3,	7,	'2021-09-28 04:08:41.252641',	'2021-09-28 04:08:41.252669',	NULL,	NULL),
+(200,	'4avDAXmtQrU6tmhsEqGMaVfniD48XU',	'2021-09-28 14:10:36.257687',	'read write',	3,	16,	'2021-09-28 04:10:36.258423',	'2021-09-28 04:10:36.258452',	NULL,	NULL),
+(202,	't2GdbOhDfbsanJdixz4aQdE7k2u2vK',	'2021-09-28 17:28:15.367050',	'read write',	3,	7,	'2021-09-28 07:28:15.380961',	'2021-09-28 07:28:15.380987',	201,	NULL),
+(203,	'aYFz1HJ2WRPB42Wgd63TIiQplWa7lG',	'2021-09-28 18:36:53.556783',	'read write',	3,	7,	'2021-09-28 08:36:53.557117',	'2021-09-28 08:36:53.557128',	NULL,	NULL),
+(206,	'OPpQPFrHkit5bPteHs6sbwsA6FW98f',	'2021-09-29 12:13:46.531323',	'read write',	3,	7,	'2021-09-29 02:13:46.542292',	'2021-09-29 02:13:46.542302',	205,	NULL),
+(207,	'p56bQwf9wsPpetBUBZiDOjMZYWu3VS',	'2021-09-29 12:17:42.488527',	'read write',	3,	7,	'2021-09-29 02:17:42.488824',	'2021-09-29 02:17:42.488834',	NULL,	NULL),
+(211,	'9ab4zFZ2h2WHFME4pZ0HMk8xqUiW6F',	'2021-09-30 13:05:51.125321',	'read write',	3,	7,	'2021-09-30 03:05:51.163466',	'2021-09-30 03:05:51.163509',	210,	NULL),
+(212,	'bFEuuCjMOO1qtyQ2LNyczNJJx0sPza',	'2021-09-30 13:09:35.077859',	'read write',	3,	7,	'2021-09-30 03:09:35.085272',	'2021-09-30 03:09:35.085283',	209,	NULL),
+(214,	'n72Jg3xsLugEO4CitSuvFqX8ZHXUDZ',	'2021-09-30 17:56:25.294111',	'read write',	3,	7,	'2021-09-30 07:56:25.295173',	'2021-09-30 07:56:25.295202',	NULL,	NULL),
+(215,	'KKWv2fq9KMT0rFTe2trqYC47aLKXme',	'2021-09-30 18:19:14.100337',	'read write',	3,	16,	'2021-09-30 08:19:14.101652',	'2021-09-30 08:19:14.101681',	NULL,	NULL),
+(217,	'jLDEGUgH31w6b9kd2jLl4m30qZGwdV',	'2021-10-05 00:19:55.298308',	'read write',	3,	16,	'2021-10-04 14:19:55.298861',	'2021-10-04 14:19:55.298872',	NULL,	NULL),
+(218,	'tcr770e557nukBF1xGxcNdPVFcbptL',	'2021-10-11 12:59:00.970146',	'read write',	3,	7,	'2021-10-11 02:59:00.987452',	'2021-10-11 02:59:00.987496',	216,	NULL),
+(219,	'sSKJOBweZ1ntOs1ZFQcYC7NAKXm2S2',	'2021-10-11 13:55:12.937298',	'read write',	3,	7,	'2021-10-11 03:55:12.937582',	'2021-10-11 03:55:12.937593',	NULL,	NULL),
+(220,	'oyvTUaRnGji0LkwbOwkMbWq4zwNGOm',	'2021-10-11 13:56:28.474401',	'read write',	3,	7,	'2021-10-11 03:56:28.474698',	'2021-10-11 03:56:28.474709',	NULL,	NULL),
+(222,	'S5FsGdgO1PSLcokdSMQWUc9I7DU9bj',	'2021-10-12 12:35:40.920386',	'read write',	3,	7,	'2021-10-12 02:35:40.920820',	'2021-10-12 02:35:40.920831',	NULL,	NULL),
+(223,	'rnV0bABCO1q5oPsGhZYnpn4N7Z2pWi',	'2021-10-12 12:35:42.954262',	'read write',	3,	7,	'2021-10-12 02:35:42.954552',	'2021-10-12 02:35:42.954563',	NULL,	NULL),
+(224,	'46xAWT6qRqoOJuMnzdbenqfTEC98KQ',	'2021-10-12 12:47:30.813313',	'read write',	3,	7,	'2021-10-12 02:47:30.813617',	'2021-10-12 02:47:30.813627',	NULL,	NULL),
+(225,	'dDRdm9xRz0ocIYR9h1QsAyyXeFtp04',	'2021-10-13 12:57:29.467527',	'read write',	3,	7,	'2021-10-13 02:57:29.483989',	'2021-10-13 02:57:29.484009',	221,	NULL),
+(226,	'3SsM74IdGZ0fM0qmQ0xZ6Jm8wOinVL',	'2021-10-14 00:43:00.837787',	'read write',	3,	7,	'2021-10-13 14:43:00.839131',	'2021-10-13 14:43:00.839162',	NULL,	NULL),
+(227,	'K2bYS9xSX1ge8FnL5PL8MOEI6SAGI3',	'2021-10-14 01:11:20.567350',	'read write',	3,	18,	'2021-10-13 15:11:27.401002',	'2021-10-13 15:11:27.401125',	NULL,	NULL),
+(229,	'jDl6MrkgBfmPviRr62pNEcyV3PNG8A',	'2021-10-14 11:19:23.756806',	'read write',	3,	18,	'2021-10-14 01:19:23.778292',	'2021-10-14 01:19:23.778319',	228,	NULL),
+(230,	'ya6JWAWaOyStpZnGcRKvGbk0zkONb3',	'2021-10-14 12:47:44.360254',	'read write',	3,	18,	'2021-10-14 02:47:44.363871',	'2021-10-14 02:47:44.363921',	NULL,	NULL),
+(231,	'kZmuSoCYYxwzsFJT8wpnFpZzFjxokQ',	'2021-10-14 12:51:34.444091',	'read write',	3,	18,	'2021-10-14 02:51:34.445585',	'2021-10-14 02:51:34.445634',	NULL,	NULL),
+(232,	'c6oWmHNXlmWwQxCtLjmdPDknTRaGum',	'2021-10-14 12:54:24.736843',	'read write',	3,	18,	'2021-10-14 02:54:24.738251',	'2021-10-14 02:54:24.738295',	NULL,	NULL),
+(233,	'ySDEqjeYWAulP12Jz76ftutZreyHCV',	'2021-10-14 13:04:56.163494',	'read write',	3,	7,	'2021-10-14 03:04:56.163803',	'2021-10-14 03:04:56.163814',	NULL,	NULL),
+(234,	'C3fqDpHPEGnNnb3NmilCidEBBZmLDL',	'2021-10-14 13:17:50.185949',	'read write',	3,	18,	'2021-10-14 03:17:50.188971',	'2021-10-14 03:17:50.189009',	NULL,	NULL),
+(235,	'NjCQzlOg4f7aUyEdCxRFIRFMmeOoiX',	'2021-10-14 13:46:20.748341',	'read write',	3,	7,	'2021-10-14 03:46:20.749200',	'2021-10-14 03:46:20.749227',	NULL,	NULL),
+(236,	'df1ugpfGDFs7OvPLdRVaUrWRNzvacv',	'2021-10-14 14:11:04.101598',	'read write',	3,	18,	'2021-10-14 04:11:04.104675',	'2021-10-14 04:11:04.104706',	NULL,	NULL),
+(237,	'vOxoV3gmYwXQ2OcYYsW5g1y6fjUxTw',	'2021-10-14 14:11:19.783267',	'read write',	3,	7,	'2021-10-14 04:11:19.783931',	'2021-10-14 04:11:19.783957',	NULL,	NULL),
+(238,	'FxCra1nID3iVFmkwlG5Lq2WMh7dJfD',	'2021-10-14 14:13:17.899996',	'read write',	3,	7,	'2021-10-14 04:13:17.900946',	'2021-10-14 04:13:17.900974',	NULL,	NULL),
+(239,	'QTvOvfJQC8WPm6YI4rgPZ3tMUOuI5M',	'2021-10-14 14:15:09.225580',	'read write',	3,	16,	'2021-10-14 04:15:09.226657',	'2021-10-14 04:15:09.226688',	NULL,	NULL),
+(240,	'izL4THsFfnb5AGaRFy1L1JwcJvzJ7U',	'2021-10-14 14:15:38.558915',	'read write',	3,	16,	'2021-10-14 04:15:38.559781',	'2021-10-14 04:15:38.559809',	NULL,	NULL),
+(241,	'QvZBa1QeyVd3cGcY6sz7OIYufBu9cq',	'2021-10-14 17:19:15.394225',	'read write',	3,	7,	'2021-10-14 07:19:15.395433',	'2021-10-14 07:19:15.395467',	NULL,	NULL),
+(242,	'KK9x7uqIEyy2iqYrSinFGqYobi4Jcv',	'2021-10-14 17:45:53.063902',	'read write',	3,	18,	'2021-10-14 07:45:53.066334',	'2021-10-14 07:45:53.066367',	NULL,	NULL),
+(244,	'o1pOykeMzbwIqcTLgMYWrZzMIYQ0bz',	'2021-10-14 18:14:23.132472',	'read write',	3,	7,	'2021-10-14 08:14:23.132913',	'2021-10-14 08:14:23.132924',	NULL,	NULL),
+(245,	'wFghxJcUUldVmjWmtwrd9SvkOK4Fl4',	'2021-10-14 18:18:22.435821',	'read write',	3,	7,	'2021-10-14 08:18:22.436197',	'2021-10-14 08:18:22.436209',	NULL,	NULL),
+(246,	'rSu7fXw23jvMtbJdNmmDvFqhf0k2Md',	'2021-10-14 18:24:39.437783',	'read write',	3,	7,	'2021-10-14 08:24:39.438108',	'2021-10-14 08:24:39.438119',	NULL,	NULL),
+(247,	'L1jHMjDik8VE3xBpsPuX7Nu3Hkx0Pp',	'2021-10-14 18:27:26.578721',	'read write',	3,	7,	'2021-10-14 08:27:26.579025',	'2021-10-14 08:27:26.579036',	NULL,	NULL),
+(248,	'vXzULD84K65SfaNirUJMtsVlGVcuH7',	'2021-10-14 18:33:22.466881',	'read write',	3,	16,	'2021-10-14 08:33:22.467458',	'2021-10-14 08:33:22.467473',	NULL,	NULL),
+(249,	'0kVtCF60wfI7NJUcPR6abxVbLkOYYg',	'2021-10-14 18:36:07.826185',	'read write',	3,	16,	'2021-10-14 08:36:07.826502',	'2021-10-14 08:36:07.826511',	NULL,	NULL),
+(250,	'K1tbnPLshqwGSMlj0xbizZRWBcAI22',	'2021-10-14 18:37:24.429760',	'read write',	3,	7,	'2021-10-14 08:37:24.430090',	'2021-10-14 08:37:24.430100',	NULL,	NULL),
+(251,	'uvh2NuuUSxlmEtE5rUi8WI6fc7Xmps',	'2021-10-14 18:38:56.173059',	'read write',	3,	7,	'2021-10-14 08:38:56.174064',	'2021-10-14 08:38:56.174076',	NULL,	NULL),
+(252,	'v9jN1HgmQiZQMCm8kZK9HuMxJKtA5h',	'2021-10-14 18:39:37.198769',	'read write',	3,	7,	'2021-10-14 08:39:37.199152',	'2021-10-14 08:39:37.199168',	NULL,	NULL),
+(253,	'SL6Qfv1mwXlQgaNritDKo0P4pIJ8jw',	'2021-10-14 19:03:42.745318',	'read write',	3,	7,	'2021-10-14 09:03:42.745614',	'2021-10-14 09:03:42.745624',	NULL,	NULL),
+(254,	'w8o2QE2nQyDqNMWRpE0FRtOkYoyblI',	'2021-10-14 19:22:31.266475',	'read write',	3,	7,	'2021-10-14 09:22:31.266900',	'2021-10-14 09:22:31.266911',	NULL,	NULL),
+(255,	'7RydpqMYdrQNYI9zR7WK6LzMrscWhc',	'2021-10-14 19:24:19.851151',	'read write',	3,	7,	'2021-10-14 09:24:19.851445',	'2021-10-14 09:24:19.851454',	NULL,	NULL),
+(256,	'wAi6b9p2e9Ok65Ln1Rd2C07YVI3UKA',	'2021-10-14 19:29:34.276004',	'read write',	3,	7,	'2021-10-14 09:29:34.276311',	'2021-10-14 09:29:34.276321',	NULL,	NULL),
+(257,	'HfaaLOj4FfXbyx7uZVM81vEg4W6u8p',	'2021-10-15 11:03:33.732975',	'read write',	3,	7,	'2021-10-15 01:03:33.733407',	'2021-10-15 01:03:33.733417',	NULL,	NULL),
+(258,	'O9mcZywrXfi6kK2J5WhN4Vc3jLvZXb',	'2021-10-15 11:07:33.884634',	'read write',	3,	16,	'2021-10-15 01:07:33.884927',	'2021-10-15 01:07:33.884938',	NULL,	NULL),
+(259,	'70RFCF2kauKCQpxh50qj6T8xoTyaEe',	'2021-10-15 12:11:57.729503',	'read write',	3,	7,	'2021-10-15 02:11:57.730003',	'2021-10-15 02:11:57.730014',	NULL,	NULL),
+(260,	'4d4deDxjOwsUszzHbHO9c3ykiscN5Y',	'2021-10-15 13:41:34.339942',	'read write',	3,	7,	'2021-10-15 03:41:34.340348',	'2021-10-15 03:41:34.340358',	NULL,	NULL),
+(261,	'aTZaPrWlXIVf9ekllqxf2VLQAh0mzq',	'2021-10-15 20:09:22.502717',	'read write',	3,	19,	'2021-10-15 10:09:22.503250',	'2021-10-15 10:09:22.503267',	NULL,	NULL),
+(262,	'jPNWVVQ7YR3niYPuxzlH8A2n4fsObA',	'2021-10-15 20:17:52.647796',	'read write',	3,	7,	'2021-10-15 10:17:52.658508',	'2021-10-15 10:17:52.658520',	243,	NULL),
+(264,	'o11aqumRzwRmZIP3wYQKMBV7n497vt',	'2021-10-16 00:38:42.192841',	'read write',	3,	18,	'2021-10-15 14:38:42.194127',	'2021-10-15 14:38:42.194141',	NULL,	NULL),
+(265,	'gSpVTgkwTzvaSt3bgRs5RuW6u8Dbys',	'2021-10-16 00:40:15.784716',	'read write',	3,	7,	'2021-10-15 14:40:15.785011',	'2021-10-15 14:40:15.785021',	NULL,	NULL),
+(266,	'6x0SbVZRTeinxpk64XOtPi4mvFisVt',	'2021-10-16 00:51:18.896010',	'read write',	3,	16,	'2021-10-15 14:51:18.896337',	'2021-10-15 14:51:18.896347',	NULL,	NULL),
+(267,	'tyfVH8jWKr7CZxWg4iQv6NS180R42w',	'2021-10-16 00:52:31.118706',	'read write',	3,	16,	'2021-10-15 14:52:31.119391',	'2021-10-15 14:52:31.119407',	NULL,	NULL),
+(268,	'h6AQ2kkl8j4DpBzfJbdAqhCJHESxno',	'2021-10-16 00:54:49.090269',	'read write',	3,	7,	'2021-10-15 14:54:49.090615',	'2021-10-15 14:54:49.090626',	NULL,	NULL),
+(269,	'TAHqyIZH9RXOPPN7t2GUNuSnncKNAN',	'2021-10-16 01:07:00.295800',	'read write',	3,	7,	'2021-10-15 15:07:00.296135',	'2021-10-15 15:07:00.296145',	NULL,	NULL),
+(270,	'vjWpA6IrXaAjM1aGqu3MJQvlaFbU8R',	'2021-10-16 01:20:37.442592',	'read write',	3,	7,	'2021-10-15 15:20:37.442959',	'2021-10-15 15:20:37.442969',	NULL,	NULL),
+(271,	'ohx3tTG0WSJ5rbLFuME4Y3jh7j0Jqr',	'2021-10-16 11:08:40.337211',	'read write',	3,	7,	'2021-10-16 01:08:40.353660',	'2021-10-16 01:08:40.353671',	263,	NULL),
+(272,	'c0sloSHaL3TSHDDLqObbgFI4yADM0n',	'2021-10-16 11:23:44.921671',	'read write',	3,	18,	'2021-10-16 01:23:44.925692',	'2021-10-16 01:23:44.925775',	NULL,	NULL),
+(273,	'eV73rfURVT2FcyxXRXsGMMzn7UzocK',	'2021-10-16 11:24:30.219407',	'read write',	3,	18,	'2021-10-16 01:24:30.220852',	'2021-10-16 01:24:30.220897',	NULL,	NULL),
+(274,	'pRvSD8mkhLiABFmSXI6nQdONSuJwap',	'2021-10-16 11:24:53.623925',	'read write',	3,	7,	'2021-10-16 01:24:53.624249',	'2021-10-16 01:24:53.624260',	NULL,	NULL),
+(275,	'Ap8mNK52ND8vcUz1yfMtXgfntNknM6',	'2021-10-16 11:29:30.512298',	'read write',	3,	16,	'2021-10-16 01:29:30.512917',	'2021-10-16 01:29:30.512942',	NULL,	NULL),
+(276,	'MXrn6g9c0OhhTsdI941fulAg2Frx90',	'2021-10-16 11:30:54.900787',	'read write',	3,	18,	'2021-10-16 01:30:54.902329',	'2021-10-16 01:30:54.902374',	NULL,	NULL),
+(277,	'fCm9rLBHI8qddQuM886bn7Ygco5yro',	'2021-10-16 11:32:26.949762',	'read write',	3,	7,	'2021-10-16 01:32:26.950069',	'2021-10-16 01:32:26.950080',	NULL,	NULL),
+(278,	'Wno1TD6JpNi8BzWJQo8K3OpiM1omcP',	'2021-10-16 11:35:27.056114',	'read write',	3,	18,	'2021-10-16 01:35:27.057602',	'2021-10-16 01:35:27.057664',	NULL,	NULL),
+(279,	'RBHadyiOvICruwrya11XFVVzOGq7de',	'2021-10-16 11:40:40.747040',	'read write',	3,	7,	'2021-10-16 01:40:40.747386',	'2021-10-16 01:40:40.747399',	NULL,	NULL),
+(280,	'rnaJC1QSe0SeGJDzSDplBlkO6inysc',	'2021-10-16 11:41:05.365497',	'read write',	3,	16,	'2021-10-16 01:41:05.365840',	'2021-10-16 01:41:05.365850',	NULL,	NULL),
+(281,	's4gx8JQyt3yhrjabv8xpkRd5LLoOhl',	'2021-10-16 11:41:17.242557',	'read write',	3,	16,	'2021-10-16 01:41:17.242882',	'2021-10-16 01:41:17.242894',	NULL,	NULL);
 
 TRUNCATE `oauth2_provider_application`;
 INSERT INTO `oauth2_provider_application` (`id`, `client_id`, `redirect_uris`, `client_type`, `authorization_grant_type`, `client_secret`, `name`, `user_id`, `skip_authorization`, `created`, `updated`, `algorithm`) VALUES
 (3,	'TPLrxQE8mF9slRzevZSNbNCLQXDSSbJrnIprMCNM',	'',	'confidential',	'password',	'QRHKVKgNnYo8GmwvxUfFtJRAtvtoLTD4mDoNtWzxulgFhrY8rssWssFglvAvZxZpm2vHHBY2nIJDHETm3SOONxD0ADRKL0ald5Ip8hCoUeOAxQn8KipFFjkU64LlzlCQ',	'social-app',	1,	0,	'2021-08-30 09:13:44.257565',	'2021-08-30 09:13:44.257620',	'');
 
-DROP TABLE IF EXISTS `oauth2_provider_grant`;
-CREATE TABLE `oauth2_provider_grant` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `code` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `expires` datetime(6) NOT NULL,
-  `redirect_uri` longtext COLLATE utf8_unicode_ci NOT NULL,
-  `scope` longtext COLLATE utf8_unicode_ci NOT NULL,
-  `application_id` bigint NOT NULL,
-  `user_id` bigint NOT NULL,
-  `created` datetime(6) NOT NULL,
-  `updated` datetime(6) NOT NULL,
-  `code_challenge` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
-  `code_challenge_method` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
-  `nonce` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `claims` longtext COLLATE utf8_unicode_ci NOT NULL DEFAULT (_utf8mb3''),
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `code` (`code`),
-  KEY `oauth2_provider_gran_application_id_81923564_fk_oauth2_pr` (`application_id`),
-  KEY `oauth2_provider_grant_user_id_e8f62af8_fk_social_network_user_id` (`user_id`),
-  CONSTRAINT `oauth2_provider_gran_application_id_81923564_fk_oauth2_pr` FOREIGN KEY (`application_id`) REFERENCES `oauth2_provider_application` (`id`),
-  CONSTRAINT `oauth2_provider_grant_user_id_e8f62af8_fk_social_network_user_id` FOREIGN KEY (`user_id`) REFERENCES `social_network_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
 TRUNCATE `oauth2_provider_grant`;
 
-DROP TABLE IF EXISTS `oauth2_provider_idtoken`;
-CREATE TABLE `oauth2_provider_idtoken` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `jti` char(32) COLLATE utf8_unicode_ci NOT NULL,
-  `expires` datetime(6) NOT NULL,
-  `scope` longtext COLLATE utf8_unicode_ci NOT NULL,
-  `created` datetime(6) NOT NULL,
-  `updated` datetime(6) NOT NULL,
-  `application_id` bigint DEFAULT NULL,
-  `user_id` bigint DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `jti` (`jti`),
-  KEY `oauth2_provider_idto_application_id_08c5ff4f_fk_oauth2_pr` (`application_id`),
-  KEY `oauth2_provider_idto_user_id_dd512b59_fk_social_ne` (`user_id`),
-  CONSTRAINT `oauth2_provider_idto_application_id_08c5ff4f_fk_oauth2_pr` FOREIGN KEY (`application_id`) REFERENCES `oauth2_provider_application` (`id`),
-  CONSTRAINT `oauth2_provider_idto_user_id_dd512b59_fk_social_ne` FOREIGN KEY (`user_id`) REFERENCES `social_network_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
 TRUNCATE `oauth2_provider_idtoken`;
-
-DROP TABLE IF EXISTS `oauth2_provider_refreshtoken`;
-CREATE TABLE `oauth2_provider_refreshtoken` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `token` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `access_token_id` bigint DEFAULT NULL,
-  `application_id` bigint NOT NULL,
-  `user_id` bigint NOT NULL,
-  `created` datetime(6) NOT NULL,
-  `updated` datetime(6) NOT NULL,
-  `revoked` datetime(6) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `access_token_id` (`access_token_id`),
-  UNIQUE KEY `oauth2_provider_refreshtoken_token_revoked_af8a5134_uniq` (`token`,`revoked`),
-  KEY `oauth2_provider_refr_application_id_2d1c311b_fk_oauth2_pr` (`application_id`),
-  KEY `oauth2_provider_refr_user_id_da837fce_fk_social_ne` (`user_id`),
-  CONSTRAINT `oauth2_provider_refr_access_token_id_775e84e8_fk_oauth2_pr` FOREIGN KEY (`access_token_id`) REFERENCES `oauth2_provider_accesstoken` (`id`),
-  CONSTRAINT `oauth2_provider_refr_application_id_2d1c311b_fk_oauth2_pr` FOREIGN KEY (`application_id`) REFERENCES `oauth2_provider_application` (`id`),
-  CONSTRAINT `oauth2_provider_refr_user_id_da837fce_fk_social_ne` FOREIGN KEY (`user_id`) REFERENCES `social_network_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 TRUNCATE `oauth2_provider_refreshtoken`;
 INSERT INTO `oauth2_provider_refreshtoken` (`id`, `token`, `access_token_id`, `application_id`, `user_id`, `created`, `updated`, `revoked`) VALUES
@@ -697,149 +658,219 @@ INSERT INTO `oauth2_provider_refreshtoken` (`id`, `token`, `access_token_id`, `a
 (137,	'7Mt6dhevAJpHAsqbboO3nH32RY18zr',	137,	3,	16,	'2021-09-15 09:56:37.311667',	'2021-09-15 09:56:37.311684',	NULL),
 (138,	'nTlAALjoP2ZoZafci8huVFVQR4xsrb',	138,	3,	17,	'2021-09-15 10:15:32.564742',	'2021-09-15 10:15:32.564760',	NULL),
 (139,	't6v3YRDAevtSnPoBq71YSTCDDnxS8h',	139,	3,	7,	'2021-09-15 12:35:15.433850',	'2021-09-15 12:35:15.433867',	NULL),
-(140,	'xUDLlmE9rBYmSEJh52dWf9pShGjUOX',	140,	3,	16,	'2021-09-15 12:47:12.488088',	'2021-09-15 12:47:12.488105',	NULL),
-(141,	'zDVaFPyNvQUniKAnRvKS43Lkf9T6bs',	141,	3,	7,	'2021-09-16 08:53:30.049542',	'2021-09-16 08:53:30.049653',	NULL);
-
-DROP TABLE IF EXISTS `social_network_auction`;
-CREATE TABLE `social_network_auction` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `content` longtext COLLATE utf8_unicode_ci,
-  `create_at` datetime(6) DEFAULT NULL,
-  `title` varchar(225) COLLATE utf8_unicode_ci NOT NULL,
-  `active` tinyint(1) NOT NULL,
-  `count_comment` int NOT NULL,
-  `base_price` double NOT NULL,
-  `condition` longtext COLLATE utf8_unicode_ci,
-  `deadline` datetime(6) NOT NULL,
-  `date_success` datetime(6) DEFAULT NULL,
-  `accept_price` double DEFAULT NULL,
-  `status_auction` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `buyer_id` bigint DEFAULT NULL,
-  `category_id` bigint DEFAULT NULL,
-  `user_id` bigint NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `social_network_aucti_category_id_0a50e334_fk_social_ne` (`category_id`),
-  KEY `social_network_aucti_user_id_f42c1fd2_fk_social_ne` (`user_id`),
-  KEY `social_network_aucti_buyer_id_a53a418c_fk_social_ne` (`buyer_id`),
-  CONSTRAINT `social_network_aucti_buyer_id_a53a418c_fk_social_ne` FOREIGN KEY (`buyer_id`) REFERENCES `social_network_user` (`id`),
-  CONSTRAINT `social_network_aucti_category_id_0a50e334_fk_social_ne` FOREIGN KEY (`category_id`) REFERENCES `social_network_categoryauction` (`id`),
-  CONSTRAINT `social_network_aucti_user_id_f42c1fd2_fk_social_ne` FOREIGN KEY (`user_id`) REFERENCES `social_network_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+(140,	'xUDLlmE9rBYmSEJh52dWf9pShGjUOX',	NULL,	3,	16,	'2021-09-15 12:47:12.488088',	'2021-09-16 12:50:35.805229',	'2021-09-16 12:50:35.805099'),
+(141,	'zDVaFPyNvQUniKAnRvKS43Lkf9T6bs',	141,	3,	7,	'2021-09-16 08:53:30.049542',	'2021-09-16 08:53:30.049653',	NULL),
+(142,	'nIpodh4p7HWY7jXzxWsMVE9oPlDULi',	142,	3,	16,	'2021-09-16 12:50:35.807710',	'2021-09-16 12:50:35.807733',	NULL),
+(143,	'pdjg4I7r8NZqR5KRdWWchFqxzTcJ4t',	NULL,	3,	7,	'2021-09-16 13:07:22.497891',	'2021-09-17 06:52:18.016008',	'2021-09-17 06:52:18.015859'),
+(144,	'Dr2HIvh5HSwCFVsPMV3MGxuo5i3tea',	144,	3,	16,	'2021-09-16 16:44:39.673163',	'2021-09-16 16:44:39.673189',	NULL),
+(145,	'mOxOUHVLKolWrU3hh8UW13OTiG9QuV',	145,	3,	7,	'2021-09-17 06:52:18.020131',	'2021-09-17 06:52:18.020156',	NULL),
+(146,	'98if0OPSXtfbptO7d54EeWzGBDW5wt',	146,	3,	7,	'2021-09-17 08:23:35.758067',	'2021-09-17 08:23:35.758092',	NULL),
+(147,	'I8cJRKfSXmo57zHxuXCOix5JerP3RL',	147,	3,	16,	'2021-09-17 09:45:27.865646',	'2021-09-17 09:45:27.865670',	NULL),
+(148,	'4G5ojviDofSR9eMguPE7hatrLNwP28',	148,	3,	7,	'2021-09-17 10:16:43.017266',	'2021-09-17 10:16:43.017300',	NULL),
+(149,	'fUbSqBdyBtwKr0Dz8Q0X5ErF98IEzK',	NULL,	3,	7,	'2021-09-17 14:40:39.324326',	'2021-09-18 10:27:35.983668',	'2021-09-18 10:27:35.983417'),
+(150,	'57R2qnopBdSQijK8bOsjZWdJcn9eZy',	150,	3,	7,	'2021-09-18 09:03:36.288737',	'2021-09-18 09:03:36.288777',	NULL),
+(151,	'pKL2DiZpWUmyvytJCmJ7AevIGSf9pI',	151,	3,	7,	'2021-09-18 09:04:45.350493',	'2021-09-18 09:04:45.350538',	NULL),
+(152,	'gDWoJMpyDhtk1Jn2TQwQ3MTxvmYp5s',	NULL,	3,	7,	'2021-09-18 10:27:35.988252',	'2021-09-19 14:51:43.610011',	'2021-09-19 14:51:43.609671'),
+(153,	'eRcrsVZoL4eLInB6X6qcf3XkfADYSi',	153,	3,	7,	'2021-09-18 10:28:15.459236',	'2021-09-18 10:28:15.459271',	NULL),
+(154,	'CvKdDmcXcBpkbqkKq5oBdVVpAST9wj',	154,	3,	16,	'2021-09-18 10:28:28.528829',	'2021-09-18 10:28:28.528864',	NULL),
+(155,	'krGLSfmmSi2hQAWW7SpvmfxXhlCqCz',	155,	3,	16,	'2021-09-18 10:57:56.934667',	'2021-09-18 10:57:56.934708',	NULL),
+(156,	'T7OeeMeS245fRaEXqA1XxQBl5JDFND',	NULL,	3,	7,	'2021-09-19 14:51:43.617258',	'2021-09-20 01:18:08.541703',	'2021-09-20 01:18:08.541588'),
+(157,	'e1SzWEkxRflorhSqjTN1AQX8o9FIn2',	157,	3,	7,	'2021-09-20 01:18:08.544196',	'2021-09-20 01:18:08.544221',	NULL),
+(158,	'XoomLHngQ4nb6eghWfTIh8IOveYYlh',	158,	3,	16,	'2021-09-20 01:22:24.845179',	'2021-09-20 01:22:24.845195',	NULL),
+(159,	'gaB0BnLZjcrJbFHZOpW4Vv5u3pBgD1',	159,	3,	7,	'2021-09-20 01:22:38.672278',	'2021-09-20 01:22:38.672303',	NULL),
+(160,	'mrnpa0srJpL28cF3CosfsEcLTgQLHL',	160,	3,	7,	'2021-09-20 08:40:02.513443',	'2021-09-20 08:40:02.513468',	NULL),
+(161,	'UximLpzMvx7dpZej2QAOh0zqdGpSw0',	161,	3,	16,	'2021-09-20 08:50:00.041209',	'2021-09-20 08:50:00.041229',	NULL),
+(162,	'ldsVtKruiok0y4zgJOb19oMhP3GOXS',	162,	3,	7,	'2021-09-20 09:25:58.532769',	'2021-09-20 09:25:58.532787',	NULL),
+(163,	'46Q7JESjdAzmRz1d3FKQ8H7r4jqVxg',	NULL,	3,	7,	'2021-09-20 09:26:00.201792',	'2021-09-21 00:35:58.232843',	'2021-09-21 00:35:58.232705'),
+(164,	'Mp4EqLxp8Lm5A9le0wDb9dt0egbuDa',	164,	3,	7,	'2021-09-21 00:35:58.236011',	'2021-09-21 00:35:58.236042',	NULL),
+(165,	'wTXt9HZoCTlLYoL0Tg3RMAbK6Kk9Y0',	165,	3,	7,	'2021-09-21 09:06:58.906889',	'2021-09-21 09:06:58.906914',	NULL),
+(166,	'AM1a1OFQdBQyMxPtHNQCsDrMM3dRHc',	166,	3,	7,	'2021-09-21 09:22:29.458199',	'2021-09-21 09:22:29.458216',	NULL),
+(167,	'n1JmLGIKPQlpElQV8Nb8XBXFn8nweH',	NULL,	3,	7,	'2021-09-21 09:26:33.663268',	'2021-09-23 03:44:09.562202',	'2021-09-23 03:44:09.562119'),
+(168,	'KPw7QuYleTs2xuwaYZSbcwwlYm9E94',	168,	3,	7,	'2021-09-23 03:44:09.565077',	'2021-09-23 03:44:09.565105',	NULL),
+(169,	'YFhWqOhNxO716t5sUZLFEyQb9i2eKq',	169,	3,	7,	'2021-09-23 04:23:00.366999',	'2021-09-23 04:23:00.367016',	NULL),
+(170,	'L9B3Q70NEeyP9PoyuSOMK5IMzoNFTs',	170,	3,	16,	'2021-09-23 04:23:16.385877',	'2021-09-23 04:23:16.385903',	NULL),
+(171,	'Kb2F4Ge0XVVcnn7W6q7jeFmLUsIfFr',	171,	3,	16,	'2021-09-23 09:13:14.272298',	'2021-09-23 09:13:14.272338',	NULL),
+(172,	'zKlO0rLxiXo64YwJK9DGu9w2765vA0',	172,	3,	16,	'2021-09-23 09:48:36.888495',	'2021-09-23 09:48:36.888531',	NULL),
+(173,	'VnSm7Sdf7V7bjnaRPD8tGozaXEQJcq',	173,	3,	16,	'2021-09-23 09:49:37.179714',	'2021-09-23 09:49:37.179731',	NULL),
+(174,	'dz0RTaKCoHGyMURUU9V53xyghBAsjv',	174,	3,	16,	'2021-09-23 09:50:04.909641',	'2021-09-23 09:50:04.909666',	NULL),
+(175,	'50PiAjxnP3tFhfUillPznfhNQRS02V',	175,	3,	7,	'2021-09-23 15:00:11.408093',	'2021-09-23 15:00:11.408111',	NULL),
+(176,	'aB6HCLcElrapiK5rg56LzIds9HZKEO',	176,	3,	7,	'2021-09-24 03:18:21.876061',	'2021-09-24 03:18:21.876095',	NULL),
+(177,	'KoNAsP4wK0iFABaNniTJIkCz3CVMFj',	177,	3,	7,	'2021-09-25 08:58:15.224936',	'2021-09-25 08:58:15.224977',	NULL),
+(178,	'pcTkHrNMXOexUcgjG3C4e2FyMLjvPy',	178,	3,	7,	'2021-09-25 15:44:49.300771',	'2021-09-25 15:44:49.300815',	NULL),
+(179,	'rU1fNbF4ZQChM32JvkftHVtrozrt9l',	179,	3,	7,	'2021-09-26 01:43:51.916230',	'2021-09-26 01:43:51.916272',	NULL),
+(180,	'DDGuPTC3emkpn53TRJk8wt2WXBkfSw',	180,	3,	7,	'2021-09-26 01:45:53.151775',	'2021-09-26 01:45:53.151809',	NULL),
+(181,	'2wtz0B5M9yiu2sZSEROfdl0weDZ1ns',	NULL,	3,	7,	'2021-09-26 08:53:50.073896',	'2021-09-27 02:23:23.941666',	'2021-09-27 02:23:23.941366'),
+(182,	'c5lyRl7yEQShIqna2Bcbjv6oKfI451',	NULL,	3,	7,	'2021-09-27 02:23:23.948495',	'2021-09-27 17:53:32.366197',	'2021-09-27 17:53:32.366076'),
+(183,	'McnlyN5qZkcc4SympXm7xIlxCo4SLX',	NULL,	3,	7,	'2021-09-27 02:37:05.368039',	'2021-09-27 13:04:39.519625',	'2021-09-27 13:04:39.519484'),
+(184,	'AmZnuBqTYZib2VqbS0NTaqltoGQmrZ',	184,	3,	7,	'2021-09-27 13:04:39.522913',	'2021-09-27 13:04:39.522955',	NULL),
+(185,	'Z3IQafTGz24sviU03z8w7M4e1LzCfF',	185,	3,	16,	'2021-09-27 13:17:48.889325',	'2021-09-27 13:17:48.889342',	NULL),
+(186,	'Ak43Ox95rPysmMCZlTCnEDWNfeQzJV',	186,	3,	16,	'2021-09-27 13:19:16.291167',	'2021-09-27 13:19:16.291191',	NULL),
+(187,	'iK8kIjrI4jlf9qPpErErW4oaQNvtOL',	187,	3,	7,	'2021-09-27 15:24:19.278261',	'2021-09-27 15:24:19.278332',	NULL),
+(188,	'7bDJ3cJLix5MvkZEbVGu3TsVMvjCSH',	188,	3,	16,	'2021-09-27 17:16:30.022077',	'2021-09-27 17:16:30.022119',	NULL),
+(189,	'5Q88qobw9JCCFn3HdsSc71qSptGKA1',	189,	3,	16,	'2021-09-27 17:16:30.333557',	'2021-09-27 17:16:30.333594',	NULL),
+(190,	'hbc4H7R6gO09UbDC4VNwdGdJRzkZd7',	190,	3,	7,	'2021-09-27 17:32:28.387390',	'2021-09-27 17:32:28.387424',	NULL),
+(191,	'6C4hGPy7Lo3vE2hvx5Vvpy09ml5Ns0',	191,	3,	7,	'2021-09-27 17:41:05.194833',	'2021-09-27 17:41:05.194878',	NULL),
+(192,	'1Wn6FjS2iPdSvL7kkJVSxU54MPmn0D',	192,	3,	16,	'2021-09-27 17:42:54.095112',	'2021-09-27 17:42:54.095145',	NULL),
+(193,	'cHPiPCVfbpy4l0CZcLLMXGtnJqQxvu',	193,	3,	7,	'2021-09-27 17:48:39.877542',	'2021-09-27 17:48:39.877587',	NULL),
+(194,	'mdSZca4SxyjfKtG9Gyi5SFcZvwvgfl',	NULL,	3,	7,	'2021-09-27 17:49:39.901856',	'2021-09-28 03:49:43.838416',	'2021-09-28 03:49:43.838167'),
+(195,	'2H1TCfWnCnmG4uMcK5cebfkQMIyvD6',	195,	3,	7,	'2021-09-27 17:53:32.372397',	'2021-09-27 17:53:32.372429',	NULL),
+(196,	'hFWn9sHhGEVBUmiMUJygI5bI2ekI1u',	NULL,	3,	7,	'2021-09-27 17:53:43.013653',	'2021-09-28 07:28:14.762336',	'2021-09-28 07:28:14.762047'),
+(197,	'5TYKfzGTYfBlrpAFFwUswvCv4Q8L7n',	197,	3,	7,	'2021-09-28 02:44:35.283860',	'2021-09-28 02:44:35.283895',	NULL),
+(198,	'dQY1JzJkVK4wBKzi6Np2kUzyEOM95B',	198,	3,	7,	'2021-09-28 03:49:43.842919',	'2021-09-28 03:49:43.842958',	NULL),
+(199,	'XHIfDFWMlqbycZ1DfHf9fwcsCvLtbP',	199,	3,	7,	'2021-09-28 04:08:41.253895',	'2021-09-28 04:08:41.253930',	NULL),
+(200,	'VFKIsUAqv0fviymBhntcPHNW9nGPA6',	200,	3,	16,	'2021-09-28 04:10:36.259741',	'2021-09-28 04:10:36.259778',	NULL),
+(201,	'1qV4UJuLrboTlkGQhiCS3fES8corR5',	NULL,	3,	7,	'2021-09-28 07:28:14.766587',	'2021-09-28 07:28:15.378703',	'2021-09-28 07:28:15.378550'),
+(202,	'PsnUlZrUFkOr347hvv0CVBOr7wxDgM',	202,	3,	7,	'2021-09-28 07:28:15.382322',	'2021-09-28 07:28:15.382358',	NULL),
+(203,	'HC1LVU8dazRjxJpaIOtkhFGsMQrcyN',	203,	3,	7,	'2021-09-28 08:36:53.557946',	'2021-09-28 08:36:53.557962',	NULL),
+(204,	'5QClUAjGUOlsmVP68OPPVxgdt1DOss',	NULL,	3,	7,	'2021-09-28 08:39:43.518800',	'2021-09-29 16:19:14.293854',	'2021-09-29 16:19:14.293525'),
+(205,	'QmljxLCFlzJKmXmORQkoC8Qhpok7BL',	NULL,	3,	7,	'2021-09-28 09:41:22.566264',	'2021-09-29 02:13:46.540898',	'2021-09-29 02:13:46.540795'),
+(206,	'grxQLhRCSkOSqUNEEZqmOZaOCgr0rE',	206,	3,	7,	'2021-09-29 02:13:46.543025',	'2021-09-29 02:13:46.543044',	NULL),
+(207,	'9zewZJFlBidwVrTmoT61RdUrBDDDde',	207,	3,	7,	'2021-09-29 02:17:42.489629',	'2021-09-29 02:17:42.489646',	NULL),
+(208,	'5qnLVWuXfUe4vUqJjNJC0k3P3pd1Nc',	NULL,	3,	7,	'2021-09-29 02:17:42.734323',	'2021-09-29 13:32:53.650035',	'2021-09-29 13:32:53.649936'),
+(209,	'9ibwaykKZRnHFLRV2IVce8WqXcreOn',	NULL,	3,	7,	'2021-09-29 13:32:53.652089',	'2021-09-30 03:09:35.083916',	'2021-09-30 03:09:35.083840'),
+(210,	'rrBpNpm3R8k95i3E8nt1WqfFMKKZcS',	NULL,	3,	7,	'2021-09-29 16:19:14.304842',	'2021-09-30 03:05:51.158918',	'2021-09-30 03:05:51.158591'),
+(211,	'QpnTKW1a9qFoARNrXJNkcWgBGTQTlU',	211,	3,	7,	'2021-09-30 03:05:51.165776',	'2021-09-30 03:05:51.165845',	NULL),
+(212,	'E13qnjpLqMzQXepjRtULg2kRfvernU',	212,	3,	7,	'2021-09-30 03:09:35.086103',	'2021-09-30 03:09:35.086126',	NULL),
+(213,	'Q7nUBTGMQIpDQu7yW8gDV4rU1Hm5DA',	NULL,	3,	7,	'2021-09-30 03:16:08.057815',	'2021-10-04 14:09:58.149171',	'2021-10-04 14:09:58.149043'),
+(214,	'bJKjHdTsc4CFDeqvxtLMCoqPTeZ3GR',	214,	3,	7,	'2021-09-30 07:56:25.301571',	'2021-09-30 07:56:25.301606',	NULL),
+(215,	'i19wM27WDh5a52C4nDYXHnX8aVWiSk',	215,	3,	16,	'2021-09-30 08:19:14.103293',	'2021-09-30 08:19:14.103328',	NULL),
+(216,	'IWzc02uwgBwlQjmMuB5UfrQj3gvsat',	NULL,	3,	7,	'2021-10-04 14:09:58.152180',	'2021-10-11 02:59:00.982738',	'2021-10-11 02:59:00.982439'),
+(217,	'lhzbI6RWzzNtNdVz8kktYGb8ecWYfH',	217,	3,	16,	'2021-10-04 14:19:55.299652',	'2021-10-04 14:19:55.299669',	NULL),
+(218,	'Bl8KCpUV8aiUegWrGS7G7xp1YfVhMW',	218,	3,	7,	'2021-10-11 02:59:00.989762',	'2021-10-11 02:59:00.989832',	NULL),
+(219,	'uLhco0aX6KVKp7cYelMNXHUc0kACfh',	219,	3,	7,	'2021-10-11 03:55:12.938336',	'2021-10-11 03:55:12.938353',	NULL),
+(220,	'iaRg9lPRO388ZDLxzQLl5AyIWT2YHx',	220,	3,	7,	'2021-10-11 03:56:28.475436',	'2021-10-11 03:56:28.475452',	NULL),
+(221,	'XXyhkhXtc8YPXn3LvKk7SnEJ5MhVW7',	NULL,	3,	7,	'2021-10-11 04:12:55.470331',	'2021-10-13 02:57:29.481979',	'2021-10-13 02:57:29.481816'),
+(222,	'WgLKOPl1OUTPGhHV7WsECz9meq4FnX',	222,	3,	7,	'2021-10-12 02:35:40.933659',	'2021-10-12 02:35:40.933738',	NULL),
+(223,	'rV76yRqu4uSFfjaqMSLqSig3Z2cKkv',	223,	3,	7,	'2021-10-12 02:35:42.955350',	'2021-10-12 02:35:42.955366',	NULL),
+(224,	'9H9ZTRiQeelAQqctoNEBmlVGKcYzA4',	224,	3,	7,	'2021-10-12 02:47:30.814330',	'2021-10-12 02:47:30.814346',	NULL),
+(225,	'lcyOUaO7A7dGFvGKADN5sxPtM41oEC',	225,	3,	7,	'2021-10-13 02:57:29.486527',	'2021-10-13 02:57:29.486583',	NULL),
+(226,	'z5ddId5sQQLH2pALFBfJpaxflx6G5P',	226,	3,	7,	'2021-10-13 14:43:00.854560',	'2021-10-13 14:43:00.854663',	NULL),
+(227,	'73CsaB4blok1dMVoGeIAsH670tg1RM',	227,	3,	18,	'2021-10-13 15:11:31.839124',	'2021-10-13 15:11:31.839216',	NULL),
+(228,	'tPQ6oqudrCN2XmmnAHIcnn5YRFQfL5',	NULL,	3,	18,	'2021-10-13 15:16:37.956481',	'2021-10-14 01:19:23.773960',	'2021-10-14 01:19:23.773701'),
+(229,	'7aY6n6oahz6sbXm0la7dOVOUycqUbt',	229,	3,	18,	'2021-10-14 01:19:23.780198',	'2021-10-14 01:19:23.780242',	NULL),
+(230,	'fVpndlqdmMP1hV7ElNFOm6ilQJu0y3',	230,	3,	18,	'2021-10-14 02:47:44.379460',	'2021-10-14 02:47:44.379543',	NULL),
+(231,	'R89WmbgG4itovvuGtQcopT4svsbh2q',	231,	3,	18,	'2021-10-14 02:51:34.471394',	'2021-10-14 02:51:34.471478',	NULL),
+(232,	'JtYkwwHWUvmqay10p8s6iHQUMTSObJ',	232,	3,	18,	'2021-10-14 02:54:24.755394',	'2021-10-14 02:54:24.755477',	NULL),
+(233,	'VfjLLxVeySPywtYX5Wl11WuJPc6lpm',	233,	3,	7,	'2021-10-14 03:04:56.164544',	'2021-10-14 03:04:56.164561',	NULL),
+(234,	'Tj1gjWm5MT3x1zYgfDhkKONNZfrmTU',	234,	3,	18,	'2021-10-14 03:17:50.200159',	'2021-10-14 03:17:50.200206',	NULL),
+(235,	'q57a1g5sDtxV5ZxgzVDtEGY1LywenK',	235,	3,	7,	'2021-10-14 03:46:20.750348',	'2021-10-14 03:46:20.750382',	NULL),
+(236,	'mUPpaEsdgquWPVxHP0P0yH56NYxMYH',	236,	3,	18,	'2021-10-14 04:11:04.116413',	'2021-10-14 04:11:04.116454',	NULL),
+(237,	'PmuUwJb0vK0plyZ54kXqsDyPeYah54',	237,	3,	7,	'2021-10-14 04:11:19.785173',	'2021-10-14 04:11:19.785207',	NULL),
+(238,	'HhCS1Mh3asHEiToQtiudSMXGuv2lgQ',	238,	3,	7,	'2021-10-14 04:13:17.902315',	'2021-10-14 04:13:17.902352',	NULL),
+(239,	'QKrS4eTvgNXscPMlLjNRLX50abVcjS',	239,	3,	16,	'2021-10-14 04:15:09.233411',	'2021-10-14 04:15:09.233456',	NULL),
+(240,	'vFLpgXhk4b7cduF18WiPSfRPSDBfxF',	240,	3,	16,	'2021-10-14 04:15:38.561106',	'2021-10-14 04:15:38.561143',	NULL),
+(241,	'sMgkikHxLZP8FXpnZkLFxY6wzgEIZh',	241,	3,	7,	'2021-10-14 07:19:15.403809',	'2021-10-14 07:19:15.403857',	NULL),
+(242,	'4FU9zwVMNICViMh9Bdk440kd8H8OZd',	242,	3,	18,	'2021-10-14 07:45:53.078925',	'2021-10-14 07:45:53.078979',	NULL),
+(243,	'zXBDXhZK4hLlDseIijkPJpuIgARoXP',	NULL,	3,	7,	'2021-10-14 07:58:34.911229',	'2021-10-15 10:17:52.656556',	'2021-10-15 10:17:52.656468'),
+(244,	'DQ3QLB0yQWKSxvhA9eG0xTUHFYaZmM',	244,	3,	7,	'2021-10-14 08:14:23.211950',	'2021-10-14 08:14:23.212032',	NULL),
+(245,	'FrDPFgfSexkclCHw04lxZj2mVr98EF',	245,	3,	7,	'2021-10-14 08:18:22.436962',	'2021-10-14 08:18:22.436981',	NULL),
+(246,	'7coYlmon78BEOsl9ftCGAcLqTroD8T',	246,	3,	7,	'2021-10-14 08:24:39.438812',	'2021-10-14 08:24:39.438829',	NULL),
+(247,	'Miw2Snjb6HsdL23BxbU7eRWarKhH8W',	247,	3,	7,	'2021-10-14 08:27:26.579763',	'2021-10-14 08:27:26.579779',	NULL),
+(248,	'Jk4k88M1FWi2IoedoJm4yPPOK69Ktm',	248,	3,	16,	'2021-10-14 08:33:22.475310',	'2021-10-14 08:33:22.475335',	NULL),
+(249,	'WK8KpoQDpzYR4fNVHHDfX1p3FcRyeY',	249,	3,	16,	'2021-10-14 08:36:07.831052',	'2021-10-14 08:36:07.831099',	NULL),
+(250,	'Rb6h5mgcmOKzyt28SBxrF484NLoakB',	250,	3,	7,	'2021-10-14 08:37:24.430939',	'2021-10-14 08:37:24.430955',	NULL),
+(251,	'2PrjQd2o9DR4xzkshrLy7SEuQBJuWF',	251,	3,	7,	'2021-10-14 08:38:56.174777',	'2021-10-14 08:38:56.174794',	NULL),
+(252,	'aYf0QjRncp2fhWnxda9iF1DyIMr9bt',	252,	3,	7,	'2021-10-14 08:39:37.199931',	'2021-10-14 08:39:37.199946',	NULL),
+(253,	'kMkJ0vxI0IDsWs6Nt8s1v0oB97axlO',	253,	3,	7,	'2021-10-14 09:03:42.750076',	'2021-10-14 09:03:42.750094',	NULL),
+(254,	'2FDiDWQdv8Hvpvy96uKZZPcJEuf7Ac',	254,	3,	7,	'2021-10-14 09:22:31.272072',	'2021-10-14 09:22:31.272099',	NULL),
+(255,	'irxLG2OYDhvXGVHBve0e9NbuLJhLfa',	255,	3,	7,	'2021-10-14 09:24:19.852277',	'2021-10-14 09:24:19.852295',	NULL),
+(256,	'HlZGhItBQHkgem35UVmefKFV1VvlVG',	256,	3,	7,	'2021-10-14 09:29:34.277136',	'2021-10-14 09:29:34.277153',	NULL),
+(257,	'u8F3k3lBeK0XsQQmBRccMT3iug0ene',	257,	3,	7,	'2021-10-15 01:03:33.745166',	'2021-10-15 01:03:33.745194',	NULL),
+(258,	'GadsAcBc8QEmY9YZBPqXSWCJvjszB1',	258,	3,	16,	'2021-10-15 01:07:33.885693',	'2021-10-15 01:07:33.885710',	NULL),
+(259,	'DJEFKg1PGfrZRiLJ17bj7lgCt05KNL',	259,	3,	7,	'2021-10-15 02:11:57.731329',	'2021-10-15 02:11:57.731347',	NULL),
+(260,	'3ZGIF1SFP1X8mpbQfwXnUl4BBLAHbF',	260,	3,	7,	'2021-10-15 03:41:34.342989',	'2021-10-15 03:41:34.343007',	NULL),
+(261,	'bQpWcnPyh1kkEJsGpe4MwKvu8KceDz',	261,	3,	19,	'2021-10-15 10:09:22.519729',	'2021-10-15 10:09:22.519769',	NULL),
+(262,	'0fvUpX06owXpwp6bQHLDz2zDljjDzs',	262,	3,	7,	'2021-10-15 10:17:52.659209',	'2021-10-15 10:17:52.659227',	NULL),
+(263,	'9l91AEwAAQO2mhZangxvUjYBlPvYF4',	NULL,	3,	7,	'2021-10-15 12:05:34.029964',	'2021-10-16 01:08:40.351451',	'2021-10-16 01:08:40.351289'),
+(264,	'woZbj1QSrIk4z0a3doDIS2LWVCWzwS',	264,	3,	18,	'2021-10-15 14:38:42.211962',	'2021-10-15 14:38:42.212002',	NULL),
+(265,	'SIpD487k3SwIBXoSq7KrisP2geJnXJ',	265,	3,	7,	'2021-10-15 14:40:15.785767',	'2021-10-15 14:40:15.785784',	NULL),
+(266,	'SQ6PPwxrWqdi8v1m8mC92jL2pbNmNi',	266,	3,	16,	'2021-10-15 14:51:18.898877',	'2021-10-15 14:51:18.898902',	NULL),
+(267,	'QsRWyen9elRlTbPQm68GX5eZD3ah2f',	267,	3,	16,	'2021-10-15 14:52:31.120527',	'2021-10-15 14:52:31.120544',	NULL),
+(268,	'XENcYlz8m3uUppUjTEijGKCFndYAW7',	268,	3,	7,	'2021-10-15 14:54:49.092294',	'2021-10-15 14:54:49.092314',	NULL),
+(269,	'8uneW8a4o9V8aH6bVQ3e276TLp3P47',	269,	3,	7,	'2021-10-15 15:07:00.297493',	'2021-10-15 15:07:00.297511',	NULL),
+(270,	'nazLePFWUZaLTGpgYIMxpfYVrj3SvQ',	270,	3,	7,	'2021-10-15 15:20:37.451548',	'2021-10-15 15:20:37.451622',	NULL),
+(271,	'EiH2FJgdkQXI2X3Dxn2KgxpcB2K41C',	271,	3,	7,	'2021-10-16 01:08:40.354417',	'2021-10-16 01:08:40.354434',	NULL),
+(272,	'0TKhyq0GvRuKnbafWWASlbHGeY6xTD',	272,	3,	18,	'2021-10-16 01:23:44.940161',	'2021-10-16 01:23:44.940250',	NULL),
+(273,	'cA0RVVj0H1hD4wc1urRP1s5z01DPo1',	273,	3,	18,	'2021-10-16 01:24:30.240480',	'2021-10-16 01:24:30.240822',	NULL),
+(274,	'6T01Suhu0cs7v5McdZQz39nh5oNlVT',	274,	3,	7,	'2021-10-16 01:24:53.625010',	'2021-10-16 01:24:53.625026',	NULL),
+(275,	'5LGRTgSXNGcDRuXl3iIVLfD0Hbkyv5',	275,	3,	16,	'2021-10-16 01:29:30.514482',	'2021-10-16 01:29:30.514524',	NULL),
+(276,	'bBukjzSK4XnVm5rX6Y0MtI607Q8Qab',	276,	3,	18,	'2021-10-16 01:30:54.926478',	'2021-10-16 01:30:54.926561',	NULL),
+(277,	'8bcdWHAfL0jTQ3xryqJosqikpzAPQE',	277,	3,	7,	'2021-10-16 01:32:26.950763',	'2021-10-16 01:32:26.950779',	NULL),
+(278,	'oR83GcjkAtHpX4u7ge7pUnqrhBo91h',	278,	3,	18,	'2021-10-16 01:35:27.082266',	'2021-10-16 01:35:27.082378',	NULL),
+(279,	'jNvYI077qIpRdqpE9LY1Z3LVcghItz',	279,	3,	7,	'2021-10-16 01:40:40.748240',	'2021-10-16 01:40:40.748260',	NULL),
+(280,	'hTfTb0bce5p8x363rBQA5LgwAFoX33',	280,	3,	16,	'2021-10-16 01:41:05.366639',	'2021-10-16 01:41:05.366659',	NULL),
+(281,	'5gbo1XEAvSmwOAw8wrqHYIUANUFWaB',	281,	3,	16,	'2021-10-16 01:41:17.243640',	'2021-10-16 01:41:17.243657',	NULL);
 
 TRUNCATE `social_network_auction`;
-INSERT INTO `social_network_auction` (`id`, `content`, `create_at`, `title`, `active`, `count_comment`, `base_price`, `condition`, `deadline`, `date_success`, `accept_price`, `status_auction`, `buyer_id`, `category_id`, `user_id`) VALUES
-(1,	'Bán nhà gây quỹ vào từ thiện 50% lợi nhuận',	'2021-08-05 10:17:24.962753',	'Auction',	1,	2,	1000,	'NOP',	'2021-09-10 09:11:27.000000',	'2021-09-04 03:39:25.139497',	20000,	'succ',	7,	2,	7),
-(2,	'comment auction',	'2021-09-02 08:57:07.206073',	'ahihi',	1,	1,	1000,	'no',	'2020-10-02 00:00:00.000000',	NULL,	0,	'being auctioned',	NULL,	1,	7),
-(7,	'ahihi lan 2',	'2021-09-02 09:30:59.647487',	'test',	1,	0,	0,	'no',	'2020-02-02 00:00:00.000000',	NULL,	0,	'being auctioned',	NULL,	1,	7),
-(8,	'nop',	'2021-09-02 10:14:21.359787',	'huhu',	1,	0,	1000,	'no',	'2020-10-03 00:00:00.000000',	NULL,	0,	'being auctioned',	NULL,	2,	7),
-(9,	'ahihihihihihihi',	'2021-09-03 02:27:53.990976',	'ahihih',	1,	1,	0,	'no',	'2020-02-02 00:00:00.000000',	NULL,	0,	'being auctioned',	NULL,	2,	7),
-(10,	'nopnopnopnop',	'2021-09-03 02:39:04.997890',	'huhuhuhuhuhu',	1,	0,	10,	'no',	'2020-10-03 00:00:00.000000',	NULL,	0,	'being auctioned',	NULL,	2,	7),
-(12,	'Ahihi',	'2021-09-03 07:02:21.233534',	'Alala',	1,	0,	0,	'no',	'2020-02-02 12:00:00.000000',	NULL,	0,	'being auctioned',	NULL,	1,	7),
-(13,	'change path static 1111111',	'2021-09-03 07:03:27.958068',	'huhuhuhuhuhu',	1,	0,	10,	'no',	'2020-10-03 00:00:00.000000',	NULL,	0,	'being auctioned',	NULL,	2,	7),
-(14,	'change path static 1111111',	'2021-09-03 07:04:33.685324',	'huhuhuhuhuhu',	1,	0,	10,	'no',	'2020-10-03 00:00:00.000000',	NULL,	0,	'being auctioned',	NULL,	2,	7),
-(15,	'change path static 1111111',	'2021-09-03 07:06:39.621430',	'huhuhuhuhuhu',	1,	0,	10,	'no',	'2020-10-03 12:00:00.000000',	NULL,	0,	'being auctioned',	NULL,	2,	7),
-(16,	'change path static 1111111',	'2021-09-03 10:19:55.407666',	'huhuhuhuhuhu',	1,	0,	10,	'no',	'2020-10-03 12:00:00.000000',	NULL,	0,	'being auctioned',	NULL,	2,	7),
-(17,	'change path static 1111111',	'2021-09-03 10:25:14.815380',	'huhuhuhuhuhu',	1,	0,	10,	'no',	'2020-10-03 12:00:00.000000',	NULL,	0,	'being auctioned',	NULL,	2,	7),
-(18,	'them tu postman',	'2021-09-11 03:11:18.687600',	'huhuhuhuhuhu',	1,	0,	1000,	'no',	'2020-10-03 12:00:00.000000',	NULL,	0,	'being auctioned',	NULL,	2,	7),
-(19,	'them tu postman',	'2021-09-11 03:18:19.521337',	'huhuhuhuhuhu',	1,	0,	1000,	'no',	'2020-10-03 12:00:00.000000',	NULL,	0,	'being auctioned',	NULL,	2,	7);
-
-DROP TABLE IF EXISTS `social_network_auction_like`;
-CREATE TABLE `social_network_auction_like` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `auction_id` bigint NOT NULL,
-  `user_id` bigint NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `social_network_auction_like_auction_id_user_id_ba8c7f0c_uniq` (`auction_id`,`user_id`),
-  KEY `social_network_aucti_user_id_460a0327_fk_social_ne` (`user_id`),
-  CONSTRAINT `social_network_aucti_auction_id_527b16ba_fk_social_ne` FOREIGN KEY (`auction_id`) REFERENCES `social_network_auction` (`id`),
-  CONSTRAINT `social_network_aucti_user_id_460a0327_fk_social_ne` FOREIGN KEY (`user_id`) REFERENCES `social_network_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+INSERT INTO `social_network_auction` (`id`, `content`, `create_at`, `title`, `active`, `count_comment`, `base_price`, `condition`, `deadline`, `date_success`, `accept_price`, `status_auction`, `buyer_id`, `category_id`, `user_id`, `payment_method_id`) VALUES
+(9,	'Vì dịch nên cần bán 1 căn chung cư ở khu đô thị Vinhome',	'2021-09-03 02:27:53.990976',	'Bán nhà',	1,	1,	1000000,	'Chỉ giao dịch trực tiếp, và bắt buộc trả trước trên 80% giá trị',	'2020-02-02 00:00:00.000000',	NULL,	0,	'fail',	NULL,	2,	7,	2),
+(20,	'Sản phẩm này là sự chăm sóc của một người khác',	'2021-09-16 16:44:45.889996',	'Bán giá trị tinh thần',	1,	3,	10,	'Chỉ dành cho con nít',	'2021-12-30 00:00:00.000000',	'2021-09-26 09:39:26.189065',	30000,	'succ',	7,	5,	16,	1),
+(21,	'chỉ mang tính minh họa',	'2021-09-19 15:51:53.465715',	'Tạo trên app',	1,	1,	200000,	'khong dk',	'2021-12-12 00:00:00.000000',	'2021-10-14 03:47:12.366399',	150000,	'succ',	16,	6,	7,	2),
+(22,	'muôn bán càng nhanh cang tốt',	'2021-09-27 04:23:23.127304',	'bán đồ gia dụng',	1,	2,	100000,	'k có nhé',	'2020-12-01 00:00:00.000000',	NULL,	0,	'in process',	NULL,	6,	7,	2),
+(23,	'Bài đấu giá thứ 4',	'2021-09-27 13:14:52.462476',	'Auto make Auction',	1,	0,	0,	'No condition',	'2021-09-27 13:14:17.000000',	NULL,	0,	'being auctioned',	NULL,	4,	6,	1),
+(24,	'baif 1',	'2021-09-27 16:54:21.420633',	'tesst',	1,	0,	50000000,	'khong',	'2021-12-30 00:00:00.000000',	'2021-09-28 01:45:26.251916',	120000000,	'succ',	16,	4,	7,	1),
+(25,	'test2',	'2021-09-27 17:47:23.868143',	'test2',	1,	1,	100000,	'no',	'2021-12-30 00:00:00.000000',	NULL,	0,	'in process',	NULL,	3,	16,	1),
+(26,	'dùng test thôi ai mua thì bán nốt',	'2021-09-28 07:47:10.890257',	'Tạo thêm cái đấu giá nhé',	1,	1,	20000,	'không nhé',	'2020-12-10 00:00:00.000000',	'2021-10-14 03:45:41.097610',	50000,	'succ',	18,	5,	7,	1),
+(27,	'Bai nay chi dung de test',	'2021-10-15 01:09:39.745992',	'Bai test',	1,	0,	1000,	'k co nhe',	'2020-12-10 00:00:00.000000',	NULL,	0,	'fail',	NULL,	5,	16,	2),
+(28,	'test',	'2021-10-15 06:48:44.950840',	'test',	1,	0,	1000,	'no',	'2021-10-29 04:00:00.000000',	NULL,	0,	'being auctioned',	NULL,	3,	7,	2),
+(29,	'Noi dung test',	'2021-10-15 10:04:19.876122',	'them bai test',	1,	0,	10000,	'khong',	'2021-10-29 05:03:00.000000',	NULL,	0,	'being auctioned',	NULL,	5,	7,	2),
+(30,	'bài 1',	'2021-10-15 14:48:52.133583',	'ms thêm',	1,	0,	10000,	'no',	'2021-10-29 09:47:00.000000',	NULL,	0,	'being auctioned',	NULL,	5,	7,	1),
+(31,	'đấu giá ',	'2021-10-16 01:27:01.611149',	'tao moi',	1,	2,	1000,	'không đk',	'2021-10-30 08:25:00.000000',	'2021-10-16 01:37:33.521836',	25000,	'succ',	18,	5,	7,	1);
 
 TRUNCATE `social_network_auction_like`;
 INSERT INTO `social_network_auction_like` (`id`, `auction_id`, `user_id`) VALUES
-(1,	1,	7),
-(7,	1,	16),
-(2,	7,	7),
-(5,	7,	16),
-(3,	8,	7);
-
-DROP TABLE IF EXISTS `social_network_auctioncomment`;
-CREATE TABLE `social_network_auctioncomment` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `content` longtext COLLATE utf8_unicode_ci,
-  `create_at` datetime(6) DEFAULT NULL,
-  `price` double NOT NULL,
-  `status_transaction` varchar(25) COLLATE utf8_unicode_ci NOT NULL,
-  `auction_id` bigint NOT NULL,
-  `user_id` bigint DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `social_network_aucti_auction_id_33992e6a_fk_social_ne` (`auction_id`),
-  KEY `social_network_aucti_user_id_4c77bfc6_fk_social_ne` (`user_id`),
-  CONSTRAINT `social_network_aucti_auction_id_33992e6a_fk_social_ne` FOREIGN KEY (`auction_id`) REFERENCES `social_network_auction` (`id`),
-  CONSTRAINT `social_network_aucti_user_id_4c77bfc6_fk_social_ne` FOREIGN KEY (`user_id`) REFERENCES `social_network_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+(37,	9,	7),
+(26,	20,	7),
+(27,	21,	7),
+(32,	21,	16),
+(29,	22,	7),
+(40,	23,	7),
+(31,	24,	7),
+(34,	25,	7),
+(41,	26,	18),
+(42,	29,	7),
+(47,	30,	7),
+(46,	30,	16);
 
 TRUNCATE `social_network_auctioncomment`;
 INSERT INTO `social_network_auctioncomment` (`id`, `content`, `create_at`, `price`, `status_transaction`, `auction_id`, `user_id`) VALUES
-(1,	'EM muốn mua vs giá 1500 nhưng chỉ trả trc 500 đô còn lại trả dần trong 1 năm',	'2021-08-05 11:45:32.532491',	1500,	'none',	1,	6),
-(2,	'Toi chi duoc gia nay thoin nha',	'2021-09-03 13:33:38.588944',	1200,	'succ',	1,	7),
-(3,	'Em đk cũng k tốt lắm nhưng  em sẽ cố hết sức vs dự án này.',	'2021-09-04 03:42:53.108882',	1800,	'none',	2,	7),
-(4,	'Toi chi duoc gia nay thoin nha',	'2021-09-12 09:48:03.018738',	1200,	'none',	7,	7),
-(5,	'Toi chi duoc gia nay thoin nha',	'2021-09-12 09:50:42.445727',	1200,	'none',	8,	7),
-(6,	'Toi chi duoc gia nay thoin nha',	'2021-09-12 09:52:03.881207',	1200,	'none',	9,	7);
-
-DROP TABLE IF EXISTS `social_network_auctionimage`;
-CREATE TABLE `social_network_auctionimage` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `image` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `auction_id` bigint NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `social_network_aucti_auction_id_8dc02dc6_fk_social_ne` (`auction_id`),
-  CONSTRAINT `social_network_aucti_auction_id_8dc02dc6_fk_social_ne` FOREIGN KEY (`auction_id`) REFERENCES `social_network_auction` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+(6,	'Em muốn mua căn này trả tiền trực tiếp ạ',	'2021-09-12 09:52:03.881207',	1200,	'in process',	9,	10),
+(8,	'Nếu dịch vụ trong 1 tuần em chấp nhận ạ',	'2021-09-17 08:49:00.633415',	20,	'none',	20,	10),
+(9,	'Oke ạ nghe có vẻ hay',	'2021-09-17 08:53:02.142644',	25,	'none',	20,	15),
+(10,	'nếu có hát cho người lớn thì em mua nhé',	'2021-09-17 08:59:20.757739',	30000,	'succ',	20,	7),
+(11,	'test1',	'2021-09-27 16:56:32.272939',	100000000,	'fail',	24,	5),
+(12,	'test2',	'2021-09-27 16:56:32.273920',	120000000,	'succ',	24,	16),
+(13,	'test3',	'2021-09-27 16:56:32.274832',	150000000,	'none',	24,	10),
+(14,	'cao qua',	'2021-09-27 17:23:33.501328',	150000,	'succ',	21,	16),
+(15,	'dc chua',	'2021-09-27 17:24:41.548922',	200000,	'fail',	22,	16),
+(16,	'Toi chi duoc gia nay thoi',	'2021-09-27 17:48:43.463097',	1200000,	'in process',	25,	7),
+(18,	'ok ạ',	'2021-10-14 02:59:04.142537',	50000,	'succ',	26,	18),
+(19,	'em mua cái này nhé',	'2021-10-14 07:48:57.580563',	200000,	'in process',	22,	18),
+(20,	'mk lÁy caiz này nhé',	'2021-10-16 01:30:32.595540',	20000,	'none',	31,	16),
+(21,	'em xin lấy ạ',	'2021-10-16 01:32:10.862388',	25000,	'succ',	31,	18);
 
 TRUNCATE `social_network_auctionimage`;
 INSERT INTO `social_network_auctionimage` (`id`, `image`, `auction_id`) VALUES
-(1,	'auction_images/2021/08/BH-Oakmont-211-2nd-st-46-6-1624611939.jpg',	1),
-(2,	'auction_images/2021/08/home-banner-2020-02-min.jpg',	1),
-(3,	'auction_images/2021/08/99231880.jpg',	1),
-(8,	'auction_images/2021/09/covi19.jpg',	7),
-(9,	'auction_images/2021/09/Screenshot_from_2021-08-23_10-06-00.png',	8),
-(10,	'auction_images/2021/09/142d78192fda46d5b58e14c9d3f2fe51_8q5gfvq.jpg',	9),
-(11,	'auction_images/2021/09/Screenshot_from_2021-08-23_10-06-00_uudzCoE.png',	10),
-(12,	'auction_images/2021/09/Screenshot_from_2021-08-30_15-21-58.png',	10),
-(14,	'static/auction_images/2021/09/142d78192fda46d5b58e14c9d3f2fe51_fJggykG.jpg',	12),
-(15,	'static/auction_images/2021/09/119170527_2035657669902648_1262318113764188233_o.png',	13),
-(16,	'static/auction_images/2021/09/119170527_2035657669902648_1262318113764188233_o_udZMTLY.png',	14),
-(17,	'static/auction_images/2021/09/119170527_2035657669902648_1262318113764188233_o_0Apv4mx.png',	15),
-(18,	'static/auction_images/2021/09/Screenshot_from_2021-08-30_15-21-58_rtu3GLN.png',	18),
-(19,	'static/auction_images/2021/09/Screenshot_from_2021-08-30_15-21-58_0dLNRyT.png',	19);
-
-DROP TABLE IF EXISTS `social_network_auctionreport`;
-CREATE TABLE `social_network_auctionreport` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `content` longtext COLLATE utf8_unicode_ci,
-  `create_at` datetime(6) DEFAULT NULL,
-  `auction_id` bigint NOT NULL,
-  `type_id` bigint DEFAULT NULL,
-  `user_id` bigint DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `social_network_aucti_auction_id_8b79ac7b_fk_social_ne` (`auction_id`),
-  KEY `social_network_aucti_type_id_7f79c945_fk_social_ne` (`type_id`),
-  KEY `social_network_aucti_user_id_1922cecd_fk_social_ne` (`user_id`),
-  CONSTRAINT `social_network_aucti_auction_id_8b79ac7b_fk_social_ne` FOREIGN KEY (`auction_id`) REFERENCES `social_network_auction` (`id`),
-  CONSTRAINT `social_network_aucti_type_id_7f79c945_fk_social_ne` FOREIGN KEY (`type_id`) REFERENCES `social_network_reporttype` (`id`),
-  CONSTRAINT `social_network_aucti_user_id_1922cecd_fk_social_ne` FOREIGN KEY (`user_id`) REFERENCES `social_network_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+(10,	'static/auction_images/2021/09/142d78192fda46d5b58e14c9d3f2fe51_8q5gfvq.jpg',	9),
+(20,	'static/auction_images/2021/09/119170527_2035657669902648_1262318113764188233_o_NBoPxYV.png',	20),
+(23,	'static/auction_images/2021/09/IMG20210818190412.jpg',	22),
+(24,	'static/auction_images/2021/09/thumb-1920-161457.jpg',	23),
+(55,	'static/auction_images/2021/09/1519955912576480406_CTboDky.jpg',	21),
+(58,	'static/auction_images/2021/09/filename0_cwPXRWp.jpg',	24),
+(59,	'static/auction_images/2021/09/IMG_20190531_061856.jpg',	25),
+(60,	'static/auction_images/2021/09/916846.jpg',	26),
+(62,	'static/auction_images/2021/10/filename0.jpg',	27),
+(64,	'static/auction_images/2021/10/filename0_94fPrPS.jpg',	28),
+(65,	'static/auction_images/2021/10/IMG_20211014_163227_wF1vpvv.jpg',	29),
+(66,	'static/auction_images/2021/10/Screenshot_20211014_144257.jpg',	30),
+(67,	'static/auction_images/2021/10/Screenshot_20211014_144205.jpg',	30),
+(68,	'static/auction_images/2021/10/Screenshot_20211014_144134.jpg',	30),
+(69,	'static/auction_images/2021/10/IMG20210816180936.jpg',	31),
+(70,	'static/auction_images/2021/10/Screenshot_2021-09-01-20-19-40-86.png',	31);
 
 TRUNCATE `social_network_auctionreport`;
-
-DROP TABLE IF EXISTS `social_network_categoryauction`;
-CREATE TABLE `social_network_categoryauction` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+INSERT INTO `social_network_auctionreport` (`id`, `content`, `create_at`, `auction_id`, `type_id`, `user_id`) VALUES
+(1,	'bài này auto make ',	'2021-09-27 13:16:28.807198',	23,	2,	7);
 
 TRUNCATE `social_network_categoryauction`;
 INSERT INTO `social_network_categoryauction` (`id`, `name`) VALUES
@@ -850,12 +881,11 @@ INSERT INTO `social_network_categoryauction` (`id`, `name`) VALUES
 (5,	'Nghệ thuật'),
 (6,	'Đồ cổ');
 
-DROP TABLE IF EXISTS `social_network_hashtagpost`;
-CREATE TABLE `social_network_hashtagpost` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+TRUNCATE `social_network_feedback`;
+INSERT INTO `social_network_feedback` (`id`, `title`, `content`, `create_at`) VALUES
+(1,	'Ve UI',	'ahihi',	'2021-10-04 14:21:25.024799'),
+(2,	'về Ui',	'thiếu nút xóa',	'2021-10-04 14:44:51.401924'),
+(3,	'Phan ui',	'Thieu nut xoa',	'2021-10-15 10:04:57.409359');
 
 TRUNCATE `social_network_hashtagpost`;
 INSERT INTO `social_network_hashtagpost` (`id`, `name`) VALUES
@@ -866,98 +896,68 @@ INSERT INTO `social_network_hashtagpost` (`id`, `name`) VALUES
 (14,	'123'),
 (15,	'áđf'),
 (16,	'effd'),
-(17,	'nothinh'),
 (18,	'chicohinhanh'),
-(21,	'ahihilallaa'),
-(22,	'huhu'),
 (23,	'test'),
-(24,	'hinhhaungoz'),
-(25,	'good');
+(25,	'good'),
+(26,	'ahihilallaa'),
+(27,	'huhu'),
+(29,	'troimua'),
+(31,	'nothing'),
+(34,	'autocreate'),
+(36,	'anh_ca_nhan'),
+(37,	'Bai_dau_tien'),
+(38,	'truy'),
+(39,	'may_ao'),
+(40,	'bai_dau'),
+(41,	'bai_moi'),
+(42,	'first'),
+(43,	'anh');
 
-DROP TABLE IF EXISTS `social_network_post`;
-CREATE TABLE `social_network_post` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `content` longtext COLLATE utf8_unicode_ci,
-  `create_at` datetime(6) DEFAULT NULL,
-  `count_comment` int NOT NULL,
-  `active` tinyint(1) NOT NULL,
-  `user_id` bigint NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `social_network_post_user_id_f9469041_fk_social_network_user_id` (`user_id`),
-  CONSTRAINT `social_network_post_user_id_f9469041_fk_social_network_user_id` FOREIGN KEY (`user_id`) REFERENCES `social_network_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+TRUNCATE `social_network_paymentmethod`;
+INSERT INTO `social_network_paymentmethod` (`id`, `name`) VALUES
+(1,	'Momo'),
+(2,	'Offline');
 
 TRUNCATE `social_network_post`;
 INSERT INTO `social_network_post` (`id`, `content`, `create_at`, `count_comment`, `active`, `user_id`) VALUES
-(1,	'hello world',	'2021-08-05 09:11:27.824571',	11,	1,	5),
-(2,	'nggo vawn',	'2021-08-08 01:49:43.296662',	0,	1,	5),
-(18,	'Test upload 5 file lan 3',	'2021-08-31 04:00:17.742423',	1,	1,	7),
-(23,	'Post ms đc chỉnh sửa',	'2021-09-07 01:41:27.008694',	0,	1,	7),
-(24,	'ahihi',	'2021-09-09 07:43:16.097909',	0,	1,	7),
-(29,	'ms thêm để thử vs redux',	'2021-09-09 13:42:16.705572',	0,	1,	7),
-(30,	'chi có nd',	'2021-09-10 16:40:12.476817',	0,	1,	7),
-(31,	NULL,	'2021-09-10 16:40:47.249156',	0,	1,	7),
-(32,	'Ms tạo tài khoản nên tò mò đăng thử\ncũng khá là hay',	'2021-09-15 12:48:04.270167',	0,	1,	16);
-
-DROP TABLE IF EXISTS `social_network_post_hashtag`;
-CREATE TABLE `social_network_post_hashtag` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `post_id` bigint NOT NULL,
-  `hashtagpost_id` bigint NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `social_network_post_hashtag_post_id_hashtagpost_id_05fd050d_uniq` (`post_id`,`hashtagpost_id`),
-  KEY `social_network_post__hashtagpost_id_f50a0780_fk_social_ne` (`hashtagpost_id`),
-  CONSTRAINT `social_network_post__hashtagpost_id_f50a0780_fk_social_ne` FOREIGN KEY (`hashtagpost_id`) REFERENCES `social_network_hashtagpost` (`id`),
-  CONSTRAINT `social_network_post__post_id_bffa1324_fk_social_ne` FOREIGN KEY (`post_id`) REFERENCES `social_network_post` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+(1,	'hello world',	'2021-08-05 09:11:27.824571',	13,	1,	5),
+(2,	'nggo vawn',	'2021-08-08 01:49:43.296662',	1,	1,	5),
+(23,	'Post ms đc chỉnh sửa\n#anh_ca_nhan',	'2021-09-07 01:41:27.008694',	2,	1,	7),
+(29,	'ms thêm để thử vs redux',	'2021-09-09 13:42:16.705572',	1,	1,	7),
+(32,	'Ms tạo tài khoản nên tò mò đăng thử\ncũng khá là hay',	'2021-09-15 12:48:04.270167',	0,	1,	16),
+(33,	'Bữa nay trời mua không biết làm gì đây????',	'2021-09-17 09:50:15.053311',	1,	1,	16),
+(34,	'thêm 1 bài cho ngày đẹp tươi\n#Bai_dau_tien',	'2021-09-20 13:57:01.107093',	1,	1,	7),
+(35,	'Post bai bang postman lam mau',	'2021-09-24 03:18:56.259650',	1,	1,	7),
+(37,	'bài đăng đầu tiên nhé',	'2021-10-14 01:25:09.308148',	0,	1,	18),
+(41,	'Bai moi them',	'2021-10-15 10:03:28.743530',	0,	1,	7),
+(42,	'Bai so 1 nhe\n#first',	'2021-10-15 10:09:53.032918',	0,	1,	19),
+(43,	'them moi\n#anh',	'2021-10-15 14:42:12.191019',	0,	1,	7);
 
 TRUNCATE `social_network_post_hashtag`;
 INSERT INTO `social_network_post_hashtag` (`id`, `post_id`, `hashtagpost_id`) VALUES
 (1,	1,	1),
-(32,	18,	21),
-(33,	18,	22),
-(35,	23,	24),
-(28,	29,	17),
-(29,	31,	18),
-(36,	32,	25);
-
-DROP TABLE IF EXISTS `social_network_post_like`;
-CREATE TABLE `social_network_post_like` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `post_id` bigint NOT NULL,
-  `user_id` bigint NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `social_network_post_like_post_id_user_id_5b8e345c_uniq` (`post_id`,`user_id`),
-  KEY `social_network_post__user_id_cfdec8bd_fk_social_ne` (`user_id`),
-  CONSTRAINT `social_network_post__post_id_08c29e98_fk_social_ne` FOREIGN KEY (`post_id`) REFERENCES `social_network_post` (`id`),
-  CONSTRAINT `social_network_post__user_id_cfdec8bd_fk_social_ne` FOREIGN KEY (`user_id`) REFERENCES `social_network_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+(47,	23,	36),
+(42,	29,	31),
+(36,	32,	25),
+(40,	33,	29),
+(48,	34,	37),
+(53,	42,	42),
+(54,	43,	43);
 
 TRUNCATE `social_network_post_like`;
 INSERT INTO `social_network_post_like` (`id`, `post_id`, `user_id`) VALUES
-(35,	1,	7),
+(70,	1,	7),
 (36,	1,	16),
-(24,	2,	7),
-(37,	18,	16),
-(27,	23,	7),
-(26,	24,	7),
-(31,	29,	7),
-(29,	30,	7),
-(30,	31,	7);
-
-DROP TABLE IF EXISTS `social_network_postcomment`;
-CREATE TABLE `social_network_postcomment` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `content` longtext COLLATE utf8_unicode_ci,
-  `create_at` datetime(6) DEFAULT NULL,
-  `post_id` bigint NOT NULL,
-  `user_id` bigint NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `social_network_postc_post_id_1d20aba3_fk_social_ne` (`post_id`),
-  KEY `social_network_postc_user_id_08033e89_fk_social_ne` (`user_id`),
-  CONSTRAINT `social_network_postc_post_id_1d20aba3_fk_social_ne` FOREIGN KEY (`post_id`) REFERENCES `social_network_post` (`id`),
-  CONSTRAINT `social_network_postc_user_id_08033e89_fk_social_ne` FOREIGN KEY (`user_id`) REFERENCES `social_network_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+(39,	2,	7),
+(84,	23,	7),
+(42,	23,	16),
+(85,	29,	16),
+(83,	32,	7),
+(87,	32,	16),
+(43,	33,	16),
+(81,	34,	7),
+(82,	35,	7),
+(89,	42,	7);
 
 TRUNCATE `social_network_postcomment`;
 INSERT INTO `social_network_postcomment` (`id`, `content`, `create_at`, `post_id`, `user_id`) VALUES
@@ -971,18 +971,16 @@ INSERT INTO `social_network_postcomment` (`id`, `content`, `create_at`, `post_id
 (8,	'ahihi',	'2021-09-11 03:02:09.495604',	1,	7),
 (9,	'ma thêm comment bằng app nèk',	'2021-09-15 01:41:39.658203',	1,	7),
 (10,	'ahlolo',	'2021-09-15 01:42:16.126544',	1,	7),
-(11,	'ahihi test api hả',	'2021-09-15 13:04:00.744292',	18,	16),
-(12,	'ahihi',	'2021-09-16 08:53:35.956101',	1,	7);
-
-DROP TABLE IF EXISTS `social_network_postimage`;
-CREATE TABLE `social_network_postimage` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `image` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `post_id` bigint NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `social_network_posti_post_id_d6826d11_fk_social_ne` (`post_id`),
-  CONSTRAINT `social_network_posti_post_id_d6826d11_fk_social_ne` FOREIGN KEY (`post_id`) REFERENCES `social_network_post` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+(12,	'ahihi',	'2021-09-16 08:53:35.956101',	1,	7),
+(13,	'ahihi',	'2021-09-16 09:12:18.023107',	1,	7),
+(14,	'hic',	'2021-09-16 13:26:27.736170',	1,	7),
+(16,	'Ở đau mà nhà đẹp ghê',	'2021-09-16 13:28:44.047688',	2,	7),
+(18,	'm hả Hậu',	'2021-09-17 09:49:20.029349',	23,	16),
+(20,	'Sao hinh thu 3 khong thay v',	'2021-09-27 13:19:35.534409',	29,	16),
+(22,	'Thấy cái app này chạy cug hay nên share',	'2021-09-28 07:45:14.225270',	35,	7),
+(23,	'Ừa t đó',	'2021-09-28 07:47:57.566023',	23,	7),
+(24,	'đẹp nha',	'2021-10-13 03:32:21.771666',	33,	7),
+(25,	'Them binh luan nhe',	'2021-10-15 01:04:04.736036',	34,	7);
 
 TRUNCATE `social_network_postimage`;
 INSERT INTO `social_network_postimage` (`id`, `image`, `post_id`) VALUES
@@ -994,44 +992,24 @@ INSERT INTO `social_network_postimage` (`id`, `image`, `post_id`) VALUES
 (13,	'static/post_images/2021/08/e5d058e4258bacbde1bf75874bd459f8.jpg',	2),
 (14,	'static/post_images/2021/08/spring-overview.png',	2),
 (15,	'static/post_images/2021/09/IMG_8628.jpg',	2),
-(16,	'static/post_images/2021/09/datanet.jpeg',	24),
-(20,	'static/post_images/2021/09/20210408_105342_nb1BiIS.jpg',	29),
-(21,	'static/post_images/2021/09/20201117_080000_3HyUaTu.jpg',	29),
-(22,	'static/post_images/2021/09/localhost_3000__wAEEucJ.png',	29),
-(23,	'static/post_images/2021/09/id_password.jpg',	31),
-(25,	'static/post_images/2021/09/Screenshot_from_2021-08-30_15-21-58_FP27zhT.png',	18),
-(27,	'static/post_images/2021/09/filename0.jpg',	23),
 (28,	'static/post_images/2021/09/1521798484898702754.jpg',	32),
-(29,	'static/post_images/2021/09/1519955912576480406.jpg',	32);
-
-DROP TABLE IF EXISTS `social_network_postreport`;
-CREATE TABLE `social_network_postreport` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `content` longtext COLLATE utf8_unicode_ci,
-  `create_at` datetime(6) DEFAULT NULL,
-  `post_id` bigint DEFAULT NULL,
-  `type_id` bigint DEFAULT NULL,
-  `user_id` bigint DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `social_network_postr_post_id_85597e85_fk_social_ne` (`post_id`),
-  KEY `social_network_postr_type_id_bcac82d3_fk_social_ne` (`type_id`),
-  KEY `social_network_postr_user_id_0bb2c9e5_fk_social_ne` (`user_id`),
-  CONSTRAINT `social_network_postr_post_id_85597e85_fk_social_ne` FOREIGN KEY (`post_id`) REFERENCES `social_network_post` (`id`),
-  CONSTRAINT `social_network_postr_type_id_bcac82d3_fk_social_ne` FOREIGN KEY (`type_id`) REFERENCES `social_network_reporttype` (`id`),
-  CONSTRAINT `social_network_postr_user_id_0bb2c9e5_fk_social_ne` FOREIGN KEY (`user_id`) REFERENCES `social_network_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+(29,	'static/post_images/2021/09/1519955912576480406.jpg',	32),
+(32,	'static/post_images/2021/09/IMG20210816180936.jpg',	33),
+(35,	'static/post_images/2021/09/filename0_optnqlT.jpg',	29),
+(36,	'static/post_images/2021/09/filename1.jpg',	29),
+(37,	'static/post_images/2021/09/filename2.jpg',	29),
+(40,	'static/post_images/2021/09/Screenshot_20210617_181856.jpg',	35),
+(42,	'static/post_images/2021/09/filename0_1RKIuiR.jpg',	23),
+(43,	'static/post_images/2021/10/1517982255138383736.jpg',	37),
+(44,	'static/post_images/2021/10/filename0.jpg',	34),
+(49,	'static/post_images/2021/10/IMG_20211014_163227_NtVIUT9.jpg',	41),
+(50,	'static/post_images/2021/10/IMG20210816180936.jpg',	43);
 
 TRUNCATE `social_network_postreport`;
 INSERT INTO `social_network_postreport` (`id`, `content`, `create_at`, `post_id`, `type_id`, `user_id`) VALUES
 (1,	'Thông tin không hữu ích',	'2021-09-05 03:03:50.735512',	NULL,	2,	6),
-(2,	'Cais post nay spam qua nen t report thoi',	'2021-09-11 06:12:33.380537',	18,	2,	7);
-
-DROP TABLE IF EXISTS `social_network_reporttype`;
-CREATE TABLE `social_network_reporttype` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+(2,	'Cais post nay spam qua nen t report thoi',	'2021-09-11 06:12:33.380537',	NULL,	2,	7),
+(3,	'bài này nhiều comment spam quá',	'2021-09-27 13:12:07.532099',	1,	2,	7);
 
 TRUNCATE `social_network_reporttype`;
 INSERT INTO `social_network_reporttype` (`id`, `name`) VALUES
@@ -1041,67 +1019,23 @@ INSERT INTO `social_network_reporttype` (`id`, `name`) VALUES
 (4,	'Ngôn từ không đúng chuẩn mực'),
 (5,	'Vấn đề khác');
 
-DROP TABLE IF EXISTS `social_network_user`;
-CREATE TABLE `social_network_user` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `password` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
-  `last_login` datetime(6) DEFAULT NULL,
-  `is_superuser` tinyint(1) NOT NULL,
-  `username` varchar(150) COLLATE utf8_unicode_ci NOT NULL,
-  `first_name` varchar(150) COLLATE utf8_unicode_ci NOT NULL,
-  `last_name` varchar(150) COLLATE utf8_unicode_ci NOT NULL,
-  `email` varchar(254) COLLATE utf8_unicode_ci NOT NULL,
-  `is_staff` tinyint(1) NOT NULL,
-  `is_active` tinyint(1) NOT NULL,
-  `date_joined` datetime(6) NOT NULL,
-  `phone` varchar(11) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `avatar` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `address` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `birthday` date DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `username` (`username`),
-  UNIQUE KEY `phone` (`phone`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
 TRUNCATE `social_network_user`;
-INSERT INTO `social_network_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`, `phone`, `avatar`, `address`, `birthday`) VALUES
-(1,	'pbkdf2_sha256$260000$qQh4sfjYrHmQxoLvJJfyf9$few37ayqiXuHlAA8daiQK8/J1K24Vzfk/jH+giH4Kok=',	'2021-09-07 14:19:06.782747',	1,	'admin',	'',	'',	'ngovanhau1999@gmail.com',	1,	1,	'2021-08-05 07:46:02.456611',	NULL,	'',	NULL,	NULL),
-(5,	'haungo',	'2021-08-05 08:39:19.000000',	0,	'haungo',	'Hau',	'Ngo',	'ngovanhau1999@gmail.com',	0,	1,	'2021-08-05 08:38:36.000000',	'0383793662',	'/static/avatar/user_haungo/suc_khoa.jpg',	'thon 10 Bom Bo',	'2000-10-02'),
-(6,	'dungly',	NULL,	0,	'dungly',	'Dung',	'Ly',	'1851050025dung@ou.edu.vn',	0,	1,	'2021-08-05 09:14:47.000000',	'0123456789',	'/static/avatar/user_dungly/ahihi.jpeg',	'TP HCM',	'2000-01-01'),
-(7,	'pbkdf2_sha256$260000$Ti8f6dDOewMBC1l8DMlr1D$jJv7GIWnrw1Nwbp34DGrJEdp3+ElWgEr4gjhFOYnNPI=',	NULL,	0,	'haungo1',	'kanj',	'haungo',	'ngovanhau@gmail.com',	0,	1,	'2021-08-31 01:00:36.000000',	'0988039184',	'static/avatar/user_haungo1/20210408_105342_o6Ls5jm.jpg',	'thôn 10 Bom Bo, Bù Đăng, Bình Phước',	'2000-10-02'),
-(10,	'pbkdf2_sha256$260000$KSQ0njy6Zb0q9XYGOQiXI5$tcRFXfDUsIUAN9PB+h7r58br7s5qCNtoVtaveQ2kTck=',	NULL,	0,	'itouvn',	'IT',	'OUIT',	'IT@ou.edu.vn',	0,	1,	'2021-09-05 09:00:27.115940',	NULL,	'',	NULL,	NULL),
-(11,	'pbkdf2_sha256$260000$VjpkbhEsBLuXlRB2qmGxzT$nlASOOeyw2DK2Wo0Je7KMlFgKFje0rHWgznW5HPLrUs=',	NULL,	0,	'',	'Haungo',	'Van',	'ngovanhau2109@gmail.com',	0,	1,	'2021-09-11 06:27:02.388273',	NULL,	'',	NULL,	NULL),
-(14,	'pbkdf2_sha256$260000$F3mJRe6gQPBDsbmjq98QrH$px3FrOuisGvh9DAxBqx09Egh3gJrmR9FKnicnal/EqE=',	NULL,	0,	'ahihi',	'Haungo',	'Van',	'ngovanhau2109@gmail.com',	0,	1,	'2021-09-15 08:13:21.388373',	NULL,	'',	NULL,	NULL),
-(15,	'pbkdf2_sha256$260000$vBU3R4uCmix3TyQhaYElIG$PoMepNTakbgkQcKC4EakVBS1GhpdcfjUZtFURMWtDaU=',	NULL,	0,	'ahihio',	'Haungo',	'Van',	'ngovanhau2109@gmail.com',	0,	1,	'2021-09-15 08:14:12.030632',	NULL,	'',	NULL,	NULL),
-(16,	'pbkdf2_sha256$260000$RTOzQspa0ZcOrNcNe1wqja$7Wx+VPATUcu01mswwyBVjzBoeIy7QaCI8Vt+GC2wxzA=',	NULL,	0,	'dungly1',	'Dung',	'Ly',	'dungly1@gmail.com',	0,	1,	'2021-09-15 09:07:14.662641',	'0174628476',	'static/avatar/user_dungly1/Screenshot_2021-09-01-20-19-40-86.png',	'Phú Nhuận',	'2020-10-25'),
-(17,	'pbkdf2_sha256$260000$5BQasxicLrK1SMi3dL8HcO$B390Uz2bBhO+6mMNv0HncWVOT7deCPTUtG2lHhn/QUA=',	NULL,	0,	'itecit02',	'Dung',	'Ly',	'dungly1@gmail.com',	0,	1,	'2021-09-15 10:15:27.336377',	NULL,	'static/avatar/user_itecit02/20201117_080000.jpg',	NULL,	'2020-10-25');
-
-DROP TABLE IF EXISTS `social_network_user_groups`;
-CREATE TABLE `social_network_user_groups` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `user_id` bigint NOT NULL,
-  `group_id` int NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `social_network_user_groups_user_id_group_id_34469280_uniq` (`user_id`,`group_id`),
-  KEY `social_network_user_groups_group_id_aef9a7cb_fk_auth_group_id` (`group_id`),
-  CONSTRAINT `social_network_user__user_id_d9ed9249_fk_social_ne` FOREIGN KEY (`user_id`) REFERENCES `social_network_user` (`id`),
-  CONSTRAINT `social_network_user_groups_group_id_aef9a7cb_fk_auth_group_id` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+INSERT INTO `social_network_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`, `phone`, `avatar`, `address`, `birthday`, `push_token`) VALUES
+(1,	'pbkdf2_sha256$260000$qQh4sfjYrHmQxoLvJJfyf9$few37ayqiXuHlAA8daiQK8/J1K24Vzfk/jH+giH4Kok=',	'2021-10-13 11:47:52.539483',	1,	'admin',	'',	'',	'ngovanhau1999@gmail.com',	1,	1,	'2021-08-05 07:46:02.456611',	NULL,	'/static/avatar/user_dungly/ahihi.jpeg',	NULL,	NULL,	'none'),
+(5,	'haungo',	'2021-08-05 08:39:19.000000',	0,	'haungo',	'Hau',	'Ngo',	'ngovanhau1999@gmail.com',	0,	1,	'2021-08-05 08:38:36.000000',	'0383793662',	'/static/avatar/user_haungo/suc_khoa.jpg',	'thon 10 Bom Bo',	'2000-10-02',	'none'),
+(6,	'dungly',	NULL,	0,	'dungly',	'Dung',	'Ly',	'1851050025dung@ou.edu.vn',	0,	1,	'2021-08-05 09:14:47.000000',	'0123456789',	'/static/avatar/user_dungly/ahihi.jpeg',	'TP HCM',	'2000-01-01',	'none'),
+(7,	'pbkdf2_sha256$260000$Ti8f6dDOewMBC1l8DMlr1D$jJv7GIWnrw1Nwbp34DGrJEdp3+ElWgEr4gjhFOYnNPI=',	NULL,	0,	'haungo1',	'KanJ',	'haungo1',	'ngovanhau@gmail.com',	0,	1,	'2021-08-31 01:00:36.000000',	'0988039185',	'static/avatar/user_haungo1/20210408_105342_Pq74sea.jpg',	'thôn 10 Bom Bo, Bù Đăng, BP',	'2000-10-02',	'ExponentPushToken[T_L-0BPn8ARCY-rVYRfb1q]'),
+(10,	'pbkdf2_sha256$260000$KSQ0njy6Zb0q9XYGOQiXI5$tcRFXfDUsIUAN9PB+h7r58br7s5qCNtoVtaveQ2kTck=',	NULL,	0,	'itouvn',	'IT',	'OUIT',	'IT@ou.edu.vn',	0,	1,	'2021-09-05 09:00:27.115940',	NULL,	'/static/avatar/user_dungly/ahihi.jpeg',	NULL,	NULL,	'none'),
+(11,	'pbkdf2_sha256$260000$VjpkbhEsBLuXlRB2qmGxzT$nlASOOeyw2DK2Wo0Je7KMlFgKFje0rHWgznW5HPLrUs=',	NULL,	0,	'',	'Haungo',	'Van',	'ngovanhau2109@gmail.com',	0,	1,	'2021-09-11 06:27:02.388273',	NULL,	'/static/avatar/user_dungly/ahihi.jpeg',	NULL,	NULL,	'none'),
+(14,	'pbkdf2_sha256$260000$F3mJRe6gQPBDsbmjq98QrH$px3FrOuisGvh9DAxBqx09Egh3gJrmR9FKnicnal/EqE=',	NULL,	0,	'ahihi',	'Haungo',	'Van',	'ngovanhau2109@gmail.com',	0,	1,	'2021-09-15 08:13:21.388373',	NULL,	'/static/avatar/user_dungly/ahihi.jpeg',	NULL,	NULL,	'none'),
+(15,	'pbkdf2_sha256$260000$vBU3R4uCmix3TyQhaYElIG$PoMepNTakbgkQcKC4EakVBS1GhpdcfjUZtFURMWtDaU=',	NULL,	0,	'ahihio',	'Haungo',	'Van',	'ngovanhau2109@gmail.com',	0,	1,	'2021-09-15 08:14:12.030632',	NULL,	'/static/avatar/user_dungly/ahihi.jpeg',	NULL,	NULL,	'none'),
+(16,	'pbkdf2_sha256$260000$RTOzQspa0ZcOrNcNe1wqja$7Wx+VPATUcu01mswwyBVjzBoeIy7QaCI8Vt+GC2wxzA=',	NULL,	0,	'dungly1',	'Dung',	'Ly',	'dungly1@gmail.com',	0,	1,	'2021-09-15 09:07:14.662641',	'0174628476',	'static/avatar/user_dungly1/IMG_20211014_163227.jpg',	'Phú Nhuận',	'2020-10-25',	''),
+(17,	'pbkdf2_sha256$260000$5BQasxicLrK1SMi3dL8HcO$B390Uz2bBhO+6mMNv0HncWVOT7deCPTUtG2lHhn/QUA=',	NULL,	0,	'itecit02',	'Dung',	'Ly',	'dungly1@gmail.com',	0,	1,	'2021-09-15 10:15:27.336377',	NULL,	'static/avatar/user_itecit02/20201117_080000.jpg',	NULL,	'2020-10-25',	'none'),
+(18,	'null',	NULL,	0,	'ngovanhau2109@gmail.com',	'Hau',	'Ngo',	'ngovanhau2109@gmail.com',	0,	1,	'2021-10-13 14:55:32.411483',	'0383793663',	'static/avatar/user_ngovanhau2109@gmail.com/1519955912576480406_ysazhGs.jpg',	'thôn 10 bom bo',	'2000-10-12',	''),
+(19,	'pbkdf2_sha256$260000$ge2yAJoAkm9lSNTQRcBz2U$D5QFpa/GFRCDmHCd4y7LqEa4DIqmVD7RaDynNrI4wYU=',	NULL,	0,	'test',	'test1',	'test',	'test@gmail.com',	0,	1,	'2021-10-15 10:09:20.374305',	NULL,	'static/avatar/user_test/IMG_20211014_163227.jpg',	NULL,	NULL,	'');
 
 TRUNCATE `social_network_user_groups`;
 
-DROP TABLE IF EXISTS `social_network_user_user_permissions`;
-CREATE TABLE `social_network_user_user_permissions` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `user_id` bigint NOT NULL,
-  `permission_id` int NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `social_network_user_user_user_id_permission_id_597e8975_uniq` (`user_id`,`permission_id`),
-  KEY `social_network_user__permission_id_7821e7d5_fk_auth_perm` (`permission_id`),
-  CONSTRAINT `social_network_user__permission_id_7821e7d5_fk_auth_perm` FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`),
-  CONSTRAINT `social_network_user__user_id_d707facd_fk_social_ne` FOREIGN KEY (`user_id`) REFERENCES `social_network_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
 TRUNCATE `social_network_user_user_permissions`;
 
--- 2021-09-16 09:00:24
+-- 2021-10-21 03:47:06

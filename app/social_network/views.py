@@ -1,3 +1,4 @@
+import oauth2_provider
 from rest_framework import viewsets, permissions, status, generics
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -7,10 +8,16 @@ from django.db import IntegrityError
 from .models import *
 from .serializers import *
 from .ultis import IsOwner, StandardResultsSetPagination, IsCurrentUser, send_push_message, create_hash_by_RSA, \
-    send_request_to_momo
+    send_request_to_momo, validate_token_login_by_gg, create_access_token_with_user
 from datetime import datetime
 from django.db.models import Q
+from google.oauth2 import id_token
+from google.auth.transport import requests
+from oauth2_provider.views.mixins import OAuthLibMixin
+from oauth2_provider.models import AbstractAccessToken, AccessToken
 
+
+CLIENT_ID = "972868105319-oc23en8rdr7bg9h9ja8agt48btuu32m4.apps.googleusercontent.com"
 
 class UserViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.UpdateAPIView):
     queryset = User.objects.filter(is_active=True)
@@ -18,7 +25,7 @@ class UserViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.UpdateAPIVi
     parser_classes = [MultiPartParser, ]
 
     def get_permissions(self):
-        if self.action == 'create':
+        if self.action in ['create', 'login_by_gg', 'login_by_fb']:
             return [permissions.AllowAny()]
         return [permissions.IsAuthenticated(), IsCurrentUser()]
 
@@ -52,6 +59,40 @@ class UserViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.UpdateAPIVi
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         except User.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    @action(methods=['post'], detail=False, url_path='delete-token')
+    def delete_push_token(self, request, pk=None):
+        try:
+            user = User.objects.get(pk=request.user.id)
+            user.push_token = ""
+            user.save()
+            return Response(data={}, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    @action(methods=['post'], detail=False, url_path='login-by-gg', parser_classes=[JSONParser, ])
+    def login_by_gg(self, request):
+        auth = request.data.get('auth')
+        token = auth.get("accessToken")
+
+        try:
+            data = validate_token_login_by_gg(token)
+            is_verified = data.get("email_verified")
+            if is_verified:
+                user = User.objects.filter(username=request.data.get('email')).first()
+                if not user:
+                    user.first_name = request.data.get('firstName')
+                    user.last_name = request.data.get('lastName')
+                    user.username = request.data.get('email')
+                    user.email = request.data.get('email')
+                    user.avatar = request.data.get('photoURL')
+                    user.password = "null"
+                    user.save()
+                data_res = create_access_token_with_user(user)
+                return Response(data=data_res,
+                                status=status.HTTP_200_OK)
+        except ValueError:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -115,6 +156,7 @@ class PostViewSet(viewsets.ModelViewSet):
                         status=status.HTTP_200_OK)
 
     def get_queryset(self):
+        id = self.request.query_params.get('id', None)
         hashtag = self.request.query_params.get('hashtag', None)
         user_name = self.request.query_params.get('user_name', None)
         content = self.request.query_params.get('content', None)
@@ -128,7 +170,8 @@ class PostViewSet(viewsets.ModelViewSet):
                 Q(user__first_name__icontains=user_name) | Q(user__last_name__contains=user_name))
         if content:
             queryset = queryset.filter(content__icontains=content)
-
+        if id:
+            queryset = queryset.filter(user__id=id)
         return queryset
 
     @action(methods=['get'], detail=False, url_path='owner')
@@ -316,6 +359,13 @@ class AuctionViewSet(viewsets.ModelViewSet):
         return Response(serializer.data,
                         status=status.HTTP_200_OK)
 
+    def destroy(self, request, pk, *args, **kwargs):
+        try:
+            auction = Auction.objects.get(pk=pk)
+            auction.delete()
+            return Response(data={}, status=status.HTTP_200_OK)
+        except Auction.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
     @action(methods=['get'], detail=False, url_path='owner')
     def get_owner_auction(self, request):
@@ -335,7 +385,8 @@ class AuctionViewSet(viewsets.ModelViewSet):
     @action(methods=['get'], detail=False, url_path='auction_join')
     def get_join_auction(self, request):
         try:
-            auctions = Auction.objects.filter(auction_comments__user__id=7)
+            user = request.user
+            auctions = Auction.objects.filter(auction_comments__user__id=user.id)
             page = self.paginate_queryset(auctions)
         except Auction.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -661,7 +712,6 @@ class MomoPay(viewsets.ViewSet, generics.CreateAPIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST, data={"error_msg": serializer.errors})
-
 
 
 class FeedbackViewSet(viewsets.ViewSet, generics.CreateAPIView):
