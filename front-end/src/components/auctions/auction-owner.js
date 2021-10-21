@@ -1,7 +1,13 @@
+import { useEffect } from 'react';
+import { useStore } from 'react-redux';
+import { useHistory, useRouteMatch } from 'react-router';
+import { useState } from 'react/cjs/react.development';
 import auctionApi from '../../api/auctionApi';
+import { useQuery } from '../../App';
 import AuctionList from './auction-list'
 import './auction-owner.css'
 
+let postPerPage = 15;
 export default function AuctionOwner({handleLike, handleDelete}) {
 
     const [auctions, setAuctions] = useState([]);
@@ -14,10 +20,6 @@ export default function AuctionOwner({handleLike, handleDelete}) {
     let user = store.getState();
     let {path, url} = useRouteMatch();
     let history = useHistory();
-
-    useEffect( () => {
-        
-    }, [])
 
     useEffect(() => {
         if(query.get('page')) {

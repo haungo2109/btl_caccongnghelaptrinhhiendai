@@ -92,7 +92,8 @@ export default function Posts() {
                     <PostMaker />
                 </ProtectedRoute>
                 <ProtectedRoute  path={`${path}/owner`}>
-                    <PostOwner />
+                    <a>hi</a>
+                    <PostOwner handleDelete={handleDeletePost} handleLike={handleLike} />
                 </ProtectedRoute>
                 <Route path={`${path}/:postid`}>
                     <PostSingle />

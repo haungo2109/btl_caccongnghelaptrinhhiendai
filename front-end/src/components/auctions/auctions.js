@@ -8,6 +8,7 @@ import Pagination from '../shared/pagination';
 import AuctionItem from './auction-item';
 import AuctionList from './auction-list';
 import AuctionMaker from './auction-maker';
+import AuctionOwner from './auction-owner';
 import AuctionSingle from './auction-single';
 import './auction.css'
 
@@ -99,6 +100,9 @@ export default function Auctions() {
             <Switch> 
                 <ProtectedRoute path={`${path}/create`}>
                     <AuctionMaker />
+                </ProtectedRoute>
+                <ProtectedRoute path={`${path}/owner`} >
+                    <AuctionOwner handleDelete={handleDeleteAuctions} handleLike={handleLike} />
                 </ProtectedRoute>
                 <Route path={`${path}/:auctionid`}>
                     <AuctionSingle />

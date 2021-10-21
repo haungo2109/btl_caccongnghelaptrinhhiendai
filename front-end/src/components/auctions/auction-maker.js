@@ -1,10 +1,12 @@
-import { faImages, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faImages, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import moment from 'moment';
 import { useEffect, useRef, useState } from 'react';
+import { useStore } from 'react-redux';
 import { useHistory } from 'react-router';
 import auctionApi from '../../api/auctionApi';
 import categoryAuctionApi from '../../api/categoryAuctionApi';
 import postApi from '../../api/postAPI';
+import { useQuery } from '../../App';
 import Button from '../shared/button';
 import DatePickerInput from '../shared/date-picker';
 import ImgViewer from '../shared/img-viewer';
@@ -17,7 +19,12 @@ import './auction-maker.css'
 export default function AuctionMaker() {
     let history = useHistory();
     const fileRef = useRef(null);
+    let query = useQuery();
+    let store = useStore();
+    let user = store.getState();
 
+    const [isEdit, setIsEdit] = useState(true);
+    const [auctionId, setAuctionId] = useState('');
     const [text, setText] = useState("");
     const [title, setTitle] = useState('');
     const [price, setPrice] = useState(0);
@@ -32,6 +39,26 @@ export default function AuctionMaker() {
         categoryAuctionApi.getCategoryAuction().then(data => {
             setListCate(data.results);
         }).catch(err => console.log(err));
+
+        if(query.get('id')) {
+            setIsEdit(true);
+            setAuctionId(query.get('id'));
+
+            auctionApi.getAuction(query.get('id')).then(data => {
+                if(user && data.user.id == user.id) {
+                    setText(data.content);
+                    setTitle(data.title);
+                    setPrice(data.base_price);
+                    setCondition(data.condition)
+                    console.log(moment(data.deadline).format('DD-MM-YYYY'))
+                    setDate(moment(data.deadline).toDate());
+                    setCategory(data.category);
+                    setPreviewImgs(data.auction_images);
+                } else {
+                    history.goBack();
+                }
+            })
+        }
     }, [])
 
     let handleSubmit = () => {
@@ -63,6 +90,37 @@ export default function AuctionMaker() {
             history.push('/auctions');
         }).catch(err => console.log(err));
     }
+
+    let handleEdit = () => {
+        if(price < 0) {
+            window.alert('Giá phải lớn hơn hoặc bằng 0');
+            return;
+        }
+        if(!category || !price || !title || !condition || !category || !text || !date) {
+            window.alert('Vui lòng nhập đầy đủ các nội dung có dấu *');
+            return;
+        }
+
+        let formData = new FormData();
+        formData.set('title', title);
+        formData.set('content', text);
+        formData.set('base_price', price);
+        formData.set('condition', condition);
+        formData.set('deadline', moment(date).format('YYYY-MM-DD'));
+        if(imgs.length !== 0) {
+            // formData.set('images', imgs);
+            for (let index = 0; index < imgs.length; index++) {
+                formData.append('images', imgs[index]);            
+            }
+        }
+        formData.set('category', category);
+
+        auctionApi.patchAuction(auctionId, formData).then(data => {
+            window.alert('Bài đấu giá được tạo thành công');
+            history.push('/auctions');
+        }).catch(err => console.log(err));
+    }
+
     let handleTags = () => {
         console.log('focus')
     }
@@ -97,10 +155,12 @@ export default function AuctionMaker() {
             </div>
             <div className="post-imgs">
                 {imgs.length != 0 && <ImgViewer imgArray={previewImgs} />}
+                {imgs.length == 0 && isEdit && <ImgViewer imgArray={previewImgs} />}
             </div>
             <div className="post-utils">
                 <Button name="Thêm ảnh" onClick={() => fileRef.current.click()} icon={faImages} />
-                <Button name="Tạo bài đấu giá" onClick={handleSubmit} icon={faPlusCircle} type="type-primary" />
+                { !isEdit && <Button name="Tạo bài đấu giá" onClick={handleSubmit} icon={faPlusCircle} type="type-primary" />}
+                { isEdit && <Button name="Chỉnh sửa bài đấu giá" onClick={handleEdit} icon={faEdit} type="type-primary" />}
             </div>
         </div>
     )
