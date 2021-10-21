@@ -1,33 +1,39 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react';
 import { useStore } from 'react-redux';
 import { useParams } from 'react-router';
-import postApi from '../../api/postAPI';
-import PostItem from './post-item';
-import './post-single.css'
+import { useState } from 'react/cjs/react.development';
+import auctionApi from '../../api/auctionApi';
+import AuctionItem from './auction-item';
+import './auction-single.css'
 
-export default function PostSingle() {
+export default function AuctionSingle() {
 
     let store = useStore();
     let user = store.getState();
-    let { postid } = useParams();
-    const [post, setPost] = useState(null);
+    let { auctionid } = useParams();
+    const [auction, setAuction] = useState(null);
     const [allowComment, setAllowComment] = useState(false);
     const [commentList, setCommentList] = useState('');
 
     useEffect(() => {
         // console.log(postid)
-        if(postid) {
-            getData()
+        if(auctionid) {
+            getData();
             getCommentList();
         }
         if(user && user?.username) {
             setAllowComment(true);
         }
-    }, [user, postid]);
+    }, [user, auctionid]);
 
+    let getData = () => {
+        auctionApi.getAuction(auctionid).then(data => {
+            setAuction(data);
+        }).catch(err => console.log(err));
+    }
     // khi comment xoong -> reload list coomment -> reset comment
     let getCommentList = () => {
-        postApi.getPostComment(postid).then(data => {
+        auctionApi.getAuctionComment(auctionid).then(data => {
             setCommentList(data);
             return true;
         }).catch(err => {
@@ -36,38 +42,28 @@ export default function PostSingle() {
             return false;
         });
     }
-    let getData = () => {
-        postApi.getPost(postid).then(data => {
-            setPost(data); 
-        }).catch(err => console.log(err));
-    }
     let handleLike = (id, flagLiked) => {
         if(flagLiked) {
-            postApi.decreatePostVote(id).then(data => {
+            auctionApi.decreateAuctionVote(id).then(data => {
                 getData();
             }).catch(err => {console.log(err); window.alert("Hệ thống đã lỗi, vui lòng thử lại sau")});
         } else {
-            postApi.increatePostVote(id).then(data => {
+            auctionApi.increateAuctionVote(id).then(data => {
                 getData();
             }).catch(err => {console.log(err); window.alert("Hệ thống đã lỗi, vui lòng thử lại sau")});
         }
     }
-    
 
     return(
         <div>
-            {post && <PostItem images={post.post_images}
-                    content={post.content}
-                    createdAt={post.create_at}
-                    hashtags={post.hashtag}
-                    user={post.user}
-                    vote={post.vote}
-                    like={post.like}
-                    comments_list={commentList}
-                    getListComment={getCommentList}
-                    isAllowedToComments={allowComment}
-                    handleLike={handleLike}
-                    id={post.id} />}
+            {auction && 
+                <AuctionItem key={auction.id} 
+                    auction={auction} 
+                    isAllowedToComments={allowComment} 
+                    comments_list={commentList} 
+                    getListComment={getCommentList} 
+                    handleLike={handleLike} 
+                />}
         </div>
     )
 }

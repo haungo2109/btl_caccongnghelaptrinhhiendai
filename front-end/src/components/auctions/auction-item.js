@@ -2,8 +2,13 @@ import { faBell, faCalendarAlt, faComment, faDollarSign, faHeart } from '@fortaw
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import moment from 'moment'
 import { useEffect, useState } from 'react'
+import { useStore } from 'react-redux'
+import { useHistory } from 'react-router'
+import auctionApi from '../../api/auctionApi'
 import ImgViewer from '../shared/img-viewer'
 import PostUtil from '../shared/post-utils'
+import AuctionComment from './auction-comment'
+import AuctionCommentList from './auction-comments-list'
 import './auction-item.css'
 
 function SmallConditionItem({className, text, title, icon}) {
@@ -18,11 +23,57 @@ function SmallConditionItem({className, text, title, icon}) {
     )
 }
 
-export default function AuctionItem({auction}) {
+export default function AuctionItem({auction, comments_list, isAllowedToComments = false, getListComment, handleLike}) {
+
+    let history = useHistory();
+    let store = useStore();
+    let user = store.getState();
+    const [comment, setComment] = useState('');
+    const [price, setPrice] = useState(0);
+
 
     let utilItems = [
         {name: 'Báo cáo', action: () => {}}
     ]
+
+    let move = (route) => {
+        !comments_list && history.push(route);
+    }
+    let sendComment = () => {
+        if(comment.length === 0 || price <= 0 ){
+            window.alert('Vui lòng nhập đầy đủ thông tin');
+            return;
+        }
+        let form = new FormData();
+        form.set('content', comment);
+        form.set('price', price)
+        auctionApi.createAuctionComment(auction.id, form).then(data => {
+            window.alert("Đấu giá thành công");
+            getListComment()
+            setComment('');
+            setPrice(0);
+        }).catch(err => {
+            console.log(err); 
+            return false;
+        });
+    }
+    let handleOnKeyDown = (e) => {
+        if(e.key === 'Enter') {
+            sendComment();
+        }
+    }
+    let checkIfLiked = () => {
+        if(auction.like.includes(user.id)) {
+            return "liked"
+        }
+    }
+    let handleClickLike = () => {
+        if(auction.like.includes(user.id)) {
+            handleLike(auction.id, true);
+        } else  {
+            handleLike(auction.id, false);
+        }
+    }
 
     return (
         <div className="post-item-container auction-item-container">
@@ -32,7 +83,7 @@ export default function AuctionItem({auction}) {
             <div className="title">
                     <h2>{auction.title}</h2>
                 </div>
-            <div className="avatar">
+            <div className="avatar auction-avatar">
                 <div className="avatar-body">
                     <p>Bởi {auction.user.full_name}</p>
                     <div className="date">
@@ -57,19 +108,25 @@ export default function AuctionItem({auction}) {
                 {auction.auction_images.length != 0 && <ImgViewer imgArray={auction.auction_images} />}
             </div>
             <div className="tool-bar">
-                <div className="likes card" title="Thích">
-                    <p>
+                <div className="likes card" title="Thích" onClick={() => handleClickLike()}>
+                    <p className={checkIfLiked()}>
                         <FontAwesomeIcon icon={faHeart} />
-                        {auction.vote} lượt thích
+                        {auction.like.length} lượt thích
                     </p>
                 </div>
-                <div className="commends card" title="Bình luận">
+                <div className="commends card" title="Bình luận" onClick={() => move(`/auctions/${auction.id}`)}>
                     <p>
                         <FontAwesomeIcon icon={faComment} />
                         Bình luận
                     </p>
                 </div>
             </div>
+            {isAllowedToComments && <div>
+                <AuctionComment onComment={(e) => setComment(e.target.value)} commentText={comment} onClick={sendComment} onKeyDown={handleOnKeyDown} price={price} onCommentPrice={(e) => setPrice(e.target.value)} />
+            </div>}
+            {comments_list && <div>
+                <AuctionCommentList listComment={comments_list} />
+            </div>}
         </div>
     )
 }

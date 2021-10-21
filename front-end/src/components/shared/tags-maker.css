@@ -1,6 +1,6 @@
 .tags-maker-container {
     display: flex;
-    margin-top: 1em;
+    margin-bottom: 1em;
     flex-direction: column;
 }
 .tags-maker-container .tag-input {
@@ -25,5 +25,14 @@
     background-color: var(--main-color-gray);
     /* color: var(--main-color-blue); */
     margin: 0.25em;
+    padding: 0.35em;
+    border-radius: 5px;
+}
+.tags-maker-container .tags-list p svg {
+    cursor: pointer;
+    transition: 0.1s ease-in-out;
+}
+.tags-maker-container .tags-list p svg:hover {
+    color: var(--main-color-red);
 }
 

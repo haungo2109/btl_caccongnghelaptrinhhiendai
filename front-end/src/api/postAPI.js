@@ -11,6 +11,10 @@ const postApi = {
 		const url = '/post/';
 		return axiosClient.get(url);
 	},
+	getPostsByPage: (page) => {
+		const url = `/post/?page=${page}`;
+		return axiosClient.get(url);
+	},
 	postPost: (data) => {
 		const url = '/post/';
 		return axiosClient.post(url, data, config);

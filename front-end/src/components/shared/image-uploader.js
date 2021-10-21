@@ -34,7 +34,7 @@ export default function ImageUploader({label, onImageSelect}) {
                 {label}
             </label>
             <div>
-                { selectImage && <img src={preview} /> }
+                { selectImage && <img src={preview} alt="img" /> }
                 <input ref={inputRef}  type="file" onChange={handleChange} name="name"  accept="image/*" />
             </div>
         </div>

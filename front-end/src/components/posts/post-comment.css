@@ -1,0 +1,33 @@
+.comment-input-container {
+    margin-top: 0.5em;
+    padding-top: 0.5em;
+    border-top: 1px solid var(--main-color-gray);
+    display: flex;
+}
+.comment-input-container input {
+    flex: 1;
+    padding: 0.75em 1em;
+}
+.comment-input-container .comment-btn {
+    display: flex;
+    justify-content: center;
+    padding: 0.5em 2em;
+    margin-left: 1em;
+    cursor: pointer;
+    background-color: var(--main-color-gray);
+    transition: 0.1s ease-in-out;
+    border-radius: 8px;
+}
+.comment-input-container p,.comment-input-container svg {
+    margin: auto;
+}
+.comment-input-container svg {
+    margin-left: 0.5em;
+}
+.comment-input-container .comment-btn:hover {
+    background-color: var(--main-color-blue);
+    color: var(--main-color-primary);
+}
+.comment-input-container .comment-btn p {
+    margin: auto;
+}

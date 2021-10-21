@@ -80,7 +80,7 @@ export function Register() {
                             <Input name="Mật khẩu*" value={password} type="password" changeData={setPassword} />
                             <Input name="Xác nhận mật khẩu*" value={confirmPassword} type="password" changeData={setConfirmPassword} />
                         </div>
-                        <input className="submit" disabled={!username || !password || !lastName || !firstName || !email || !confirmPassword} type="submit" value="Đăng ký" />
+                        <input className="submit" disabled={!username || !password || !lastName || !firstName || !email || !confirmPassword || !avatar} type="submit" value="Đăng ký" />
                     </form>
                 </div>
             </div>

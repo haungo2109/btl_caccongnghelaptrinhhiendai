@@ -2,7 +2,8 @@ import './App.css';
 import {
   BrowserRouter as Router,
   Switch,
-  Route
+  Route,
+  useLocation
 } from "react-router-dom";
 import Header from './components/header/header';
 import Auctions from './components/auctions/auctions';
@@ -15,13 +16,17 @@ import UserPage from './components/user/user';
 import userApi from './api/userApi';
 import { useDispatch, useStore } from 'react-redux';
 
+export function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
+
 function App() {
   const store = useStore();
   const user = store.getState();
   const dispatch = useDispatch()
 
   //pursist state
-  if(localStorage.getItem('Authorization') && Object.keys(user).length == 0) {
+  if(localStorage.getItem('Authorization') && Object.keys(user).length === 0) {
     userApi.getCurrentUserInfo().then(data => {
       dispatch({
         type: 'login',
@@ -32,6 +37,8 @@ function App() {
     })
   }
 
+  // note, nếu sub route error, coi chừng chữ exact
+
   return (
     <div className="main">
       <Router>
@@ -41,12 +48,10 @@ function App() {
         <div>
           <Switch>
               <Route path="/posts" component={Posts} ></Route>
-              {/* <Route exact path="/posts" component={Posts} ></Route> */}
-              {/* <Route exact path="/posts/*" component={Posts} ></Route> */}
-              <Route exact path="/auctions" component={Auctions} ></Route>
+              <Route path="/auctions" component={Auctions} ></Route>
               <Route exact path="/login" component={Login} ></Route>
               <Route exact path="/register" component={Register} ></Route>
-              <ProtectedRoute exact path="/user"><UserPage /></ProtectedRoute>
+              <ProtectedRoute path="/user"><UserPage /></ProtectedRoute>
               <Route exact path="/" component={MainPage}></Route>
           </Switch>
         </div>

@@ -6,6 +6,10 @@ export default function ImgViewer({imgArray, preview = true}) {
 
     const [mainImg, setMainImg] = useState(imgArray[0]);
 
+    useEffect(() => {
+        setMainImg(imgArray[0])
+    }, [imgArray])
+
     return(
         <div className="imgViewer-container">
             <div className="first-preview">
