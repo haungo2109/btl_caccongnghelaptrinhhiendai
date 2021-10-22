@@ -25,7 +25,6 @@ function App() {
   const store = useStore();
   const user = store.getState();
   const dispatch = useDispatch();
-  const history = useHistory();
 
   //pursist state
   if(localStorage.getItem('Authorization') && Object.keys(user).length === 0) {
@@ -35,11 +34,9 @@ function App() {
         payload: data
       });
     }).catch(err => {
-      history.replace('/login');
+      console.log(err);
     })
   }
-
-  // note, nếu sub route error, coi chừng chữ exact
 
   return (
     <div className="main">

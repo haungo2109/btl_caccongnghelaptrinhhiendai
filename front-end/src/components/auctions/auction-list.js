@@ -1,5 +1,7 @@
 import { useStore } from "react-redux";
 import { useHistory } from 'react-router';
+import { useEffect, useState } from "react/cjs/react.development";
+import reportApi from "../../api/reportApi";
 import Pagination from '../shared/pagination';
 import AuctionItem from './auction-item';
 import './auction-list.css'
@@ -10,6 +12,13 @@ export default function AuctionList({auctions, handleLike, handleDelete, handleP
     let user = store.getState();
     let history = useHistory();
     let createAuctionEl;
+    const [listType, setListType] = useState([])
+
+    useEffect(() => {
+        reportApi.getReportType().then(data => {
+            setListType(data.results);
+        }).catch(err => console.log(err));
+    }, [])
 
     if(user && user?.username) {
         createAuctionEl = (
@@ -28,7 +37,7 @@ export default function AuctionList({auctions, handleLike, handleDelete, handleP
     return(
         <>
             {createAuctionEl}
-            {auctions && auctions.map(a => <AuctionItem key={a.id} auction={a} handleLike={handleLike} handleDelete={handleDelete} />)}
+            {auctions && auctions.map(a => <AuctionItem key={a.id} auction={a} handleLike={handleLike} handleDelete={handleDelete} listReportType={listType} />)}
             {auctions && 
                     <Pagination 
                         currentPage={page} 

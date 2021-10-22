@@ -1,5 +1,8 @@
+import { useEffect } from "react";
 import { useStore } from "react-redux";
 import { useHistory } from "react-router";
+import { useState } from "react/cjs/react.development";
+import reportApi from "../../api/reportApi";
 import Pagination from "../shared/pagination";
 import PostItem from "./post-item";
 
@@ -9,6 +12,13 @@ export default function PostList({posts, handleLike, handleDeletePost, handleCli
     const store = useStore();
     const user = store.getState();
     let createPostEl;
+    const [listType, setListType] = useState([])
+
+    useEffect(() => {
+        reportApi.getReportType().then(data => {
+            setListType(data.results);
+        }).catch(err => console.log(err));
+    }, [])
 
     let navigate = (path) => {
         history.push(`${url}${path}`)
@@ -42,6 +52,7 @@ export default function PostList({posts, handleLike, handleDeletePost, handleCli
                             id={p.id}
                             handleLike={handleLike}
                             handleDelete={handleDeletePost}
+                            listReportType={listType}
                         />
                     );
                 })}
