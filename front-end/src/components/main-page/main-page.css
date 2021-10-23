@@ -1,0 +1,62 @@
+.body {
+    overflow: hidden;
+    background-image: url("https://images.pexels.com/photos/3183198/pexels-photo-3183198.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940");
+    height: 100%;
+    /* background-color: rgba(255,255,255,0.7);
+    background-blend-mode: lighten; */
+}
+.body p {
+    margin-left: 0;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.body .main-text-container {
+    margin: 4em 1em;
+    position: relative;
+}
+.body .main-text-container div {
+    width: 70%;
+    margin: auto;
+    padding: 1em;
+    z-index: 2;
+    background-color: white;
+}
+.body .main-text-container div h1 {
+    font-size: 40px;
+    margin-top: 0;
+}
+/* footer */
+.footer {
+    background-color: var(--main-color-dark-grey);
+    color: var(--main-color-primary);
+    display: flex;
+    flex-direction: row;
+    padding: 1em;
+}
+.footer > div {
+    flex: 1;
+}
+.footer > div h3 {
+    margin-top: 0;
+    padding-bottom: 0.5em;
+    margin-bottom: 0.5em;
+    margin-right: 1em;
+    border-bottom: 1px solid var(--main-color-primary);
+}
+.footer > div p {
+    line-height: 1.5;
+}
+.items-container {
+    padding: 1em 0.5em 0 0.5em;
+    background-color: var(--main-color-bg);
+}
+.items-container h2 {
+    margin-top: 0;
+    margin-bottom: 0.5em;
+    padding-left: 0.25em;
+    font-size: 24px;
+}
+.items-container > div:nth-child(2) {
+    border-top: 2px solid var(--main-color-gray);
+    padding-top: 1em;
+}

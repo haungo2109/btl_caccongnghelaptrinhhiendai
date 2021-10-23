@@ -1,0 +1,31 @@
+.list-container {
+    width: 100%;
+    padding-bottom: 1em;
+    display: flex;
+    flex-wrap: wrap;
+}
+.list-item {
+    cursor: pointer;
+    padding: 0.75em;
+    background-color: var(--main-color-primary);
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    margin: 0.5em;
+    width: 250px;
+    height: 100px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+}
+.list-item .content {
+    padding-bottom: 0.5em;
+}
+
+.list-item .btm {
+    border-top: 1px solid var(--main-color-dark-grey);
+    margin-top: auto;
+    padding-top: 0.5em;
+    opacity: 0.8;
+}
+.list-item .btm span {
+    opacity: 0.5;
+}
