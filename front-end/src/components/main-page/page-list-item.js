@@ -12,6 +12,9 @@ export function ListItem({item, onClick, route}) {
                     <span>Ngày: </span>
                     { moment(item.createdAt).format("DD/MM/YYYY") }
                 </p>
+                <div className="btm-img">
+                    <img src={item.user.avatar} />
+                </div>
             </div>
         </div>
     )

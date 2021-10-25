@@ -25,7 +25,21 @@
     margin-top: auto;
     padding-top: 0.5em;
     opacity: 0.8;
+    display: flex;
 }
 .list-item .btm span {
     opacity: 0.5;
+    text-decoration: none;
+    margin-left: 0;
+}
+.btm .btm-img {
+    position: relative;
+    margin-left: auto;
+    display: flex;
+}
+.btm .btm-img img {
+    width: 25px;
+    height: 25px;
+    margin: auto;
+    border-radius: 50%;
 }

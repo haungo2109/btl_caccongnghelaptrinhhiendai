@@ -15,8 +15,11 @@ export default function MainPage() {
     const history = useHistory();
 
     let moveTo = (id, route) => {
-        console.log(id, route);
-        history.push(`${route}/${id}`)
+        if(id) {
+            history.push(`${route}/${id}`)
+        } else {
+            history.push(`${route}`)
+        }
     }
 
     useEffect(() => {
@@ -32,21 +35,30 @@ export default function MainPage() {
         <div className="body">
             <div className="main-text-container">
                 <div>
-                    <h1>Chào mừng đến với mạng xã hội</h1>
-                    <p>Nơi bạn có thể thể hiện bản thân và chia sẽ với nhiều người dùng khác</p>
-                    <h4>Bắt đầu ngay</h4>
-                </div>
-                <div>
-                    
+                    <div>
+                        <h1>Chào mừng đến với mạng xã hội</h1>
+                        <p>Nơi bạn có thể thể hiện bản thân và chia sẽ với nhiều người dùng khác</p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ante massa, congue in viverra id, pretium eu nulla. Quisque hendrerit a nunc in facilisis.</p>
+                    </div>
+                    <div className="main-text-side-pannel-container">
+                        <div>
+                            <h3>Đã có tài khoản? </h3>
+                            <span  onClick={ () => moveTo(null,"/login")} >Đăng nhập ngay</span>
+                        </div>
+                        <div>
+                            <h3>Chưa có tài khoản? </h3>
+                            <span onClick={ () => moveTo(null,"/register")} >Đăng ký tại đây</span>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div className="items-container">
                 <div>
-                    <h2>Bài đăng nổi bật</h2>
+                    <h2>Bài đăng nổi bật <span onClick={ () => moveTo(null,"/posts")} >Xem thêm</span> </h2>
                     <PageListItems list={listPosts} route={"/posts"} handleClick={moveTo} />
                 </div>
                 <div>
-                    <h2>Bài đấu giá nổi bật</h2>
+                    <h2>Bài đấu giá nổi bật  <span onClick={ () => moveTo(null,"/auctions")} >Xem thêm</span> </h2>
                     <PageListItems list={listAuctions} route={"/auctions"} handleClick={moveTo} />
                 </div>
             </div>
