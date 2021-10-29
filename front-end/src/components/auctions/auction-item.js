@@ -99,6 +99,12 @@ export default function AuctionItem({auction, comments_list, isAllowedToComments
         setDialogState(false);
         setOpenUtils(false);
     }
+    // handle select winner for auction
+    let handleSelectWinnerForAuction = (user) => {
+        if(window.confirm('Xác nhận chọn người dùng này là người thắng cuộc của đấu giá này ?')) {
+            console.log(user);
+        }
+    }
 
     return (
         <div className="post-item-container auction-item-container">
@@ -151,7 +157,7 @@ export default function AuctionItem({auction, comments_list, isAllowedToComments
                 <AuctionComment onComment={(e) => setComment(e.target.value)} commentText={comment} onClick={sendComment} onKeyDown={handleOnKeyDown} price={price} onCommentPrice={(e) => setPrice(e.target.value)} />
             </div>}
             {comments_list && <div>
-                <AuctionCommentList listComment={comments_list} />
+                <AuctionCommentList listComment={comments_list} auctionOwnerId={auction.user.id} handleSelectWinner={handleSelectWinnerForAuction} />
             </div>}
         </div>
     )

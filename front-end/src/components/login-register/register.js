@@ -2,11 +2,9 @@ import './register.css'
 import React, { useState } from 'react';
 import { Input } from './input';
 import ImageUploader from '../shared/image-uploader';
-import api from '../../api/apiCalls';
 import userApi from '../../api/userApi';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { ID, SECRET } from '../../api/axiosClient';
 
 export function Register() {
 
@@ -72,7 +70,7 @@ export function Register() {
                     <h2>Đăng Ký</h2>
                     <form onSubmit={handleSubmit} encType="multipart/form-data">
                         <div>
-                            <ImageUploader label="Hình đại diện" onImageSelect={setAvatar} />
+                            <ImageUploader label="Hình đại diện*" onImageSelect={setAvatar} />
                             <Input name="Họ*" value={firstName} type="text" changeData={setFirstName} />
                             <Input name="Tên*" value={lastName} type="text" changeData={setLastName} />
                             <Input name="Email*" value={email} type="text" changeData={setEmail} />
