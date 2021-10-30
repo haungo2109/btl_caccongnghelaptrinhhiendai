@@ -17,6 +17,7 @@
     height: 35px;
     margin-bottom: auto;
     border-radius: 50%;
+    object-fit: cover;
 }
 .comment-item-container {
     display: flex;

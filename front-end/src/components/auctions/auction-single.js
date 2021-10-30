@@ -51,6 +51,7 @@ export default function AuctionSingle() {
             return false;
         });
     }
+    // like
     let handleLike = (id, flagLiked) => {
         if(flagLiked) {
             auctionApi.decreateAuctionVote(id).then(data => {
@@ -59,6 +60,15 @@ export default function AuctionSingle() {
         } else {
             auctionApi.increateAuctionVote(id).then(data => {
                 getData();
+            }).catch(err => {console.log(err); window.alert("Hệ thống đã lỗi, vui lòng thử lại sau")});
+        }
+    }
+    // handle select winner for auction
+    let handleSelectWinnerForAuction = (comment) => {
+        if(window.confirm('Xác nhận chọn người dùng này là người thắng cuộc của đấu giá này ?')) {
+            auctionApi.changeStateAuctionComment(auction.id,comment.id,"in_process").then(data => {
+                getData();
+                window.alert('Chọn thành công, trạng thái chuyển sang "Đang trong quá trình giao dịch"');
             }).catch(err => {console.log(err); window.alert("Hệ thống đã lỗi, vui lòng thử lại sau")});
         }
     }
@@ -72,6 +82,7 @@ export default function AuctionSingle() {
                     comments_list={commentList} 
                     getListComment={getCommentList} 
                     handleLike={handleLike} 
+                    handleSelectWinnerForAuction={handleSelectWinnerForAuction}
                 />}
         </div>
     )

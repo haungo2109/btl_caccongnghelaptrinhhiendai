@@ -49,13 +49,12 @@ export default function PostOwner({handleDelete, handleLike}) {
             setLoading(false);
             setPosts(data.results)
             if(data.count) {
-                setTotalPage(Math.round(data.count / postPerPage));
+                setTotalPage(Math.ceil(data.count / postPerPage));
             }
         })
     }
     let handleClickPagination = (pageNum) => {
         setPage(pageNum);
-        console.log(pageNum)
         history.push(`/posts/owner?page=${pageNum}`);
     }
 

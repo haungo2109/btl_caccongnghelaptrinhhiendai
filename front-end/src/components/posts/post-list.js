@@ -21,13 +21,13 @@ export default function PostList({posts, handleLike, handleDeletePost, handleCli
     }, [])
 
     let navigate = (path) => {
-        history.push(`${url}${path}`)
+        history.push(`${path}`)
     }
 
     if(user && user?.username) {
         createPostEl = (
             <div className="posts-container">
-                <div className="post-item-container" onClick={() => navigate('/create')}>
+                <div className="post-item-container" onClick={() => navigate('/posts/create')}>
                     <input className="temp-input" placeholder="Tạo bài viết mới" />
                 </div>
             </div>
@@ -38,7 +38,7 @@ export default function PostList({posts, handleLike, handleDeletePost, handleCli
         <>
             {createPostEl}
             <div className="posts-container">
-                {posts.map((p) => {
+                {posts.length != 0 && posts.map((p) => {
                     return (
                         <PostItem
                             key={p.id}
@@ -56,6 +56,13 @@ export default function PostList({posts, handleLike, handleDeletePost, handleCli
                         />
                     );
                 })}
+                {posts.length == 0 && 
+                    (
+                        <div className="post-item-container">
+                            <p className="list-empty">Danh sách rỗng</p>
+                        </div>
+                    )
+                }
                 {posts && 
                     <Pagination 
                         currentPage={page} 

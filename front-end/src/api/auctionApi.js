@@ -88,5 +88,9 @@ const auctionApi = {
 		const url = `/auction/${auctionId}/fail-auction/`;
 		return axiosClient.post(url, null, config);
 	},
+	getPaymentMethod: () => {
+		const url = `/payment-method/`;
+		return axiosClient.get(url);
+	}
 };
 export default auctionApi;

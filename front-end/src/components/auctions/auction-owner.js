@@ -7,7 +7,7 @@ import { useQuery } from '../../App';
 import AuctionList from './auction-list'
 import './auction-owner.css'
 
-let postPerPage = 15;
+let postPerPage = 5;
 export default function AuctionOwner({handleLike, handleDelete}) {
 
     const [auctions, setAuctions] = useState([]);
@@ -54,7 +54,7 @@ export default function AuctionOwner({handleLike, handleDelete}) {
             setAuctions(data.results);
             setLoading(false);
             if(data.count) {
-                setTotalPage(Math.round(data.count / postPerPage));
+                setTotalPage(Math.ceil(data.count / postPerPage));
             }
         })
     }

@@ -23,7 +23,7 @@ export default function AuctionList({auctions, handleLike, handleDelete, handleP
     if(user && user?.username) {
         createAuctionEl = (
             <div className="posts-container">
-                <div className="post-item-container" onClick={() => navigate('/create')}>
+                <div className="post-item-container" onClick={() => navigate('/auctions/create')}>
                     <input className="temp-input" placeholder="Tạo bài đấu giá mới" />
                 </div>
             </div>
@@ -31,13 +31,19 @@ export default function AuctionList({auctions, handleLike, handleDelete, handleP
     }
 
     let navigate = (path) => {
-        history.push(`${url}${path}`)
+        history.push(`${path}`)
     }
     
     return(
         <>
             {createAuctionEl}
-            {auctions && auctions.map(a => <AuctionItem key={a.id} auction={a} handleLike={handleLike} handleDelete={handleDelete} listReportType={listType} />)}
+            {auctions.length != 0 && auctions.map(a => <AuctionItem key={a.id} auction={a} handleLike={handleLike} handleDelete={handleDelete} listReportType={listType} />)}
+            {auctions.length == 0 && (
+                <div className="post-item-container">
+                    <p className="list-empty">Danh sách rỗng</p>
+                </div>
+                )
+            }
             {auctions && 
                     <Pagination 
                         currentPage={page} 

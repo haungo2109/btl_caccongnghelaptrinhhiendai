@@ -65,7 +65,7 @@ export default function Auctions() {
             setAuctions(data.results);
             setLoading(false);
             if(data.count) {
-                setTotalPage(Math.round(data.count / postPerPage));
+                setTotalPage(Math.ceil(data.count / postPerPage));
             }
         })
     }

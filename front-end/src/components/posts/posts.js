@@ -56,7 +56,7 @@ export default function Posts() {
             setLoading(false);
             setPosts(data.results)
             if(data.count) {
-                setTotalPage(Math.round(data.count / postPerPage));
+                setTotalPage(Math.ceil(data.count / postPerPage));
             }
         })
     }
@@ -92,7 +92,6 @@ export default function Posts() {
                     <PostMaker />
                 </ProtectedRoute>
                 <ProtectedRoute  path={`${path}/owner`}>
-                    <a>hi</a>
                     <PostOwner handleDelete={handleDeletePost} handleLike={handleLike} />
                 </ProtectedRoute>
                 <Route path={`${path}/:postid`}>

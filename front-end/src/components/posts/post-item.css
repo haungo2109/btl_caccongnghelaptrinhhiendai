@@ -11,6 +11,11 @@
 .post-item-container p {
     margin: 0;
 }
+.post-item-container .list-empty {
+    margin: auto !important;
+    font-size: 32px;
+    opacity: 0.6;
+}
 .post-item-container .utils {
     position: absolute;
     padding: 0.5em;
