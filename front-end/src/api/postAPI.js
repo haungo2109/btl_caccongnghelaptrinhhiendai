@@ -11,8 +11,11 @@ const postApi = {
 		const url = '/post/';
 		return axiosClient.get(url);
 	},
-	getPostsByPage: (page) => {
-		const url = `/post/?page=${page}`;
+	getPostsByPage: (page, tag = null) => {
+		let url = `/post/?page=${page}`;
+		if(tag) {
+			url += `&hashtag=${tag}`
+		}
 		return axiosClient.get(url);
 	},
 	postPost: (data) => {

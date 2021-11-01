@@ -15,7 +15,7 @@ import './post-item.css'
 
 
 
-export default function PostItem({content, createdAt, vote, user, hashtags, id, images, comments_list, isAllowedToComments = false, getListComment, like, handleLike, handleDelete, listReportType}) {
+export default function PostItem({content, createdAt, vote, user, hashtags, id, images, comments_list, isAllowedToComments = false, getListComment, like, handleLike, handleDelete, listReportType, handleClickTag}) {
 
     const store = useStore();
     const userStore = store.getState();
@@ -101,14 +101,14 @@ export default function PostItem({content, createdAt, vote, user, hashtags, id, 
             </div>
             <div className="hashtag">
                 {hashtags && hashtags.map((h) => 
-                    <a key={h.id} >#{h.name}</a>
+                    <a onClick={() => handleClickTag(h)} key={h.id} >#{h.name}</a>
                 )}
             </div>
             <div className="content">
                 <p>{content}</p>
             </div>
             <div className="wrapper-image">
-                <ImgViewer imgArray={images} />
+                {images.length != 0 && <ImgViewer imgArray={images} />}
             </div>
             <div className="tool-bar">
                 <div className="likes card" title="Thích" onClick={() => handleClickLike()}>

@@ -6,7 +6,7 @@ import reportApi from "../../api/reportApi";
 import Pagination from "../shared/pagination";
 import PostItem from "./post-item";
 
-export default function PostList({posts, handleLike, handleDeletePost, handleClickPagination, page, totalPage, url }) {
+export default function PostList({posts, handleLike, handleDeletePost, handleClickPagination, page, totalPage, url , handleClickTag}) {
 
     const history = useHistory();
     const store = useStore();
@@ -53,6 +53,7 @@ export default function PostList({posts, handleLike, handleDeletePost, handleCli
                             handleLike={handleLike}
                             handleDelete={handleDeletePost}
                             listReportType={listType}
+                            handleClickTag={handleClickTag}
                         />
                     );
                 })}

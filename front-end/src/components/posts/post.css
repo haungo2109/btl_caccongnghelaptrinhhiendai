@@ -11,3 +11,23 @@
     flex: 1;
     padding: 1em;
 }
+.hashtag-container { 
+    border: none;
+    margin: 0 auto !important;
+    background-color: unset !important;
+    padding: unset !important;
+    width: calc(50% + 2em);
+}
+.hashtag-container p {
+    width: fit-content;
+    padding: 0.5em;
+    border-radius: 15px;
+    background-color: var(--main-color-blue);
+    color: var(--main-color-primary);
+}
+.hashtag-container p span {
+    margin-right: 0.5em;
+}
+.hashtag-container p svg {
+    cursor: pointer;
+}

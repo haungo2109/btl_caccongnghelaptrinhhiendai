@@ -5,7 +5,7 @@ import postApi from '../../api/postAPI';
 import PostItem from './post-item';
 import './post-single.css'
 
-export default function PostSingle() {
+export default function PostSingle({handleClickTag}) {
 
     let store = useStore();
     let user = store.getState();
@@ -67,6 +67,7 @@ export default function PostSingle() {
                     getListComment={getCommentList}
                     isAllowedToComments={allowComment}
                     handleLike={handleLike}
+                    handleClickTag={handleClickTag}
                     id={post.id} />}
         </div>
     )

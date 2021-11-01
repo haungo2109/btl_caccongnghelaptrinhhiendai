@@ -8,7 +8,7 @@ import './post-owner.css'
 
 let postPerPage = 5;
 
-export default function PostOwner({handleDelete, handleLike}) {
+export default function PostOwner({handleDelete, handleLike, handleClickTag}) {
 
     let history = useHistory();
     let query = useQuery();
@@ -61,7 +61,7 @@ export default function PostOwner({handleDelete, handleLike}) {
     return(
         <PostList posts={posts} handleLike={handleLike} 
                         handleClickPagination={handleClickPagination} handleDeletePost={handleDelete} 
-                        page={page} totalPage={totalPage}
+                        page={page} totalPage={totalPage} handleClickTag={handleClickTag}
                         url={url} />
         // <a>{posts}</a>
     )
