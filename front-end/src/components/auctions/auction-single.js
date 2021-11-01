@@ -63,14 +63,37 @@ export default function AuctionSingle() {
             }).catch(err => {console.log(err); window.alert("Hệ thống đã lỗi, vui lòng thử lại sau")});
         }
     }
-    // handle select winner for auction
-    let handleSelectWinnerForAuction = (comment) => {
-        if(window.confirm('Xác nhận chọn người dùng này là người thắng cuộc của đấu giá này ?')) {
-            auctionApi.changeStateAuctionComment(auction.id,comment.id,"in_process").then(data => {
-                getData();
-                window.alert('Chọn thành công, trạng thái chuyển sang "Đang trong quá trình giao dịch"');
-            }).catch(err => {console.log(err); window.alert("Hệ thống đã lỗi, vui lòng thử lại sau")});
+    // handle button for auction
+    let handleSelectWinnerForAuction = (comment, type = null) => {
+        switch(comment.status_transaction) {
+            case 'none': 
+            if(window.confirm('Xác nhận chọn người dùng này là người thắng cuộc của đấu giá này ?')) {
+                auctionApi.changeStateAuctionComment(auction.id,comment.id,"in_process").then(data => {
+                    getData();
+                    window.alert('Chọn thành công, trạng thái chuyển sang "Đang trong quá trình giao dịch"');
+                }).catch(err => {console.log(err); window.alert("Hệ thống đã lỗi, vui lòng thử lại sau")});
+            }
+            break;
+
+            case 'in process': 
+            if(type === 'success') {
+                if(window.confirm('Xác nhận giao dịch thành công với người dùng này?')) {
+                    auctionApi.changeStateAuctionComment(auction.id,comment.id, 'success').then(data => {
+                        getData();
+                        window.alert('Xác nhận giao dịch thành công, trạng thái chuyển sang "Giao dịch thất bại". Vui lòng chọn người thắng cuộc khác');
+                    }).catch(err => {console.log(err); window.alert("Hệ thống đã lỗi, vui lòng thử lại sau")});
+                }
+            }
+            if(type === 'fail') {
+                if(window.confirm('Xác nhận giao dịch thất bại với người dùng này?')) {
+                    auctionApi.changeStateAuctionComment(auction.id,comment.id, 'fail').then(data => {
+                        getData();
+                        window.alert('Xác nhận giao dịch thất bại, trạng thái chuyển sang "Giao dịch thành công"');
+                    }).catch(err => {console.log(err); window.alert("Hệ thống đã lỗi, vui lòng thử lại sau")});
+                }
+            }
         }
+        
     }
 
     return(

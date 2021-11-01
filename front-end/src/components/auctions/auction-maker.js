@@ -124,7 +124,7 @@ export default function AuctionMaker() {
 
         auctionApi.patchAuction(auctionId, formData).then(data => {
             window.alert('Bài đấu giá được tạo thành công');
-            history.push('/auctions');
+            history.push('/auctions/'+data.id);
         }).catch(err => console.log(err));
     }
 

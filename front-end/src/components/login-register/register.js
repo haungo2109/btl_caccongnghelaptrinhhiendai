@@ -23,6 +23,10 @@ export function Register() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        if(Object.keys(avatar).length !== 0) {
+            window.alert("Vui lòng chọn một hình đại diện");
+            return;
+        }
         if(!emailRe.test(email)) {
             window.alert("Vui lòng nhập Email đúng định dạng");
             return;
@@ -35,9 +39,7 @@ export function Register() {
         const formData = new FormData();
         formData.append('first_name', firstName);
         formData.append('last_name', lastName);
-        if(Object.keys(avatar).length !== 0) {
-            formData.append('avatar', avatar);
-        }
+        formData.append('avatar', avatar);
         formData.append('email', email);
         formData.append('username', username);
         formData.append('password', password);
@@ -48,8 +50,8 @@ export function Register() {
             formDa.append('username', username);
             formDa.append('password', password);
             formDa.append('grant_type', "password");
-            formData.append('client_secret', process.env.REACT_APP_CLIENT_SECRET);
-            formData.append('client_id', process.env.REACT_APP_CLIENT_ID);
+            formDa.append('client_secret', process.env.REACT_APP_CLIENT_SECRET);
+            formDa.append('client_id', process.env.REACT_APP_CLIENT_ID);
             userApi.login(formDa).then(data => {
                 userApi.getCurrentUserInfo().then(data => {
                     dispatch({
