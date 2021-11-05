@@ -10,7 +10,7 @@ class UserSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'first_name', 'last_name', 'avatar', 'email', 'username',
-                  'phone', 'address', 'birthday', 'password', 'push_token']
+                  'phone', 'address', 'birthday', 'password', 'push_token', 'rating']
         extra_kwargs = {
             'password': {'write_only': 'true'},
             'address': {'required': False},
@@ -42,7 +42,7 @@ class UserBaseInforSerializer(ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'full_name', 'avatar']
+        fields = ['id', 'full_name', 'avatar', 'rating']
         extra_kwargs = {
             'avatar': {'read_only': 'true'},
         }
@@ -120,7 +120,7 @@ class AuctionSerializer(ModelSerializer):
         model = Auction
         fields = ['id', 'content', 'create_at', 'title', 'base_price', 'condition', 'count_comment', 'deadline',
                   'user', 'images', 'auction_images', 'like', 'buyer', 'date_success',
-                  'accept_price', 'status_auction', 'category', 'price', 'payment_method']
+                  'accept_price', 'status_auction', 'category', 'price', 'payment_method', 'rating']
         read_only_fields = ('created_by', 'like', 'status_auction', 'count_comment',
                             'accept_price', 'date_success')
         extra_kwargs = {

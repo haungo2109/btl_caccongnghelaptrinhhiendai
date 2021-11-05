@@ -4,18 +4,12 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, JSONParser
 from rest_framework.views import APIView
-from django.db import IntegrityError
-from .models import *
 from .serializers import *
 from .ultis import IsOwner, StandardResultsSetPagination, IsCurrentUser, send_push_message, create_hash_by_RSA, \
     send_request_to_momo, validate_token_login_by_gg, create_access_token_with_user
 from datetime import datetime
 from django.db.models import Q
-from google.oauth2 import id_token
-from google.auth.transport import requests
-from oauth2_provider.views.mixins import OAuthLibMixin
-from oauth2_provider.models import AbstractAccessToken, AccessToken
-
+import math
 
 CLIENT_ID = "972868105319-oc23en8rdr7bg9h9ja8agt48btuu32m4.apps.googleusercontent.com"
 
@@ -544,6 +538,31 @@ class AuctionViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST, data={"error_msg": serializer.errors})
+
+    @action(methods=['post'], detail=True, url_path='rating')
+    def add_rating(self, request, pk=None):
+        rating = int(request.POST['rating'])
+
+        auction = Auction.objects.get(pk=pk)
+
+        if not (rating < 11 and auction.buyer.id == request.user.id):
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = auction.user
+            if user.rating:
+                user.rating = math.ceil((rating + user.rating)/2)
+            else: user.rating = rating
+            user.save()
+
+            auction.rating = rating
+            auction.save()
+        except User.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = AuctionSerializer(auction)
+        return Response(serializer.data,
+                        status=status.HTTP_200_OK)
 
 
 class AuctionCommentAPIView(APIView):

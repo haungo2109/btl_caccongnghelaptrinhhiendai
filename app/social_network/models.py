@@ -11,6 +11,7 @@ class User(AbstractUser):
     address = models.CharField(max_length=255, null=True)
     birthday = models.DateField(null=True)
     push_token = models.CharField(max_length=60, null=True, default="none")
+    rating = models.IntegerField(null=True)
 
     def __str__(self):
         return self.get_full_name()
@@ -82,6 +83,7 @@ class Auction(BaseInfo):
     category = models.ForeignKey(CategoryAuction, on_delete=models.SET_NULL, null=True)
     like = models.ManyToManyField(User, related_name='auction_liked', blank=True)
     buyer = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='auction_bought', null=True)
+    rating = models.IntegerField(null=True)
     payment_method = models.ForeignKey(PaymentMethod, related_name="aution_pay_method", default=2, on_delete=models.SET_NULL, null=True)
 
 
@@ -106,6 +108,7 @@ class AuctionComment(BaseInfo):
 
     class Meta:
         ordering = ['create_at', 'price']
+
 
 class PostImage(models.Model):
     image = models.ImageField(upload_to='static/post_images/%Y/%m', default=None, null=True)
