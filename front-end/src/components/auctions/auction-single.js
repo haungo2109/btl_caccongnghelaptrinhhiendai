@@ -80,7 +80,7 @@ export default function AuctionSingle() {
                 if(window.confirm('Xác nhận giao dịch thành công với người dùng này?')) {
                     auctionApi.changeStateAuctionComment(auction.id,comment.id, 'success').then(data => {
                         getData();
-                        window.alert('Xác nhận giao dịch thành công, trạng thái chuyển sang "Giao dịch thất bại". Vui lòng chọn người thắng cuộc khác');
+                        window.alert('Xác nhận giao dịch thành công, trạng thái chuyển sang "Giao dịch thành công". Vui lòng chọn người thắng cuộc khác');
                     }).catch(err => {console.log(err); window.alert("Hệ thống đã lỗi, vui lòng thử lại sau")});
                 }
             }
@@ -88,7 +88,7 @@ export default function AuctionSingle() {
                 if(window.confirm('Xác nhận giao dịch thất bại với người dùng này?')) {
                     auctionApi.changeStateAuctionComment(auction.id,comment.id, 'fail').then(data => {
                         getData();
-                        window.alert('Xác nhận giao dịch thất bại, trạng thái chuyển sang "Giao dịch thành công"');
+                        window.alert('Xác nhận giao dịch thất bại, trạng thái chuyển sang "Giao dịch thất bại"');
                     }).catch(err => {console.log(err); window.alert("Hệ thống đã lỗi, vui lòng thử lại sau")});
                 }
             }
