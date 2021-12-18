@@ -44,8 +44,9 @@ export default function UserPage() {
                             </div>
                     })}
                     <div className="buttons">
-                        <button onClick={() => move('/posts/owner')} >Bài viết của cá nhân</button>
-                        <button onClick={() => move('/auctions/owner')}>Bài đấu giá của cá nhân</button>
+                        <button onClick={() => move('/posts/owner')} >Bài viết của tôi</button>
+                        <button onClick={() => move('/auctions/owner')}>Đấu giá của tôi</button>
+                        <button onClick={() => move('/auctions/join')}>Đấu giá đã tham gia</button>
                         <button onClick={() => logout()}>Đăng xuất</button>
                     </div>
                 </div>

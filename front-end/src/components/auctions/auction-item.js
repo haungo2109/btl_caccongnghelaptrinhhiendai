@@ -13,6 +13,13 @@ import AuctionComment from './auction-comment'
 import AuctionCommentList from './auction-comments-list'
 import './auction-item.css'
 
+const nameAuctionStatus = {
+	'being auctioned': 'Đang đấu giá',
+	'in process': 'Đang giao dịch',
+	fail: 'Đã hủy',
+	succ: 'Thành công',
+};
+
 function SmallConditionItem({className, text, title, icon}) {
     return (
         <div className="small-cond-item">
@@ -119,7 +126,7 @@ export default function AuctionItem({auction, comments_list, isAllowedToComments
             </div>
             <div className="price">
                 <div>
-                    <SmallConditionItem title="Trạng thái: " text={auction.status_auction} icon={faBell} className="dark-grey" />
+                    <SmallConditionItem title="Trạng thái: " text={nameAuctionStatus[auction.status_auction]} icon={faBell} className="dark-grey" />
                     <SmallConditionItem title="Thời gian: " text={moment(auction.deadline).format("DD/MM/YYYY")} icon={faCalendarAlt} />
                 </div>
                 <div>

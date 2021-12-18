@@ -6,6 +6,7 @@ import { useQuery } from '../../App';
 import ProtectedRoute from '../../route/protected-route';
 import Pagination from '../shared/pagination';
 import AuctionItem from './auction-item';
+import AuctionJoin from './auction-join';
 import AuctionList from './auction-list';
 import AuctionMaker from './auction-maker';
 import AuctionOwner from './auction-owner';
@@ -103,6 +104,9 @@ export default function Auctions() {
                 </ProtectedRoute>
                 <ProtectedRoute path={`${path}/owner`} >
                     <AuctionOwner handleDelete={handleDeleteAuctions} handleLike={handleLike} />
+                </ProtectedRoute>
+                <ProtectedRoute path={`${path}/join`} >
+                    <AuctionJoin handleDelete={handleDeleteAuctions} handleLike={handleLike} />
                 </ProtectedRoute>
                 <Route path={`${path}/:auctionid`}>
                     <AuctionSingle />

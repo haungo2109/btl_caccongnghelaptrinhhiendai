@@ -23,6 +23,10 @@ const auctionApi = {
 		const url = `/auction/owner/?page=${page}`;
 		return axiosClient.get(url);
 	},
+	getAuctionJoin: (page) => {
+		const url = `/auction/auction_join/?page=${page}`;
+		return axiosClient.get(url);
+	},
 	getAuction: (auctionId) => {
 		const url = `/auction/${auctionId}/`;
 		return axiosClient.get(url);
