@@ -1,14 +1,20 @@
+.main > div:nth-child(1) {
+	display: inherit;
+	flex-direction: column;
+}
 .navbar {
-    display: flex;
-    justify-content: center;
-    height: 100%;
-    border-bottom: 1px solid var(--main-color-gray);
-    background-color: var(--main-color-secondary);
+	display: flex;
+	justify-content: center;
+	height: 100%;
+	border-bottom: 1px solid var(--main-color-gray);
+	background-color: var(--main-color-secondary);
+	position: sticky;
+	top: 0;
 }
 .navbar a {
-    text-decoration: none;
-    color: var(--main-color-primary);
+	text-decoration: none;
+	color: var(--main-color-primary);
 }
 p {
-    margin: auto 1em;
+	margin: auto 1em;
 }
