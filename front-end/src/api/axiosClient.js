@@ -2,10 +2,6 @@ import axios from "axios";
 import queryString from "query-string";
 
 let baseURL = "http://localhost:8000/";
-export const ID = 'TPLrxQE8mF9slRzevZSNbNCLQXDSSbJrnIprMCNM';
-export const SECRET =
-	'QRHKVKgNnYo8GmwvxUfFtJRAtvtoLTD4mDoNtWzxulgFhrY8rssWssFglvAvZxZpm2vHHBY2nIJDHETm3SOONxD0ADRKL0ald5Ip8hCoUeOAxQn8KipFFjkU64LlzlCQ';
-
 
 const axiosClient = axios.create({
 	baseURL,

@@ -11,16 +11,19 @@ const postApi = {
 		const url = '/post/';
 		return axiosClient.get(url);
 	},
-	getPostsByPage: (page) => {
-		const url = `/post/?page=${page}`;
+	getPostsByPage: (page, tag = null) => {
+		let url = `/post/?page=${page}`;
+		if(tag) {
+			url += `&hashtag=${tag}`
+		}
 		return axiosClient.get(url);
 	},
 	postPost: (data) => {
 		const url = '/post/';
 		return axiosClient.post(url, data, config);
 	},
-	getPostOwner: () => {
-		const url = '/post/owner/';
+	getPostOwner: (page) => {
+		const url = `/post/owner/?page=${page}`;
 		return axiosClient.get(url);
 	},
 	getPost: (postId) => {

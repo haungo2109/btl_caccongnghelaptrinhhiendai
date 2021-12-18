@@ -21,8 +21,8 @@ export function Login() {
         formData.append('username', username);
         formData.append('password', password);
         formData.append('grant_type', "password");
-        formData.append('client_secret', SECRET);
-        formData.append('client_id', ID);
+        formData.append('client_secret', process.env.REACT_APP_CLIENT_SECRET);
+        formData.append('client_id', process.env.REACT_APP_CLIENT_ID);
 
         userApi.login(formData).then(data => {
             userApi.getCurrentUserInfo().then(data => {

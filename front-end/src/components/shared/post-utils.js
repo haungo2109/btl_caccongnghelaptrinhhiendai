@@ -24,12 +24,12 @@ function PostUtilItem(props) {
     )
 }
 
-export default function PostUtil({listItem}) {
+export default function PostUtil({listItem, isOpen, handleClick}) {
 
-    const [open, setOpen] = useState(false);
+    // const [open, setOpen] = useState(false);
     let element;
 
-    if(open) {
+    if(isOpen) {
         element = 
             <div className="post-util-list">
                 {listItem && listItem.map(i => {
@@ -43,7 +43,7 @@ export default function PostUtil({listItem}) {
 
     return(
         <div className="util-container">
-            <div className="post-util" onClick={() => setOpen(o => !o)}>
+            <div className="post-util" onClick={() => handleClick(o => !o)}>
                 <FontAwesomeIcon icon={faEllipsisV} ></FontAwesomeIcon>
             </div>
             {element}

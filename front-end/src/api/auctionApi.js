@@ -19,8 +19,8 @@ const auctionApi = {
 		const url = '/auction/';
 		return axiosClient.post(url, data, config);
 	},
-	getAuctionOwner: () => {
-		const url = '/auction/owner/';
+	getAuctionOwner: (page) => {
+		const url = `/auction/owner/?page=${page}`;
 		return axiosClient.get(url);
 	},
 	getAuction: (auctionId) => {
@@ -88,5 +88,9 @@ const auctionApi = {
 		const url = `/auction/${auctionId}/fail-auction/`;
 		return axiosClient.post(url, null, config);
 	},
+	getPaymentMethod: () => {
+		const url = `/payment-method/`;
+		return axiosClient.get(url);
+	}
 };
 export default auctionApi;

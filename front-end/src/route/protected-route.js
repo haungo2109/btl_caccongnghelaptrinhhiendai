@@ -6,9 +6,16 @@ export default function ProtectedRoute({children, ...rest}) {
     const store = useStore();
     let user = store.getState();
 
+    let checkIfAllowed = () => {
+        if(user && user.username || localStorage.getItem('user') !== null) {
+            return true;
+        }
+        return false;
+    }
+
     return(
-        <Route {...rest} render={(props) => (
-            user && user?.username ? (children) : <Redirect to='/login' />
+        <Route {...rest} render={({location}) => (
+            checkIfAllowed() ? (children) : <Redirect to={{pathname: '/login', state: {from: location}}} />
         )} /> 
     )
 }

@@ -1,12 +1,14 @@
+import { faTimes, faTimesCircle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react"
 import { useStore } from "react-redux";
 import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
 import postApi from "../../api/postAPI";
 import { useQuery } from "../../App";
 import ProtectedRoute from "../../route/protected-route";
-import Pagination from "../shared/pagination";
-import PostItem from "./post-item";
+import PostList from "./post-list";
 import PostMaker from "./post-maker";
+import PostOwner from "./post-owner";
 import PostSingle from "./post-single";
 import './post.css'
 
@@ -22,32 +24,38 @@ export default function Posts() {
     const [posts, setPosts] = useState([]);
     const [page, setPage] = useState(1);
     const [totalPage, setTotalPage] = useState(1);
+    const [hashtag, setHashTag] = useState(null);
     const [loading, setLoading] = useState(true);
     const [init, setInit] = useState(false);
     // const [curentPage, setCurrentPage] = useState(1);
 
-    let createPostEl;
-
     useEffect(() => {
+        if(query.get('tag')) {
+            setHashTag(query.get('tag'));
+        } else {
+            setHashTag(null);
+        }
         if(query.get('page')) {
             setPage(query.get('page'))
         } else {
             handleGetListByPage(page);
         }
         setInit(true);
-    }, [page])
+    }, [])
 
     useEffect(() => {
         if(init) {
-            handleGetListByPage(page);
+            handleGetListByPage(page, true, hashtag);
         }
-    }, [page, init])
+    }, [page, init, hashtag])
 
-    let navigate = (path) => {
-        history.push(`${url}${path}`)
-    }
+    useEffect(() => {
+        if(page !== 0 && hashtag !== null) {
+            // handleGetListByPage(page, true, hashtag);
+        }
+    })
 
-    let handleGetListByPage = (p, rollToTop = true) => {
+    let handleGetListByPage = (p, rollToTop = true, hashtag = null) => {
         if(rollToTop) {
             window.scrollTo({
                 top: 0,
@@ -55,19 +63,49 @@ export default function Posts() {
             });
         }
         setLoading(true);
-        postApi.getPostsByPage(p).then((data) => {
-            // console.log(data.results)
-            setLoading(false);
-            setPosts(data.results)
-            if(data.count) {
-                setTotalPage(Math.round(data.count / postPerPage));
-            }
-        })
+        if(hashtag) {
+            postApi.getPostsByPage(p, hashtag).then((data) => {
+                // console.log(data.results)
+                setLoading(false);
+                setPosts(data.results)
+                if(data.count) {
+                    setTotalPage(Math.ceil(data.count / postPerPage));
+                }
+            })
+        } else {
+            postApi.getPostsByPage(p).then((data) => {
+                // console.log(data.results)
+                setLoading(false);
+                setPosts(data.results)
+                if(data.count) {
+                    setTotalPage(Math.ceil(data.count / postPerPage));
+                }
+            })
+        }
+        
     }
     let handleClickPagination = (pageNum) => {
         setPage(pageNum);
-        // console.log(pageNum)
-        history.push(`/posts?page=${pageNum}`);
+        let searchParams = new URLSearchParams(window.location.search);
+        searchParams.set('page', pageNum);
+        history.push({search: searchParams.toString(), pathname: '/posts'})
+        // history.push(`/posts?page=${pageNum}`);
+    }
+    let handleClickingTag = (tag) => {
+        setPage(1);
+        setHashTag(tag.name);
+        let searchParams = new URLSearchParams(window.location.search);
+        searchParams.set('tag', tag.name);
+        searchParams.set('page', 1);
+        history.push({search: searchParams.toString(), pathname: '/posts'})
+    }
+    let handleCancleSearchByHashTag = () => {
+        setPage(1);
+        setHashTag(null);
+        let searchParams = new URLSearchParams(window.location.search);
+        searchParams.delete('tag');
+        searchParams.set('page', 1);
+        history.push({search: searchParams.toString(), pathname: '/posts'})
     }
     let handleLike = (id, flagLiked) => {
         if(flagLiked) {
@@ -81,19 +119,12 @@ export default function Posts() {
         }
     }
     let handleDeletePost = (id) => {
-        postApi.deletePost(id).then(data => {
-            handleGetListByPage(page);
-        }).catch(err => {console.log(err); window.alert("Hệ thống đã lỗi, vui lòng thử lại sau")});
-    }
-
-    if(user && user?.username) {
-        createPostEl = (
-            <div className="posts-container">
-                <div className="post-item-container" onClick={() => navigate('/create')}>
-                    <input className="temp-input" placeholder="Tạo bài viết mới" />
-                </div>
-            </div>
-        )
+        if(window.confirm("Xóa bài viết này ?")) {
+            postApi.deletePost(id).then(data => {
+                handleGetListByPage(page);
+                window.alert('Xóa thành công');
+            }).catch(err => {console.log(err); window.alert("Hệ thống đã lỗi, vui lòng thử lại sau")});
+        }
     }
 
     return(
@@ -102,36 +133,25 @@ export default function Posts() {
                 <ProtectedRoute  path={`${path}/create`}>
                     <PostMaker />
                 </ProtectedRoute>
+                <ProtectedRoute  path={`${path}/owner`}>
+                    <PostOwner handleDelete={handleDeletePost} handleLike={handleLike} handleClickTag={handleClickingTag} />
+                </ProtectedRoute>
                 <Route path={`${path}/:postid`}>
-                    <PostSingle />
+                    <PostSingle handleClickTag={handleClickingTag} />
                 </Route>
                 <Route exact path={path}>
-                    {createPostEl}
-                    <div className="posts-container">
-                        {posts.map((p) => {
-                            return (
-								<PostItem
-									key={p.id}
-									images={p.post_images}
-									content={p.content}
-									createdAt={p.create_at}
-									hashtags={p.hashtag}
-									user={p.user}
-                                    like={p.like}
-									vote={p.vote}
-									id={p.id}
-                                    handleLike={handleLike}
-                                    handleDelete={handleDeletePost}
-								/>
-							);
-                        })}
-                        {posts && 
-                            <Pagination 
-                                currentPage={page} 
-                                count={totalPage} 
-                                onClick={handleClickPagination} 
-                            />}
-                    </div>
+                    {hashtag && <div className="posts-container">
+                        <div className="post-item-container hashtag-container">
+                            <p>
+                                <span>{hashtag}</span>
+                                <FontAwesomeIcon onClick={handleCancleSearchByHashTag} icon={faTimesCircle} ></FontAwesomeIcon>
+                            </p>
+                        </div>
+                    </div>}
+                    <PostList posts={posts} handleLike={handleLike} 
+                        handleClickPagination={handleClickPagination} handleDeletePost={handleDeletePost} 
+                        page={page} totalPage={totalPage} handleClickTag={handleClickingTag}
+                        url={url} />
                 </Route>
             </Switch>
         </div>

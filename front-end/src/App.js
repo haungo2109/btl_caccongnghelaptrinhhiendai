@@ -3,7 +3,8 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  useLocation
+  useLocation,
+  useHistory
 } from "react-router-dom";
 import Header from './components/header/header';
 import Auctions from './components/auctions/auctions';
@@ -23,7 +24,7 @@ export function useQuery() {
 function App() {
   const store = useStore();
   const user = store.getState();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   //pursist state
   if(localStorage.getItem('Authorization') && Object.keys(user).length === 0) {
@@ -31,13 +32,11 @@ function App() {
       dispatch({
         type: 'login',
         payload: data
-      })
+      });
     }).catch(err => {
-      console.log('Hết hạn phiên làm việc')
+      console.log(err);
     })
   }
-
-  // note, nếu sub route error, coi chừng chữ exact
 
   return (
     <div className="main">

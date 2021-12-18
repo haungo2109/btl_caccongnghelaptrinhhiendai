@@ -52,7 +52,7 @@ export default function PostMaker() {
 
         postApi.postPost(formData).then(data => {
             window.alert('Bài viết được tạo thành công');
-            history.goBack();
+            history.push('/posts/' + data.id);
         }).catch(err => {
             console.log(err);
             window.alert('Bài viết tạo thất bại, vui lòng thử lại sau');

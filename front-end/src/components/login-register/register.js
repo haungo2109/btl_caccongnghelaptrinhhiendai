@@ -2,11 +2,9 @@ import './register.css'
 import React, { useState } from 'react';
 import { Input } from './input';
 import ImageUploader from '../shared/image-uploader';
-import api from '../../api/apiCalls';
 import userApi from '../../api/userApi';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { ID, SECRET } from '../../api/axiosClient';
 
 export function Register() {
 
@@ -25,6 +23,10 @@ export function Register() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        if(Object.keys(avatar).length !== 0) {
+            window.alert("Vui lòng chọn một hình đại diện");
+            return;
+        }
         if(!emailRe.test(email)) {
             window.alert("Vui lòng nhập Email đúng định dạng");
             return;
@@ -37,9 +39,7 @@ export function Register() {
         const formData = new FormData();
         formData.append('first_name', firstName);
         formData.append('last_name', lastName);
-        if(Object.keys(avatar).length !== 0) {
-            formData.append('avatar', avatar);
-        }
+        formData.append('avatar', avatar);
         formData.append('email', email);
         formData.append('username', username);
         formData.append('password', password);
@@ -50,8 +50,8 @@ export function Register() {
             formDa.append('username', username);
             formDa.append('password', password);
             formDa.append('grant_type', "password");
-            formDa.append('client_secret', SECRET);
-            formDa.append('client_id', ID);
+            formDa.append('client_secret', process.env.REACT_APP_CLIENT_SECRET);
+            formDa.append('client_id', process.env.REACT_APP_CLIENT_ID);
             userApi.login(formDa).then(data => {
                 userApi.getCurrentUserInfo().then(data => {
                     dispatch({
@@ -72,7 +72,7 @@ export function Register() {
                     <h2>Đăng Ký</h2>
                     <form onSubmit={handleSubmit} encType="multipart/form-data">
                         <div>
-                            <ImageUploader label="Hình đại diện" onImageSelect={setAvatar} />
+                            <ImageUploader label="Hình đại diện*" onImageSelect={setAvatar} />
                             <Input name="Họ*" value={firstName} type="text" changeData={setFirstName} />
                             <Input name="Tên*" value={lastName} type="text" changeData={setLastName} />
                             <Input name="Email*" value={email} type="text" changeData={setEmail} />

@@ -5,8 +5,10 @@ import { useEffect, useState } from 'react'
 import { useStore } from 'react-redux'
 import { useHistory } from 'react-router'
 import auctionApi from '../../api/auctionApi'
+import reportApi from '../../api/reportApi'
 import ImgViewer from '../shared/img-viewer'
 import PostUtil from '../shared/post-utils'
+import ReportDialog from '../shared/report-dialog'
 import AuctionComment from './auction-comment'
 import AuctionCommentList from './auction-comments-list'
 import './auction-item.css'
@@ -23,22 +25,34 @@ function SmallConditionItem({className, text, title, icon}) {
     )
 }
 
-export default function AuctionItem({auction, comments_list, isAllowedToComments = false, getListComment, handleLike}) {
+export default function AuctionItem({auction, comments_list, isAllowedToComments = false, getListComment, handleLike, handleDelete, listReportType, handleSelectWinnerForAuction}) {
 
     let history = useHistory();
     let store = useStore();
     let user = store.getState();
     const [comment, setComment] = useState('');
     const [price, setPrice] = useState(0);
+    const [dialogState, setDialogState] = useState(false);
+    const [openUtils, setOpenUtils] = useState(false);
 
-
-    let utilItems = [
-        {name: 'Báo cáo', action: () => {}}
-    ]
-
+    let utilItems = [];
+    if(user && user.id == auction.user.id) {
+        utilItems.push({name: 'Chỉnh sửa bài', action: () => handleEdit()});
+        utilItems.push({name: 'Xóa bài bài', action: () => handleDelete(auction.id)});
+    } else {
+        utilItems.push({name: 'Báo cáo', action: () => setDialogState(true)});
+    }
+    //utils
+    let handleEdit = () => {
+        history.push({pathname: '/auctions/create', search: `?id=${auction.id}`})
+    }
     let move = (route) => {
         !comments_list && history.push(route);
     }
+    let handleOpenUtils = (value) => {
+        setOpenUtils(value);
+    }
+    // comments
     let sendComment = () => {
         if(comment.length === 0 || price <= 0 ){
             window.alert('Vui lòng nhập đầy đủ thông tin');
@@ -62,6 +76,7 @@ export default function AuctionItem({auction, comments_list, isAllowedToComments
             sendComment();
         }
     }
+    // tool bar
     let checkIfLiked = () => {
         if(auction.like.includes(user.id)) {
             return "liked"
@@ -74,14 +89,25 @@ export default function AuctionItem({auction, comments_list, isAllowedToComments
             handleLike(auction.id, false);
         }
     }
+    //handle dialogs
+    let handleCloseReportDialog = (value) => {
+        if(value.action == 'confirm') {
+            reportApi.postReportAuction({type: value.type, content: value.content, auction: auction.id}).then(data => {
+                window.alert('Báo cáo thành công');
+            }).catch(err => window.alert("Báo cáo thất bại, vui lòng thử lại sau"))
+        } 
+        setDialogState(false);
+        setOpenUtils(false);
+    }
 
     return (
         <div className="post-item-container auction-item-container">
             <div className="utils">
-                <PostUtil listItem={utilItems}/>
+                <PostUtil listItem={utilItems} handleClick={handleOpenUtils} isOpen={openUtils} />
+                <ReportDialog state={dialogState} handleClose={handleCloseReportDialog} listType={listReportType} ></ReportDialog>
             </div>
             <div className="title">
-                    <h2>{auction.title}</h2>
+                    <h2 onClick={() => move(`/auctions/${auction.id}`)} >{auction.title}</h2>
                 </div>
             <div className="avatar auction-avatar">
                 <div className="avatar-body">
@@ -104,6 +130,17 @@ export default function AuctionItem({auction, comments_list, isAllowedToComments
             <div className="content">
                 <p>{auction.content}</p>
             </div>
+            {auction.buyer && <div className="buyer">
+                <div>
+                    <h3>Người thắng cuộc:</h3> 
+                    <div className="inner-container">
+                        <div className="avatar-img">
+                            <img src={auction.buyer.avatar} alt="img" title={`Người dùng: ${auction.buyer.full_name}`} />
+                        </div>
+                        <p>{auction.buyer.full_name}</p>
+                    </div>
+                </div>
+            </div>}
             <div className="wrapper-image">
                 {auction.auction_images.length != 0 && <ImgViewer imgArray={auction.auction_images} />}
             </div>
@@ -121,11 +158,11 @@ export default function AuctionItem({auction, comments_list, isAllowedToComments
                     </p>
                 </div>
             </div>
-            {isAllowedToComments && <div>
+            {isAllowedToComments && auction.status_auction == 'being auctioned' && <div>
                 <AuctionComment onComment={(e) => setComment(e.target.value)} commentText={comment} onClick={sendComment} onKeyDown={handleOnKeyDown} price={price} onCommentPrice={(e) => setPrice(e.target.value)} />
             </div>}
-            {comments_list && <div>
-                <AuctionCommentList listComment={comments_list} />
+            {comments_list && auction.buyer == null && <div>
+                <AuctionCommentList listComment={comments_list} auction={auction} handleSelectWinner={handleSelectWinnerForAuction} />
             </div>}
         </div>
     )
