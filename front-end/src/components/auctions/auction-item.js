@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { useStore } from 'react-redux'
 import { useHistory } from 'react-router'
 import auctionApi from '../../api/auctionApi'
+import momoApi from '../../api/momoApi'
 import reportApi from '../../api/reportApi'
 import ImgViewer from '../shared/img-viewer'
 import PostUtil from '../shared/post-utils'
@@ -12,6 +13,8 @@ import ReportDialog from '../shared/report-dialog'
 import AuctionComment from './auction-comment'
 import AuctionCommentList from './auction-comments-list'
 import './auction-item.css'
+import logoZaloPay from './logo-zalopay.svg';
+import logoMomo from './logo-momo.svg';
 
 const nameAuctionStatus = {
 	'being auctioned': 'Đang đấu giá',
@@ -37,6 +40,7 @@ export default function AuctionItem({auction, comments_list, isAllowedToComments
     let history = useHistory();
     let store = useStore();
     let user = store.getState();
+    const [linkQr, setLinkQr] = useState(false);
     const [comment, setComment] = useState('');
     const [price, setPrice] = useState(0);
     const [dialogState, setDialogState] = useState(false);
@@ -107,6 +111,23 @@ export default function AuctionItem({auction, comments_list, isAllowedToComments
         setOpenUtils(false);
     }
 
+    useEffect(() => {
+        let isMounted = true;
+        if (
+			comments_list?.length &&
+			comments_list[0].status_transaction === 'in process'
+		){
+            momoApi
+                .getLinkMomoPay(auction.id, comments_list[0].id)
+                .then((res) =>{ 
+                    if (isMounted){ setLinkQr(res.url); console.log(res.url);}
+                });
+        }
+			return () => {
+				isMounted = false;
+			};
+    }, [auction, comments_list])
+
     return (
         <div className="post-item-container auction-item-container">
             <div className="utils">
@@ -171,6 +192,29 @@ export default function AuctionItem({auction, comments_list, isAllowedToComments
             {comments_list && auction.buyer == null && <div>
                 <AuctionCommentList listComment={comments_list} auction={auction} handleSelectWinner={handleSelectWinnerForAuction} />
             </div>}
+            {linkQr && 
+                <>
+                    <p>Chọn hình thức thanh toán:</p>
+                    <div class="mb-1">
+                        <label>
+                            <input type="radio" name="iCheck" class="iradio_flat-blue" /> 
+                            Ví <img src={logoZaloPay} alt="" />
+                        </label>
+                    </div>
+                    <div class="mb-1">
+                        <label>
+                            <input type="radio" name="iCheck" class="iradio_flat-blue" /> 
+                            Ví <img src={logoMomo} height={18} alt="Zalopay logo" />
+                        </label>
+                    </div>
+                    
+                    <div style={{ margin: '0 auto' }}>
+                        <img
+                            src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${linkQr}`}
+                        />
+                    </div>
+                </>
+            }
         </div>
     )
 }
