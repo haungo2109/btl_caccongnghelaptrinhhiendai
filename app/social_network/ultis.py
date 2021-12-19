@@ -103,6 +103,11 @@ def create_hash_by_RSA(rowData={}):
     cipher_text = cipher.encrypt(json.dumps(rowData).encode())
     return b64encode(cipher_text)
 
+def create_signature(storeSlug, amount, orderId):
+    key = b"6VzFAPfP9eGsw47dEPx6FiYqGWete93n"
+    raw_signature = bytes("storeSlug={0}&amount={1}&billId={2}".format(storeSlug, amount, orderId), encoding='utf8')
+    return hmac.new(key, raw_signature, hashlib.sha256).hexdigest()
+
 
 def send_request_to_momo(data):
     data_string = json.dumps(data)

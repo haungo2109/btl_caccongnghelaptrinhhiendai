@@ -6,7 +6,7 @@ from rest_framework.parsers import MultiPartParser, JSONParser
 from rest_framework.views import APIView
 from .serializers import *
 from .ultis import IsOwner, StandardResultsSetPagination, IsCurrentUser, send_push_message, create_hash_by_RSA, \
-    send_request_to_momo, validate_token_login_by_gg, create_access_token_with_user
+    send_request_to_momo, validate_token_login_by_gg, create_access_token_with_user, create_signature
 from datetime import datetime
 from django.db.models import Q
 import math
@@ -731,6 +731,27 @@ class MomoPay(viewsets.ViewSet, generics.CreateAPIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST, data={"error_msg": serializer.errors})
+
+    @action(methods=['get'], detail=False, url_path='linkQR')
+    def getLinkQR(self, request, **kwargs):
+        auction_id = request.query_params.get("auctionId")
+        comment_id = request.query_params.get('commentId')
+
+        try:
+            auction = Auction.objects.get(pk=auction_id)
+            comment = AuctionComment.objects.get(pk=comment_id)
+
+            storeSlug = "MOMOBDAF20201207-abcdefABCDEF0189"
+            orderId = "auctionId_{0}-commentId_{1}".format(auction.id, comment.id)
+
+            if (comment.auction.id != auction.id or comment.status_transaction != StatusTransaction.in_process):
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+
+            signature = create_signature(storeSlug=storeSlug, amount=comment.price, orderId=orderId)
+            url = "https://test-payment.momo.vn/pay/store/{0}?a={1}&b={2}&s={3}".format(storeSlug, comment.price, orderId, signature)
+        except Auction.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response({"url": url}, status=status.HTTP_200_OK)
 
 
 class FeedbackViewSet(viewsets.ViewSet, generics.CreateAPIView):
