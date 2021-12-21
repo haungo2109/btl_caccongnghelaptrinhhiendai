@@ -9,6 +9,7 @@ export function PostCommentLine({line}) {
                 </div>
             </div>
             <div className="comment-text">
+                <p>{line.user.full_name}</p>
                 <p>{line.content}</p>
             </div>
         </div>

@@ -93,7 +93,7 @@ export default function AuctionMaker() {
 
         auctionApi.postAuction(formData).then(data => {
             window.alert('Bài đấu giá được tạo thành công');
-            history.push('/auctions');
+            history.push(`/auctions/${data.id}`);
         }).catch(err => console.log(err));
     }
 
