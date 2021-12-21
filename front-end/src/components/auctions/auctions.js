@@ -106,7 +106,7 @@ export default function Auctions() {
                     <AuctionOwner handleDelete={handleDeleteAuctions} handleLike={handleLike} />
                 </ProtectedRoute>
                 <ProtectedRoute path={`${path}/join`} >
-                    <AuctionJoin handleDelete={handleDeleteAuctions} handleLike={handleLike} />
+                    <AuctionJoin handleLike={handleLike} />
                 </ProtectedRoute>
                 <Route path={`${path}/:auctionid`}>
                     <AuctionSingle />

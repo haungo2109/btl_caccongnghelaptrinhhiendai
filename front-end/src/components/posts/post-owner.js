@@ -8,7 +8,7 @@ import './post-owner.css'
 
 let postPerPage = 5;
 
-export default function PostOwner({handleDelete, handleLike, handleClickTag}) {
+export default function PostOwner({ handleLike, handleClickTag}) {
 
     let history = useHistory();
     let query = useQuery();
@@ -57,10 +57,18 @@ export default function PostOwner({handleDelete, handleLike, handleClickTag}) {
         setPage(pageNum);
         history.push(`/posts/owner?page=${pageNum}`);
     }
+    let handleDeletePost = (id) => {
+        if(window.confirm("Xóa bài viết này ?")) {
+            postApi.deletePost(id).then(data => {
+                handleGetListByPage(page);
+                window.alert('Xóa thành công');
+            }).catch(err => {console.log(err); window.alert("Hệ thống đã lỗi, vui lòng thử lại sau")});
+        }
+    }
 
     return(
         <PostList posts={posts} handleLike={handleLike} 
-                        handleClickPagination={handleClickPagination} handleDeletePost={handleDelete} 
+                        handleClickPagination={handleClickPagination} handleDeletePost={handleDeletePost} 
                         page={page} totalPage={totalPage} handleClickTag={handleClickTag}
                         url={url} />
         // <a>{posts}</a>

@@ -68,7 +68,6 @@ export default function AuctionJoin({ handleLike, handleDelete }) {
 			auctions={auctions}
 			handlePagination={handleClickPagination}
 			handleLike={handleLike}
-			handleDelete={handleDelete}
 			url={url}
 			page={page}
 			totalPage={totalPage}

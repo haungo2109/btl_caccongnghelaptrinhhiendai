@@ -64,8 +64,17 @@ export default function AuctionOwner({handleLike, handleDelete}) {
         history.push(`/auctions/owner?page=${pageNum}`);
     }
 
+    let handleDeleteAuctions = (id) => {
+        if(window.confirm("Xóa bài đấu giá này ?")) {
+            auctionApi.deleteAuction(id).then(data => {
+                handleGetListByPage(page);
+                window.alert('Xóa thành công');
+            }).catch(err => {console.log(err); window.alert("Hệ thống đã lỗi, vui lòng thử lại sau")});
+        }
+    }
+
     return(
-        <AuctionList auctions={auctions} handlePagination={handleClickPagination} handleLike={handleLike} handleDelete={handleDelete}
+        <AuctionList auctions={auctions} handlePagination={handleClickPagination} handleLike={handleLike} handleDelete={handleDeleteAuctions}
             url={url} page={page} totalPage={totalPage} >
         </AuctionList>
     )

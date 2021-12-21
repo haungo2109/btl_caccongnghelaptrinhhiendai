@@ -49,7 +49,7 @@ export default function AuctionItem({auction, comments_list, isAllowedToComments
     let utilItems = [];
     if(user && user.id == auction.user.id) {
         utilItems.push({name: 'Chỉnh sửa bài', action: () => handleEdit()});
-        utilItems.push({name: 'Xóa bài bài', action: () => handleDelete(auction.id)});
+        utilItems.push({name: 'Xóa bài đấu giá', action: () => handleDelete(auction.id)});
     } else {
         utilItems.push({name: 'Báo cáo', action: () => setDialogState(true)});
     }
