@@ -44,3 +44,8 @@
     padding: 0.5em;
     border-radius: 8px;
 }
+.comment-text p:first-child {
+    margin-bottom: 0.5em;
+    opacity: 0.5;
+    font-size: small;
+}

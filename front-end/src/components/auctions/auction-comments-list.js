@@ -18,6 +18,7 @@ export  function AuctionCommentLine({line, isFirst, showPrice = false, displayBu
             </div>
             <div className="comment-text">
                 <div className="price">
+                    <p></p>
                     <p><span>Giá đấu giá: </span>{showPrice? line.price + '$': '---'}</p>
                     <div>
                         {displayButton && line.status_transaction === 'none' && <button title={'Chọn người dùng này thắng đấu giá'}  onClick={() => handleSelectWinner(line)} >Thắng đấu giá</button>}

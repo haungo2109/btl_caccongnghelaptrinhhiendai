@@ -134,7 +134,7 @@ export default function Posts() {
                     <PostMaker />
                 </ProtectedRoute>
                 <ProtectedRoute  path={`${path}/owner`}>
-                    <PostOwner handleDelete={handleDeletePost} handleLike={handleLike} handleClickTag={handleClickingTag} />
+                    <PostOwner handleLike={handleLike} handleClickTag={handleClickingTag} />
                 </ProtectedRoute>
                 <Route path={`${path}/:postid`}>
                     <PostSingle handleClickTag={handleClickingTag} />
