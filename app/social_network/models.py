@@ -80,7 +80,7 @@ class Auction(BaseInfo):
     accept_price = models.FloatField(null=True, default=0)
     status_auction = models.CharField(max_length=20, choices=StatusAuction.choices, default=StatusAuction.auction)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='auctions')
-    category = models.ForeignKey(CategoryAuction, on_delete=models.SET_NULL, null=True)
+    category = models.ForeignKey(CategoryAuction, related_name="auctions", on_delete=models.SET_NULL, null=True)
     like = models.ManyToManyField(User, related_name='auction_liked', blank=True)
     buyer = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='auction_bought', null=True)
     rating = models.IntegerField(null=True)

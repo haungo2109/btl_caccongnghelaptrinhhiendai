@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -48,7 +48,14 @@ INSTALLED_APPS = [
     'oauth2_provider',
     'drf_yasg',
     'debug_toolbar',
+    'webpush'
 ]
+
+WEBPUSH_SETTINGS = {
+    "VAPID_PUBLIC_KEY": "BH3TlCPLPMEJcHie8_cvds-ykD6F7d6s87AofPAXqBAsI5nbFSPxolyTuA0LAE7IlKXEiLUC9en-f75dzGbLJ2o",
+    "VAPID_PRIVATE_KEY":"_GDWwN7SFLNSEwggA2wG6dkTTNfWkAvmjKpJ7dRsYj8",
+    "VAPID_ADMIN_EMAIL": "ngovanhau1999@gmail.com"
+}
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -83,7 +90,7 @@ ROOT_URLCONF = 'app.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'app/social_network/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

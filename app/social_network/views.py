@@ -1,4 +1,7 @@
 import oauth2_provider
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 from rest_framework import viewsets, permissions, status, generics
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -9,7 +12,9 @@ from .ultis import IsOwner, StandardResultsSetPagination, IsCurrentUser, send_pu
     send_request_to_momo, validate_token_login_by_gg, create_access_token_with_user, create_signature
 from datetime import datetime
 from django.db.models import Q
-import math
+from django.shortcuts import get_object_or_404
+from webpush import send_user_notification
+import math, json
 
 CLIENT_ID = "972868105319-oc23en8rdr7bg9h9ja8agt48btuu32m4.apps.googleusercontent.com"
 
@@ -155,7 +160,7 @@ class PostViewSet(viewsets.ModelViewSet):
         user_name = self.request.query_params.get('user_name', None)
         content = self.request.query_params.get('content', None)
 
-        queryset = Post.objects.filter(active=True)
+        queryset = Post.objects.filter(active=True).order_by('-create_at')
 
         if hashtag:
             queryset = queryset.filter(hashtag__in=HashTagPost.objects.filter(name__contains=hashtag))
@@ -293,7 +298,7 @@ class AuctionViewSet(viewsets.ModelViewSet):
                 Q(user__first_name__icontains=user_name) | Q(user__last_name__contains=user_name))
 
         queryset = queryset.select_related("user").select_related("buyer").select_related("category").select_related(
-            "payment_method")
+            "payment_method").order_by('-create_at')
 
         return queryset
 
@@ -761,3 +766,23 @@ class FeedbackViewSet(viewsets.ViewSet, generics.CreateAPIView):
 
     def get_permissions(self):
         return [permissions.IsAuthenticated()]
+
+
+@require_POST
+@csrf_exempt
+def send_push(request):
+    try:
+        body = request.body
+        data = json.loads(body)
+
+        if 'head' not in data or 'body' not in data or 'id' not in data:
+            return JsonResponse(status=400, data={"message": "Invalid data format"})
+
+        user_id = data['id']
+        user = User.objects.get(pk=user_id)
+        payload = {'head': data['head'], 'body': data['body']}
+        send_user_notification(user=user, payload=payload, ttl=1000)
+
+        return JsonResponse(status=200, data={"message": "Web push successful"})
+    except TypeError:
+        return JsonResponse(status=500, data={"message": "An error occurred"})

@@ -1,7 +1,8 @@
 import axios from "axios";
 import queryString from "query-string";
 
-let baseURL = "http://localhost:8000/";
+// let baseURL = "http://localhost:8000/";
+let baseURL = 'http://192.168.1.21:5000/';
 
 const axiosClient = axios.create({
 	baseURL,

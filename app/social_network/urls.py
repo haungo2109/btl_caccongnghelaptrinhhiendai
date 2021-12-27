@@ -3,6 +3,7 @@ from . import views
 from .admin import admin_site
 from rest_framework.routers import DefaultRouter
 
+from .views import send_push
 
 router = DefaultRouter()
 router.register('post', views.PostViewSet, basename='post')
@@ -19,6 +20,7 @@ router.register('auction-report', views.AuctionReportViewSet, basename='auction-
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('send_push', send_push),
     path('admin/', admin_site.urls),
     path('post-comments/<int:post_id>/',  views.PostCommentAPIView.as_view()),
     path('auction-comments/<int:auction_id>/',  views.AuctionCommentAPIView.as_view()),

@@ -65,10 +65,11 @@ export default function AuctionItem({auction, comments_list, isAllowedToComments
     }
     // comments
     let sendComment = () => {
-        if(comment.length === 0 || price <= 0 ){
+        if(price <= 0 ){
             window.alert('Vui lòng nhập đầy đủ thông tin');
             return;
         }
+        if (comment.length === 0) setComment("")
         let form = new FormData();
         form.set('content', comment);
         form.set('price', price)
@@ -129,92 +130,170 @@ export default function AuctionItem({auction, comments_list, isAllowedToComments
     }, [auction, comments_list])
 
     return (
-        <div className="post-item-container auction-item-container">
-            <div className="utils">
-                <PostUtil listItem={utilItems} handleClick={handleOpenUtils} isOpen={openUtils} />
-                <ReportDialog state={dialogState} handleClose={handleCloseReportDialog} listType={listReportType} ></ReportDialog>
-            </div>
-            <div className="title">
-                    <h2 onClick={() => move(`/auctions/${auction.id}`)} >{auction.title}</h2>
-                </div>
-            <div className="avatar auction-avatar">
-                <div className="avatar-body">
-                    <p>Bởi {auction.user.full_name}</p>
-                    <div className="date">
-                        <p>{ moment(auction.createdAt).format("DD/MM/YYYY - h:mm a") }</p>
-                    </div>
-                </div>
-            </div>
-            <div className="price">
-                <div>
-                    <SmallConditionItem title="Trạng thái: " text={nameAuctionStatus[auction.status_auction]} icon={faBell} className="dark-grey" />
-                    <SmallConditionItem title="Thời gian: " text={moment(auction.deadline).format("DD/MM/YYYY")} icon={faCalendarAlt} />
-                </div>
-                <div>
-                    <SmallConditionItem title="Giá chấp nhận: " text={auction.accept_price} icon={faDollarSign} className="green"/>
-                    <SmallConditionItem title="Giá bắt đầu: " text={auction.base_price} icon={faDollarSign} className="green"/>
-                </div>
-            </div>
-            <div className="content">
-                <p>{auction.content}</p>
-            </div>
-            {auction.buyer && <div className="buyer">
-                <div>
-                    <h3>Người thắng cuộc:</h3> 
-                    <div className="inner-container">
-                        <div className="avatar-img">
-                            <img src={auction.buyer.avatar} alt="img" title={`Người dùng: ${auction.buyer.full_name}`} />
-                        </div>
-                        <p>{auction.buyer.full_name}</p>
-                    </div>
-                </div>
-            </div>}
-            <div className="wrapper-image">
-                {auction.auction_images.length != 0 && <ImgViewer imgArray={auction.auction_images} />}
-            </div>
-            <div className="tool-bar">
-                <div className="likes card" title="Thích" onClick={() => handleClickLike()}>
-                    <p className={checkIfLiked()}>
-                        <FontAwesomeIcon icon={faHeart} />
-                        {auction.like.length} lượt thích
-                    </p>
-                </div>
-                <div className="commends card" title="Bình luận" onClick={() => move(`/auctions/${auction.id}`)}>
-                    <p>
-                        <FontAwesomeIcon icon={faComment} />
-                        Bình luận
-                    </p>
-                </div>
-            </div>
-            {isAllowedToComments && auction.status_auction == 'being auctioned' && <div>
-                <AuctionComment onComment={(e) => setComment(e.target.value)} commentText={comment} onClick={sendComment} onKeyDown={handleOnKeyDown} price={price} onCommentPrice={(e) => setPrice(e.target.value)} />
-            </div>}
-            {comments_list && auction.buyer == null && <div>
-                <AuctionCommentList listComment={comments_list} auction={auction} handleSelectWinner={handleSelectWinnerForAuction} />
-            </div>}
-            {linkQr && 
-                <>
-                    <p>Chọn hình thức thanh toán:</p>
-                    <div class="mb-1">
-                        <label>
-                            <input type="radio" name="iCheck" class="iradio_flat-blue" /> 
-                            Ví <img src={logoZaloPay} alt="" />
-                        </label>
-                    </div>
-                    <div class="mb-1">
-                        <label>
-                            <input type="radio" name="iCheck" class="iradio_flat-blue" /> 
-                            Ví <img src={logoMomo} height={18} alt="Zalopay logo" />
-                        </label>
-                    </div>
-                    
-                    <div style={{ margin: '0 auto' }}>
-                        <img
-                            src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${linkQr}`}
-                        />
-                    </div>
-                </>
-            }
-        </div>
-    )
+		<div className="post-item-container auction-item-container">
+			<div className="utils">
+				<PostUtil
+					listItem={utilItems}
+					handleClick={handleOpenUtils}
+					isOpen={openUtils}
+				/>
+				<ReportDialog
+					state={dialogState}
+					handleClose={handleCloseReportDialog}
+					listType={listReportType}
+				></ReportDialog>
+			</div>
+			<div className="title">
+				<h2 onClick={() => move(`/auctions/${auction.id}`)}>
+					{auction.title}
+				</h2>
+			</div>
+			<div className="avatar auction-avatar">
+				<div className="avatar-body">
+					<p>Bởi {auction.user.full_name}</p>
+					<div className="date">
+						<p>
+							{moment(auction.createdAt).format(
+								'DD/MM/YYYY - h:mm a'
+							)}
+						</p>
+					</div>
+				</div>
+			</div>
+			<div className="price">
+				<div>
+					<SmallConditionItem
+						title="Trạng thái: "
+						text={nameAuctionStatus[auction.status_auction]}
+						icon={faBell}
+						className="dark-grey"
+					/>
+					<SmallConditionItem
+						title="Thời gian: "
+						text={moment(auction.deadline).format('DD/MM/YYYY')}
+						icon={faCalendarAlt}
+					/>
+				</div>
+				<div>
+					<SmallConditionItem
+						title="Giá chấp nhận: "
+						text={auction.accept_price}
+						icon={faDollarSign}
+						className="green"
+					/>
+					<SmallConditionItem
+						title="Giá bắt đầu: "
+						text={auction.base_price}
+						icon={faDollarSign}
+						className="green"
+					/>
+				</div>
+			</div>
+			<div className="content">
+				<p>{auction.content}</p>
+			</div>
+			{auction.buyer && (
+				<div className="buyer">
+					<div>
+						<h3>Người thắng cuộc:</h3>
+						<div className="inner-container">
+							<div className="avatar-img">
+								<img
+									src={auction.buyer.avatar}
+									alt="img"
+									title={`Người dùng: ${auction.buyer.full_name}`}
+								/>
+							</div>
+							<p>{auction.buyer.full_name}</p>
+						</div>
+					</div>
+				</div>
+			)}
+			<div className="wrapper-image">
+				{auction.auction_images.length != 0 && (
+					<ImgViewer imgArray={auction.auction_images} />
+				)}
+			</div>
+			<div className="tool-bar">
+				<div
+					className="likes card"
+					title="Thích"
+					onClick={() => handleClickLike()}
+				>
+					<p className={checkIfLiked()}>
+						<FontAwesomeIcon icon={faHeart} />
+						{auction.like.length} lượt thích
+					</p>
+				</div>
+				<div
+					className="commends card"
+					title="Bình luận"
+					onClick={() => move(`/auctions/${auction.id}`)}
+				>
+					<p>
+						<FontAwesomeIcon icon={faComment} />
+						{auction.count_comment} Định giá
+					</p>
+				</div>
+			</div>
+			{isAllowedToComments &&
+				auction.status_auction == 'being auctioned' && (
+					<div>
+						<AuctionComment
+							onComment={(e) => setComment(e.target.value)}
+							commentText={comment}
+							onClick={sendComment}
+							onKeyDown={handleOnKeyDown}
+							price={price}
+							onCommentPrice={(e) => setPrice(e.target.value)}
+						/>
+					</div>
+				)}
+			{comments_list && auction.buyer == null && (
+				<div>
+					<AuctionCommentList
+						listComment={comments_list}
+						auction={auction}
+						handleSelectWinner={handleSelectWinnerForAuction}
+					/>
+				</div>
+			)}
+			{linkQr && (
+				<>
+					<p>Chọn hình thức thanh toán:</p>
+					<div class="mb-1">
+						<label>
+							<input
+								type="radio"
+								name="iCheck"
+								class="iradio_flat-blue"
+							/>
+							Ví <img src={logoZaloPay} alt="" />
+						</label>
+					</div>
+					<div class="mb-1">
+						<label>
+							<input
+								type="radio"
+								name="iCheck"
+								class="iradio_flat-blue"
+							/>
+							Ví{' '}
+							<img
+								src={logoMomo}
+								height={18}
+								alt="Zalopay logo"
+							/>
+						</label>
+					</div>
+
+					<div style={{ margin: '0 auto' }}>
+						<img
+							src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${linkQr}`}
+						/>
+					</div>
+				</>
+			)}
+		</div>
+	);
 }

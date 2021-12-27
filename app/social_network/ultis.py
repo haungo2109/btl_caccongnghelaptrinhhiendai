@@ -148,3 +148,13 @@ def create_access_token_with_user(user):
         "scope": "read write",
         "refresh_token": refresh_token.token
     }
+
+def group_by_month(months, data):
+    d = {}
+    for i in data:
+        mon = months[(i.get('month')) - 1]
+        if (d.get(mon)):
+            d[mon] += i.get('count')
+        else:
+            d[mon] = i.get('count')
+    return d

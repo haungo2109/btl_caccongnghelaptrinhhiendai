@@ -5,7 +5,20 @@
 {% endblock %}
 
 {% block content %}
-<h2>Số lượng bài post: {{ count }}</h2>
+<h1>Thống kê sơ lược bài viết</h1>
+<h2>Số lượng bài viết: {{ count_post }}</h2>
+<h2>Số lượt like trung bình: {{ count_post_like_avg }}</h2>
+<h2>Số lượt bình luận trung bình: {{ count_post_comment_avg }}</h2>
+<a href="/admin/report-post/">Xem chi tiết</a>
+<br/>
+<hr/>
+<br/>
+<h1>Thống kê sơ lược đấu giá</h1>
+<h2>Số lượng bài đấu giá: {{ count_auction }}</h2>
+<h2>Số lượng bài đấu giá thành công: {{ count_auction_succ }}</h2>
+<h2>Số lượng bài đấu giá thất bại: {{ count_auction_fail }}</h2>
+<h2>Thứ tự loại sản phẩm đấu giá: {{ order_auction_by_category }}</h2>
+<a href="/admin/report-auction/">Xem chi tiết</a>
 <!--<ul>-->
 <!--    {% for c in course_stats %}-->
 <!--    <li><strong>{{ c.subject }}</strong> có {{ c.lesson_count }} bài học </li>-->

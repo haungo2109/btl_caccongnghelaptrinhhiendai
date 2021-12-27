@@ -2,7 +2,7 @@ import './auction-comment.css'
 import { faDollarSign } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-export default function AuctionComment({onComment, commentText, placeHolder = "Nhập vào bình luận của bạn", onClick, onKeyDown, onCommentPrice, price, placeHolder_price = "Giá đấu giá ($)"}) {
+export default function AuctionComment({onComment, commentText, placeHolder = "Nhập vào nội dung", onClick, onKeyDown, onCommentPrice, price, placeHolder_price = "Giá đấu giá ($)"}) {
     return( 
         <div className="comment-input-container auction-comment">
             <div>

@@ -4,11 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
-    dependencies = [
-        ('social_network', '0008_feedback'),
-    ]
-
     operations = [
         migrations.AddField(
             model_name='auction',

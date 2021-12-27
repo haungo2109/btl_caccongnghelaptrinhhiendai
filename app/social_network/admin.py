@@ -1,13 +1,18 @@
+import json
+
 from django.contrib import admin
 from django.contrib.auth.models import Permission, Group
 from django.db.models import Count
+from django.db.models.functions import Coalesce, TruncMonth, TruncYear, ExtractMonth
 from django.template.response import TemplateResponse
 from django.utils.html import mark_safe
 from django.urls import path
 from django.forms import ModelForm
+from django.db.models import Avg
 
 from .models import User, Post, Auction, AuctionComment, PostComment, AuctionImage, PostImage, PostReport, \
-    AuctionReport, HashTagPost, CategoryAuction, ReportType, PaymentMethod
+    AuctionReport, HashTagPost, CategoryAuction, ReportType, PaymentMethod, StatusAuction
+from .ultis import group_by_month
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -110,18 +115,60 @@ class AuctionReportAdmin(admin.ModelAdmin):
 
 class SocialNetworkAdminSite(admin.AdminSite):
     site_header = 'SOCIAL NETWORK ABOUT AUCTION'
-
+    months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October',
+              'November', 'December']
     def get_urls(self):
         return [
-                   path('report/', self.stats_view)
+                   path('report/', self.overview),
+                   path('report-auction/', self.reportAuction),
+                   path('report-post/', self.reportPost)
                ] + super().get_urls()
 
-    def stats_view(self, request):
-        count = Post.objects.filter(active=True).count()
+    def overview(self, request):
+        count_post = Post.objects.filter(active=True).count()
+        post_like = Post.objects.filter(active=True).annotate(count=Count('like')).aggregate(avg=Avg('count'))
+        post_comment = Post.objects.filter(active=True).aggregate(Avg('count_comment'))
+
+        count_auction = Auction.objects.filter(active=True).count()
+        count_auction_succ = Auction.objects.filter(active=True, status_auction=StatusAuction.success).count()
+        count_auction_fail = Auction.objects.filter(active=True, status_auction=StatusAuction.fail).count()
+        categorys = CategoryAuction.objects.annotate(count=Count('auctions__id')).order_by('count')
+        rs = []
+        for cate in categorys:
+            rs.append(cate.name + "(" + str(cate.count) + ")")
         return TemplateResponse(request,
                                 'admin/report.html', {
-                                    'count': count,
-                                    'title': "Post report"
+                                    'count_post': count_post,
+                                    'count_post_like_avg': int(post_like.get("avg")),
+                                    'count_post_comment_avg': int(post_comment.get("count_comment__avg")),
+                                    'count_auction': count_auction,
+                                    'count_auction_succ': count_auction_succ,
+                                    'count_auction_fail': count_auction_fail,
+                                    'order_auction_by_category': (', ').join(rs)
+                                })
+    def reportAuction(self, request):
+        categorys = CategoryAuction.objects.annotate(count=Count('auctions__id')).order_by('count')
+        auction_by_time = Auction.objects.filter(create_at__year=2021).annotate(month=ExtractMonth('create_at'))\
+            .values('month').annotate(count=Count('id')).values('month', 'count')
+
+        d = group_by_month(self.months, auction_by_time)
+        return TemplateResponse(request,
+                                'admin/report-auction.html', ({
+                                    'label_cates': ",".join([i.name for i in categorys]),
+                                    'data_cates': [i.count for i in categorys],
+                                    'label_month': ','.join(d.keys()),
+                                    'data_month': list(d.values()),
+                                }))
+
+    def reportPost(self, request):
+        post_by_time = Post.objects.filter(create_at__year=2021).annotate(month=ExtractMonth('create_at')) \
+            .values('month').annotate(count=Count('id')).values('month', 'count')
+        d = group_by_month(self.months, post_by_time)
+
+        return TemplateResponse(request,
+                                'admin/report-post.html', {
+                                    'label_month': ','.join(d.keys()),
+                                    'data_month': list(d.values()),
                                 })
 
 

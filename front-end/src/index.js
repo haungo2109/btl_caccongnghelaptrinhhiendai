@@ -6,6 +6,7 @@ import { createStore, compose, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import { userReducer} from './userReducer';
 import reduxImutableStateInvariant from 'redux-immutable-state-invariant';
+import registerServiceWorker, {unregister} from './serviceWorker';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(
@@ -22,6 +23,8 @@ const render = () => ReactDOM.render(
 
 render();
 store.subscribe(render);
+// registerServiceWorker();
+unregister();
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
